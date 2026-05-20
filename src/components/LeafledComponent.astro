@@ -25,8 +25,10 @@ try {
 }
 ---
 
-<section>
-    <div id="map"></div>
+<section class="mapSection">
+    <div id="map">
+
+    </div>
 </section>
 
 <script define:vars={{ geojson }}>
@@ -172,8 +174,13 @@ try {
 </script>
 
 <style>
+
+    .mapSection {
+        height: 80vh;
+        width: 100%;
+    }
     #map {
-        height: 100vh;
+        height: 89.5vh;
         width: 100%;
     }
 
