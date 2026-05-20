@@ -1,0 +1,35 @@
+---
+// @ts-nocheck
+
+---
+
+<section>
+    <div id="map">
+
+    </div>
+</section>
+
+<script>
+    //@ts-nocheck
+    const amsterdamBounds = L.latLngBounds(
+        [52.2780, 4.7280], // zuid-west
+        [52.4310, 5.0790]  // noord-oost
+    );
+
+    var map = L.map('map', {
+    maxBounds: amsterdamBounds,
+    maxBoundsViscosity: 1.0,
+    minZoom: 12
+}).setView([52.3676, 4.9041], 13);
+
+    L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+</script>
+
+<style>
+    #map {
+        height: 100vh;
+        width: 100%;
+    }
+</style>
