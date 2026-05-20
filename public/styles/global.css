@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'Amsterdam Sans';
+  src: url('https://www.amsterdam.nl/views/libs/design-system-assets/font/woff2/AmsterdamSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amsterdam Sans';
+  src: url('https://www.amsterdam.nl/views/libs/design-system-assets/font/woff2/AmsterdamSans-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Colors */
   --color-surface: #fff8f6;
