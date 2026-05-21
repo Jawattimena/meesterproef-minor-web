@@ -1,0 +1,75 @@
+---
+//@ts-nocheck
+
+const { title, svg } = Astro.props;
+---
+
+<label class="toegankelijk-button">
+    <input type="checkbox" />
+    <span class="icon">
+        <!-- jouw svg -->
+        <svg
+            aria-hidden="true"
+            focusable="false"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path d="M19.5 5.91v3.95h2V2.5h-7.36v2h3.95l-8.8 8.79 1.42 1.42z"
+            ></path>
+            <path
+                d="m10.71 17.54 1.41-1.42 6.38-6.38V21.5h-16v-16h11.76l-6.38 6.38-1.42 1.41z"
+            ></path>
+        </svg>
+    </span>
+     {title}
+</label>
+
+<style>
+    .toegankelijk-button {
+        display: flex;
+        width: 7rem;
+        flex-direction: column;
+        align-items: start;
+        gap: 0.5rem;
+        cursor: pointer;
+        padding: 1rem .8rem;
+        border: 2px solid #000000;
+        /* border-radius: 6px; */
+        transition: background 0.2s;
+        font-size: 1.3rem;
+    }
+
+    /* verberg checkbox */
+    .toegankelijk-button input {
+        display: none;
+    }
+
+    /* standaard kleur */
+    .toegankelijk-button .icon svg {
+        width: 24px;
+        height: 24px;
+        fill: #BD0100;
+    }
+
+    /* ALS gechecked → hele button rood */
+    .toegankelijk-button input:checked + .icon svg {
+        fill: white;
+    }
+
+    .toegankelijk-button input:checked ~ * {
+        color: white;
+    }
+
+    /* achtergrond rood als checked */
+    .toegankelijk-button input:checked {
+        /* niets hier nodig */
+    }
+
+    /* dit is de belangrijkste regel */
+    .toegankelijk-button:has(input:checked) {
+        background-color: #EC0000;
+        border: 2px solid black;
+        /* border-color: red; */
+        color: white;
+    }
+</style>
