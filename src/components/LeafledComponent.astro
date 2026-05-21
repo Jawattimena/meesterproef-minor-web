@@ -43,7 +43,7 @@ try {
         console.error(`Amsterdam API fout: ${response.status} ${response.statusText}`);
     } else {
         schoolGeojson = await response.json();
-        
+        // bron: https://api.pdok.nl/
         // De schoolgebouwen API geeft vaak geen geometrie terug, we gebruiken PDOK om adressen om te zetten naar coördinaten
         if (schoolGeojson && schoolGeojson.features) {
             for (const feature of schoolGeojson.features) {
