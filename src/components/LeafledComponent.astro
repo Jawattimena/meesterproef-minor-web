@@ -58,9 +58,9 @@ try {
         const adresVolledig = [adres, postcode].filter(Boolean).join(', ');
 
         const openZoDo = (p.openingstijdenZoDoVan && p.openingstijdenZoDoTot)
-            ? `Zondag t/m donderdag: ${p.openingstijdenZoDoVan} – ${p.openingstijdenZoDoTot}` : null;
+            ? `Zondag t/m donderdag: ${p.openingstijdenZoDoVan}  ${p.openingstijdenZoDoTot}` : null;
         const openVrZa = (p.openingstijdenVrZaVan && p.openingstijdenVrZaTot)
-            ? `Vrijdag en zaterdag: ${p.openingstijdenVrZaVan} – ${p.openingstijdenVrZaTot}` : null;
+            ? `Vrijdag en zaterdag: ${p.openingstijdenVrZaVan} - ${p.openingstijdenVrZaTot}` : null;
 
         const items = [
             soort ? { label: 'Type horeca', desc: soort } : null,
