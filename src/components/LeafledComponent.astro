@@ -4,7 +4,7 @@
 const apiKey = import.meta.env.KEY_AMSTERDAM;
 const baseUrl = 'https://api.data.amsterdam.nl/'
 let geojson = null;
-let standsGeojson = null;
+let schoolGeojson = null;
 
 try {
     const endPoint = 'v1/horeca/v1/exploitatievergunning/?zaakCategorie=Caf%C3%A9&_pageSize=10&_format=geojson'
@@ -28,7 +28,7 @@ try {
 }
 
 try {
-    const endPoint = 'v1/standbedrijven/vestigingen/?_pageSize=10&_format=geojson';
+    const endPoint = 'v1/schoolgebouwen/v2/accommodatie/?_pageSize=10&_format=geojson';
     const url = baseUrl + endPoint;
     const response = await fetch(
         url,
@@ -42,12 +42,12 @@ try {
     if (!response.ok) {
         console.error(`Amsterdam API fout: ${response.status} ${response.statusText}`);
     } else {
-        standsGeojson = await response.json();
+        schoolGeojson = await response.json();
     }
 } catch (err) {
-    console.error('Kon standplaatsen niet ophalen:', err);
+    console.error('Kon schoolgebouwen niet ophalen:', err);
 }
-console.log('standsGeojson:', standsGeojson);
+console.log('schoolGeojson:', schoolGeojson);
 console.log('apiKey:', apiKey);
 
 ---
@@ -58,8 +58,9 @@ console.log('apiKey:', apiKey);
     </div>
 </section>
 
-<script define:vars={{ geojson, standsGeojson }}> 
+<script define:vars={{ geojson, schoolGeojson }}> 
     //@ts-nocheck
+    console.log('schoolGeojson:', schoolGeojson);   
 
     // SVG voor de rode cirkel-checkmark (uit Figma)
     const checkIconSvg = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -186,6 +187,47 @@ console.log('apiKey:', apiKey);
                     // Wissel naar actief icoon bij openen popup
                     layer.on('popupopen', function () {
                         layer.setIcon(activeIcon);
+                    });
+                    layer.on('popupclose', function () {
+                        layer.setIcon(defaultIcon);
+                    });
+                },
+            }).addTo(map);
+        }
+
+        const defaultIconSchool = L.divIcon({
+            className: 'am-marker',
+            html: `<span style="font-size:16px;line-height:1;">🏫</span>`,
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -34],
+        });
+
+        // Actief marker-icoon (40px, rood)
+        const activeIconSchool = L.divIcon({
+            className: 'am-marker am-marker--active',
+            html: `<span style="font-size:20px;line-height:1;">🏫</span>`,
+            iconSize: [40, 40],
+            iconAnchor: [20, 40],
+            popupAnchor: [0, -42],
+        });
+
+        if (schoolGeojson) {
+            L.geoJSON(schoolGeojson, {
+                pointToLayer(feature, latlng) {
+                    return L.marker(latlng, { icon: defaultIconSchool });
+                },
+                onEachFeature(feature, layer) {
+                    layer.bindPopup(buildPopupHtml(feature.properties), {
+                        className: 'am-popup-wrapper',
+                        closeButton: false,
+                        autoPanPaddingTopLeft: [10, 10],
+                        autoPanPaddingBottomRight: [10, 10],
+                    });
+
+                    // Wissel naar actief icoon bij openen popup
+                    layer.on('popupopen', function () {
+                        layer.setIcon(activeIconSchool);
                     });
                     layer.on('popupclose', function () {
                         layer.setIcon(defaultIcon);
