@@ -1,25 +1,13 @@
 ---
 //@ts-nocheck
 
-const { title, svg } = Astro.props;
+const { title, name, value, checked } = Astro.props;
 ---
 
 <label class="toegankelijk-button">
-    <input type="checkbox" />
+    <input type="checkbox" name={name} value={value} checked={checked} />
     <span class="icon">
-        <!-- jouw svg -->
-        <svg
-            aria-hidden="true"
-            focusable="false"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M19.5 5.91v3.95h2V2.5h-7.36v2h3.95l-8.8 8.79 1.42 1.42z"
-            ></path>
-            <path
-                d="m10.71 17.54 1.41-1.42 6.38-6.38V21.5h-16v-16h11.76l-6.38 6.38-1.42 1.41z"
-            ></path>
-        </svg>
+        <slot />
     </span>
      {title}
 </label>
@@ -27,12 +15,14 @@ const { title, svg } = Astro.props;
 <style>
     .toegankelijk-button {
         display: flex;
-        width: 7rem;
+        width: 100%;
+        box-sizing: border-box;
         flex-direction: column;
         align-items: start;
         gap: 0.5rem;
         cursor: pointer;
         padding: 1rem .8rem;
+        margin: 0;
         border: 2px solid #000000;
         /* border-radius: 6px; */
         transition: background 0.2s;
