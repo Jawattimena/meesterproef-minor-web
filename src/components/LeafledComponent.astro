@@ -43,6 +43,28 @@ try {
         console.error(`Amsterdam API fout: ${response.status} ${response.statusText}`);
     } else {
         schoolGeojson = await response.json();
+        
+        // De schoolgebouwen API geeft vaak geen geometrie terug, we gebruiken PDOK om adressen om te zetten naar coördinaten
+        if (schoolGeojson && schoolGeojson.features) {
+            for (const feature of schoolGeojson.features) {
+                if (!feature.geometry && feature.properties.adresStraat && feature.properties.adresHuisnummer) {
+                    try {
+                        const query = `${feature.properties.adresStraat} ${feature.properties.adresHuisnummer} ${feature.properties.adresPostcode || ''}`;
+                        const res = await fetch(`https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?q=${encodeURIComponent(query)}&fl=centroide_ll`);
+                        const data = await res.json();
+                        if (data.response && data.response.docs && data.response.docs.length > 0) {
+                            const pt = data.response.docs[0].centroide_ll.replace('POINT(', '').replace(')', '').split(' ');
+                            feature.geometry = {
+                                type: "Point",
+                                coordinates: [parseFloat(pt[0]), parseFloat(pt[1])]
+                            };
+                        }
+                    } catch (e) {
+                        console.error('Kon locatie niet ophalen via PDOK:', e);
+                    }
+                }
+            }
+        }
     }
 } catch (err) {
     console.error('Kon schoolgebouwen niet ophalen:', err);
@@ -79,10 +101,18 @@ console.log('apiKey:', apiKey);
     </svg>`;
 
     function buildPopupHtml(p) {
-        const naam = p.zaaknaam ?? 'Onbekend café';
-        const adres = p.adres ?? '';
-        const postcode = p.postcode ?? '';
-        const soort = p.zaakSpecificatie ?? p.zaakCategorie ?? '';
+        const isSchool = p.adresStraat !== undefined || p.accommodatieId !== undefined;
+        const naam = p.zaaknaam ?? (isSchool ? (p.juridischEigenaar ?? 'Onbekende school') : 'Onbekend café');
+        
+        let adres = p.adres ?? '';
+        let postcode = p.postcode ?? '';
+        
+        if (isSchool) {
+            adres = `${p.adresStraat ?? ''} ${p.adresHuisnummer ?? ''}`.trim();
+            postcode = p.adresPostcode ?? '';
+        }
+
+        const soort = p.zaakSpecificatie ?? p.zaakCategorie ?? (isSchool ? `School (${p.bestemming ?? 'Onbekend'})` : '');
         const adresVolledig = [adres, postcode].filter(Boolean).join(', ');
 
         const openZoDo = (p.openingstijdenZoDoVan && p.openingstijdenZoDoTot)
@@ -91,7 +121,7 @@ console.log('apiKey:', apiKey);
             ? `Vrijdag en zaterdag: ${p.openingstijdenVrZaVan} – ${p.openingstijdenVrZaTot}` : null;
 
         const items = [
-            soort ? { label: 'Type horeca', desc: soort } : null,
+            soort ? { label: isSchool ? 'Type bestemming' : 'Type horeca', desc: soort } : null,
             openZoDo ? { label: 'Openingstijden', desc: openZoDo } : null,
             openVrZa ? { label: 'Openingstijden weekend', desc: openVrZa } : null,
         ].filter(Boolean);
