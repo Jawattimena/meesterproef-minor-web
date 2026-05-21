@@ -33,7 +33,7 @@ const { title, svg } = Astro.props;
         gap: 0.5rem;
         cursor: pointer;
         padding: 1rem .8rem;
-        border: 2px solid #000000;
+        border: 2px solid var(--color-border);
         /* border-radius: 6px; */
         transition: background 0.2s;
         font-size: 1.3rem;
@@ -48,16 +48,16 @@ const { title, svg } = Astro.props;
     .toegankelijk-button .icon svg {
         width: 24px;
         height: 24px;
-        fill: #BD0100;
+        fill: var(--color-primary);
     }
 
     /* ALS gechecked → hele button rood */
     .toegankelijk-button input:checked + .icon svg {
-        fill: white;
+        fill: var(--color-on-primary);
     }
 
     .toegankelijk-button input:checked ~ * {
-        color: white;
+        color: var(--color-on-primary);
     }
 
     /* achtergrond rood als checked */
@@ -67,9 +67,9 @@ const { title, svg } = Astro.props;
 
     /* dit is de belangrijkste regel */
     .toegankelijk-button:has(input:checked) {
-        background-color: #EC0000;
-        border: 2px solid black;
+        background-color: var(--color-primary-container);
+        border: 2px solid var(--color-border);
         /* border-color: red; */
-        color: white;
+        color: var(--color-on-primary-container);
     }
 </style>
