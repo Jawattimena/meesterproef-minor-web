@@ -2,12 +2,15 @@
 // @ts-nocheck
 
 const apiKey = import.meta.env.KEY_AMSTERDAM;
-
+const baseUrl = 'https://api.data.amsterdam.nl/'
 let geojson = null;
+let standsGeojson = null;
 
 try {
+    const endPoint = 'v1/horeca/v1/exploitatievergunning/?zaakCategorie=Caf%C3%A9&_pageSize=10&_format=geojson'
+    const url = baseUrl + endPoint;
     const response = await fetch(
-        'https://api.data.amsterdam.nl/v1/horeca/v1/exploitatievergunning/?zaakCategorie=Caf%C3%A9&_pageSize=10&_format=geojson',
+        url,
         {
             headers: {
                 'X-Api-Key': apiKey,
@@ -23,6 +26,30 @@ try {
 } catch (err) {
     console.error('Kon cafés niet ophalen:', err);
 }
+
+try {
+    const endPoint = 'v1/standbedrijven/vestigingen/?_pageSize=10&_format=geojson';
+    const url = baseUrl + endPoint;
+    const response = await fetch(
+        url,
+        {
+            headers: {
+                'X-Api-Key': apiKey,
+            },
+        }
+);
+
+    if (!response.ok) {
+        console.error(`Amsterdam API fout: ${response.status} ${response.statusText}`);
+    } else {
+        standsGeojson = await response.json();
+    }
+} catch (err) {
+    console.error('Kon standplaatsen niet ophalen:', err);
+}
+console.log('standsGeojson:', standsGeojson);
+console.log('apiKey:', apiKey);
+
 ---
 
 <section class="mapSection">
@@ -31,7 +58,7 @@ try {
     </div>
 </section>
 
-<script define:vars={{ geojson }}>
+<script define:vars={{ geojson, standsGeojson }}> 
     //@ts-nocheck
 
     // SVG voor de rode cirkel-checkmark (uit Figma)
