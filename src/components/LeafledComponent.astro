@@ -656,10 +656,24 @@ window.addEventListener("load", function () {
     :global(.am-marker) {
         background: var(--color-background-main) !important;
         border: 1px solid var(--color-border) !important;
+        color: var(--color-on-surface) !important; /* Icons default to black inside white marker */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         box-sizing: border-box !important;
+        /* Smooth color/border transition on hover, without overriding Leaflet's transform transitions */
+        transition-property: background-color, border-color, color, box-shadow;
+        transition-duration: 0.15s;
+        transition-timing-function: ease;
+    }
+
+    :global(.am-marker svg) {
+        color: inherit !important; /* Ensure SVG inherits container color */
+    }
+
+    :global(.am-marker:hover) {
+        color: var(--color-primary-container) !important; /* Turn light red on hover interaction */
+        border-color: var(--color-primary-container) !important;
     }
 
     :global(.am-marker--active) {
