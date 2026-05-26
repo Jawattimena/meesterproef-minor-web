@@ -69,7 +69,72 @@ try {
 } catch (err) {
     console.error('Kon schoolgebouwen niet ophalen:', err);
 }
+
+let otherBuildingsGeojson = { type: 'FeatureCollection', features: [] };
+
+try {
+    const categories = ['bijeenkomstfunctie', 'gezondheidszorgfunctie', 'logiesfunctie', 'winkelfunctie', 'sportfunctie'];
+    const fetchPromises = categories.map(async (cat) => {
+        const endPoint = `v1/bag/verblijfsobjecten/?_pageSize=10&_format=geojson&gebruiksdoel.omschrijving=${encodeURIComponent(cat)}`;
+        const url = baseUrl + endPoint;
+        const response = await fetch(
+            url,
+            {
+                headers: {
+                    'X-Api-Key': apiKey,
+                },
+            }
+        );
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.error(`BAG API fout voor ${cat}: ${response.status} ${response.statusText}`);
+            return null;
+        }
+    });
+
+    const results = await Promise.all(fetchPromises);
+    const allFeatures = [];
+    results.forEach((res) => {
+        if (res && res.features) {
+            allFeatures.push(...res.features);
+        }
+    });
+
+    if (allFeatures.length > 0) {
+        // Resolve nummeraanduiding (address) for each verblijfsobject in parallel
+        const addressPromises = allFeatures.map(async (feature) => {
+            const hoofdadresId = feature.properties.heeftHoofdadresId;
+            if (hoofdadresId) {
+                try {
+                    const url = `${baseUrl}v1/bag/nummeraanduidingen/${hoofdadresId}`;
+                    const res = await fetch(url, {
+                        headers: {
+                            'X-Api-Key': apiKey,
+                        },
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        feature.properties.adresStraat = data._links?.ligtAanOpenbareruimte?.title ?? '';
+                        feature.properties.adresHuisnummer = data.huisnummer ?? '';
+                        feature.properties.adresHuisnummertoevoeging = data.huisnummertoevoeging ?? '';
+                        feature.properties.adresHuisletter = data.huisletter ?? '';
+                        feature.properties.adresPostcode = data.postcode ?? '';
+                    }
+                } catch (e) {
+                    console.error(`Kon adres niet ophalen voor verblijfsobject ${feature.properties.identificatie}:`, e);
+                }
+            }
+        });
+        await Promise.all(addressPromises);
+    }
+    otherBuildingsGeojson.features = allFeatures;
+} catch (err) {
+    console.error('Kon overige gebouwen niet ophalen:', err);
+}
+
 console.log('schoolGeojson:', schoolGeojson);
+console.log('otherBuildingsGeojson count:', otherBuildingsGeojson.features.length);
 console.log('apiKey:', apiKey);
 
 ---
@@ -80,9 +145,10 @@ console.log('apiKey:', apiKey);
     </div>
 </section>
 
-<script define:vars={{ geojson, schoolGeojson }}> 
+<script define:vars={{ geojson, schoolGeojson, otherBuildingsGeojson }}> 
     //@ts-nocheck
     console.log('schoolGeojson:', schoolGeojson);   
+    console.log('otherBuildingsGeojson:', otherBuildingsGeojson);
 
     // SVG voor de rode cirkel-checkmark (uit Figma)
     const checkIconSvg = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -101,18 +167,41 @@ console.log('apiKey:', apiKey);
     </svg>`;
 
     function buildPopupHtml(p) {
-        const isSchool = p.adresStraat !== undefined || p.accommodatieId !== undefined;
-        const naam = p.zaaknaam ?? (isSchool ? (p.juridischEigenaar ?? 'Onbekende school') : 'Onbekend café');
+        const isSchool = p.accommodatieId !== undefined;
+        const isBagObject = p.gebruiksdoel !== undefined;
+        
+        let naam = p.zaaknaam ?? 'Onbekende locatie';
+        if (isSchool) {
+            naam = p.juridischEigenaar ?? 'Onbekende school';
+        } else if (isBagObject) {
+            const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? '';
+            let typeNaam = 'Overig gebouw';
+            if (omschrijving.includes('winkelfunctie')) typeNaam = 'Winkel / Supermarkt';
+            else if (omschrijving.includes('gezondheidszorg')) typeNaam = 'Gezondheidszorg Locatie';
+            else if (omschrijving.includes('logiesfunctie')) typeNaam = 'Hotel / Logies';
+            else if (omschrijving.includes('bijeenkomst')) typeNaam = 'Bijeenkomst / Cultuur';
+            else if (omschrijving.includes('sportfunctie')) typeNaam = 'Sport & Spel';
+            naam = typeNaam;
+        }
         
         let adres = p.adres ?? '';
         let postcode = p.postcode ?? '';
         
-        if (isSchool) {
-            adres = `${p.adresStraat ?? ''} ${p.adresHuisnummer ?? ''}`.trim();
-            postcode = p.adresPostcode ?? '';
+        if (isSchool || isBagObject) {
+            const toevoeging = p.adresHuisnummertoevoeging ? ` ${p.adresHuisnummertoevoeging}` : '';
+            const letter = p.adresHuisletter ? ` ${p.adresHuisletter}` : '';
+            adres = `${p.adresStraat ?? ''} ${p.adresHuisnummer ?? ''}${letter}${toevoeging}`.trim();
+            postcode = p.adresPostcode ?? p.postcode ?? '';
         }
 
-        const soort = p.zaakSpecificatie ?? p.zaakCategorie ?? (isSchool ? `School (${p.bestemming ?? 'Onbekend'})` : '');
+        let soort = p.zaakSpecificatie ?? p.zaakCategorie ?? '';
+        if (isSchool) {
+            soort = `School (${p.bestemming ?? 'Onbekend'})`;
+        } else if (isBagObject) {
+            const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? '';
+            soort = `BAG (${omschrijving.charAt(0).toUpperCase() + omschrijving.slice(1)})`;
+        }
+
         const adresVolledig = [adres, postcode].filter(Boolean).join(', ');
 
         const openZoDo = (p.openingstijdenZoDoVan && p.openingstijdenZoDoTot)
@@ -121,7 +210,9 @@ console.log('apiKey:', apiKey);
             ? `Vrijdag en zaterdag: ${p.openingstijdenVrZaVan} - ${p.openingstijdenVrZaTot}` : null;
 
         const items = [
-            soort ? { label: isSchool ? 'Type bestemming' : 'Type horeca', desc: soort } : null,
+            soort ? { label: isSchool ? 'Type bestemming' : (isBagObject ? 'Gebruiksdoel' : 'Type horeca'), desc: soort } : null,
+            isBagObject && p.oppervlakte ? { label: 'Oppervlakte', desc: `${p.oppervlakte} m²` } : null,
+            isBagObject && p.statusOmschrijving ? { label: 'Status', desc: p.statusOmschrijving } : null,
             openZoDo ? { label: 'Openingstijden', desc: openZoDo } : null,
             openVrZa ? { label: 'Openingstijden weekend', desc: openVrZa } : null,
         ].filter(Boolean);
@@ -186,7 +277,9 @@ console.log('apiKey:', apiKey);
         // Inactief marker-icoon (32px, wit)
         const defaultIcon = L.divIcon({
             className: 'am-marker',
-            html: `<span style="font-size:16px;line-height:1;">🍺</span>`,
+            html: `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.09917C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
+            </svg>`,
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -34],
@@ -195,7 +288,9 @@ console.log('apiKey:', apiKey);
         // Actief marker-icoon (40px, rood)
         const activeIcon = L.divIcon({
             className: 'am-marker am-marker--active',
-            html: `<span style="font-size:20px;line-height:1;">🍺</span>`,
+            html: `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917Z" fill="currentColor"/>
+            </svg>`,
             iconSize: [40, 40],
             iconAnchor: [20, 40],
             popupAnchor: [0, -42],
@@ -227,7 +322,9 @@ console.log('apiKey:', apiKey);
 
         const defaultIconSchool = L.divIcon({
             className: 'am-marker',
-            html: `<span style="font-size:16px;line-height:1;">🏫</span>`,
+            html: `<svg width="15" height="18" viewBox="0 0 17.217 20.2095" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.6 2H12.35V5.60495C12.5116 6.03931 12.6 6.50934 12.6 7.00001C12.6 9.20915 10.8091 11 8.59997 11C6.39083 11 4.59997 9.20915 4.59997 7.00001C4.59997 6.50934 4.68832 6.03931 4.84997 5.60495V2H3.38328V4.57426L3.92722 6.75001H1.33939L1.88328 4.57442V2H1.59997V0H15.6V2ZM6.86754 6C6.69737 6.29418 6.59997 6.63572 6.59997 7.00001C6.59997 8.10458 7.4954 9.00001 8.59997 9.00001C9.70454 9.00001 10.6 8.10458 10.6 7.00001C10.6 6.63572 10.5026 6.29418 10.3324 6H6.86754ZM6.84997 2H10.35V4H6.84997V2ZM4.18718 14.0014C3.73878 14.0254 3.35831 14.3471 3.26329 14.7905L2.10207 20.2095H0L1.30769 14.3714C1.60409 12.9882 2.82648 12 4.24109 12H13.0074C14.422 12 15.6444 12.9882 15.9408 14.3714L17.217 20.2095H15.1465L13.9852 14.7905C13.8869 14.3316 13.4828 14.0031 13.0141 14L8.59995 14L4.18718 14.0014ZM10.1857 14H8.59995H7.01417H10.1857Z" fill="currentColor"/>
+            </svg>`,
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -34],
@@ -236,7 +333,9 @@ console.log('apiKey:', apiKey);
         // Actief marker-icoon (40px, rood)
         const activeIconSchool = L.divIcon({
             className: 'am-marker am-marker--active',
-            html: `<span style="font-size:20px;line-height:1;">🏫</span>`,
+            html: `<svg width="17" height="20" viewBox="0 0 17.217 20.2095" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.84998 2H3.38329V4.57426L3.92722 6.75001H1.33939L1.88329 4.57442V2H1.59998V0H15.6V2H12.35V4.5H4.84998V2ZM2.62142 12.4747C3.09199 12.1727 3.64974 12 4.24109 12H13.0074C13.5865 12 14.1334 12.1656 14.5977 12.4561C15.2677 12.8753 15.7658 13.5544 15.9408 14.3714L17.217 20.2095H0L1.30769 14.3714C1.48018 13.5664 1.96631 12.8952 2.62142 12.4747ZM5.08921 6C5.03083 6.25729 5 6.52505 5 6.80001C5 8.78824 6.61177 10.4 8.6 10.4C10.5882 10.4 12.2 8.78824 12.2 6.80001C12.2 6.52505 12.1692 6.25729 12.1108 6H5.08921Z" fill="currentColor"/>
+            </svg>`,
             iconSize: [40, 40],
             iconAnchor: [20, 40],
             popupAnchor: [0, -42],
@@ -261,6 +360,195 @@ console.log('apiKey:', apiKey);
                     });
                     layer.on('popupclose', function () {
                         layer.setIcon(defaultIconSchool);
+                    });
+                },
+            }).addTo(map);
+        }
+
+        if (otherBuildingsGeojson && otherBuildingsGeojson.features) {
+            L.geoJSON(otherBuildingsGeojson, {
+                pointToLayer(feature, latlng) {
+                    const omschrijving = feature.properties.gebruiksdoel?.[0]?.omschrijving ?? '';
+                    let emoji = '🏢';
+                    let markerHtml = '';
+
+                    if (omschrijving.includes('gezondheidszorg')) {
+                        // Use outline MedicalKit SVG from Figma
+                        markerHtml = `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+                        </svg>`;
+                    } else if (omschrijving.includes('sportfunctie')) {
+                        // Use outline SportsField SVG from Figma
+                        markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
+                        </svg>`;
+                    } else if (omschrijving.includes('logiesfunctie')) {
+                        // Use outline HouseCanal SVG from Figma
+                        markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                            <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
+                            <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
+                            <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
+                        </svg>`;
+                    } else if (omschrijving.includes('bijeenkomst')) {
+                        // Use outline Buildings SVG from Figma
+                        markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                            <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
+                            <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
+                            <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
+                            <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
+                            <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
+                            <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
+                            <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
+                            <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
+                            <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
+                            <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
+                        </svg>`;
+                    } else {
+                        if (omschrijving.includes('winkelfunctie')) {
+                            markerHtml = `<span style="font-size:16px;line-height:1;">🛍️</span>`;
+                        } else {
+                            // Use outline Building SVG from Figma
+                            markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                                <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
+                                <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
+                                <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
+                                <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
+                                <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
+                                <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
+                            </svg>`;
+                        }
+                    }
+
+                    const defaultIconOther = L.divIcon({
+                        className: 'am-marker',
+                        html: markerHtml,
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32],
+                        popupAnchor: [0, -34],
+                    });
+
+                    return L.marker(latlng, { icon: defaultIconOther });
+                },
+                onEachFeature(feature, layer) {
+                    layer.bindPopup(buildPopupHtml(feature.properties), {
+                        className: 'am-popup-wrapper',
+                        closeButton: false,
+                        autoPanPaddingTopLeft: [10, 10],
+                        autoPanPaddingBottomRight: [10, 10],
+                    });
+
+                    layer.on('popupopen', function () {
+                        const omschrijving = feature.properties.gebruiksdoel?.[0]?.omschrijving ?? '';
+                        let emoji = '🏢';
+                        let markerHtml = '';
+
+                        if (omschrijving.includes('gezondheidszorg')) {
+                            // Use filled MedicalKitFill SVG from Figma
+                            markerHtml = `<svg width="22" height="22" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 0H4.5V4H0V19H19V4H14.5V0ZM12.5 4V2H6.5V4H12.5ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+                            </svg>`;
+                        } else if (omschrijving.includes('sportfunctie')) {
+                            // Use filled SportsFieldFill SVG from Figma
+                            markerHtml = `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H10.25V4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V16H0V13.25H1C3.8995 13.25 6.25 10.8995 6.25 8C6.25 5.1005 3.8995 2.75 1 2.75H0V0ZM11.75 11.4195V16H22V13.25H21C18.1005 13.25 15.75 10.8995 15.75 8C15.75 5.1005 18.1005 2.75 21 2.75H22V0H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195ZM11.75 6.14538C12.483 6.44207 13 7.16066 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM0 4.25V11.75H1C3.07107 11.75 4.75 10.0711 4.75 8C4.75 5.92893 3.07107 4.25 1 4.25H0ZM21 4.25H22V11.75H21C18.9289 11.75 17.25 10.0711 17.25 8C17.25 5.92893 18.9289 4.25 21 4.25Z" fill="currentColor"/>
+                            </svg>`;
+                        } else if (omschrijving.includes('logiesfunctie')) {
+                            // Use filled HouseCanalFill SVG from Figma
+                            markerHtml = `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 4.96774V2.51886H10.6195V0H5.35076V2.52885H2.52151V4.97774H0V22H16V4.96774H13.4487ZM6.70269 9.09998H4V11.8027H6.70269V9.09998ZM9.29731 9.09998H12V11.8027H9.29731V9.09998ZM12 14.5054H9.29731V17.2081H12V14.5054ZM5 14.5054C4.44772 14.5054 4 14.9531 4 15.5054V19.9108H6.70269V15.5054C6.70269 14.9531 6.25498 14.5054 5.70269 14.5054H5Z" fill="currentColor"/>
+                            </svg>`;
+                        } else if (omschrijving.includes('bijeenkomst')) {
+                            // Use filled BuildingsFill SVG from Figma
+                            markerHtml = `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.31818V0H0V16H22V5.4L16.2857 2L12 4.31818ZM3.25 3.5H5.25V5.5H3.25V3.5ZM5.25 7H3.25V9H5.25V7ZM13.25 7H15.25V9H13.25V7ZM5.25 10.5H3.25V12.5H5.25V10.5ZM13.25 10.5H15.25V12.5H13.25V10.5ZM8.75 3.5H6.75V5.5H8.75V3.5ZM6.75 7H8.75V9H6.75V7ZM18.75 7H16.75V9H18.75V7ZM6.75 10.5H8.75V12.5H6.75V10.5ZM18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+                            </svg>`;
+                        } else {
+                            if (omschrijving.includes('winkelfunctie')) {
+                                markerHtml = `<span style="font-size:20px;line-height:1;">🛍️</span>`;
+                            } else {
+                                // Use filled BuildingFill SVG from Figma
+                                markerHtml = `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 22V0H0V22H16ZM4 4H7V7H4V4ZM7 9H4V12H7V9ZM4 14H7V17H4V14ZM12 4H9V7H12V4ZM9 9H12V12H9V9ZM12 14H9V17H12V14Z" fill="currentColor"/>
+                                </svg>`;
+                            }
+                        }
+
+                        const activeIconOther = L.divIcon({
+                            className: 'am-marker am-marker--active',
+                            html: markerHtml,
+                            iconSize: [40, 40],
+                            iconAnchor: [20, 40],
+                            popupAnchor: [0, -42],
+                        });
+                        layer.setIcon(activeIconOther);
+                    });
+
+                    layer.on('popupclose', function () {
+                        const omschrijving = feature.properties.gebruiksdoel?.[0]?.omschrijving ?? '';
+                        let emoji = '🏢';
+                        let markerHtml = '';
+
+                        if (omschrijving.includes('gezondheidszorg')) {
+                            // Use outline MedicalKit SVG from Figma
+                            markerHtml = `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+                            </svg>`;
+                        } else if (omschrijving.includes('sportfunctie')) {
+                            // Use outline SportsField SVG from Figma
+                            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
+                            </svg>`;
+                        } else if (omschrijving.includes('logiesfunctie')) {
+                            // Use outline HouseCanal SVG from Figma
+                            markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                                <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
+                                <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
+                                <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
+                            </svg>`;
+                        } else if (omschrijving.includes('bijeenkomst')) {
+                            // Use outline Buildings SVG from Figma
+                            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                                <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
+                                <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
+                                <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
+                                <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
+                                <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
+                                <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
+                                <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
+                                <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
+                                <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
+                                <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
+                            </svg>`;
+                        } else {
+                            if (omschrijving.includes('winkelfunctie')) {
+                                markerHtml = `<span style="font-size:16px;line-height:1;">🛍️</span>`;
+                            } else {
+                                // Use outline Building SVG from Figma
+                                markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-surface); display: block;">
+                                    <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
+                                    <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
+                                    <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
+                                    <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
+                                    <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
+                                    <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
+                                </svg>`;
+                            }
+                        }
+
+                        const defaultIconOther = L.divIcon({
+                            className: 'am-marker',
+                            html: markerHtml,
+                            iconSize: [32, 32],
+                            iconAnchor: [16, 32],
+                            popupAnchor: [0, -34],
+                        });
+                        layer.setIcon(defaultIconOther);
                     });
                 },
             }).addTo(map);
@@ -293,15 +581,30 @@ console.log('apiKey:', apiKey);
     :global(.am-marker) {
         background: var(--color-on-primary) !important;
         border: 1px solid var(--color-border) !important;
+        color: var(--color-on-surface) !important; /* Icons default to black inside white marker */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         box-sizing: border-box !important;
+        /* Smooth color/border transition on hover, without overriding Leaflet's transform transitions */
+        transition-property: background-color, border-color, color, box-shadow;
+        transition-duration: 0.15s;
+        transition-timing-function: ease;
+    }
+
+    :global(.am-marker svg) {
+        color: inherit !important; /* Ensure SVG inherits container color */
+    }
+
+    :global(.am-marker:hover) {
+        color: var(--color-primary-container) !important; /* Turn light red on hover interaction */
+        border-color: var(--color-primary-container) !important;
     }
 
     :global(.am-marker--active) {
-        background: var(--color-primary-container) !important;
-        border-color: var(--color-border) !important;
+        background: var(--color-on-primary) !important; /* Stay white/light for contrast */
+        border-color: var(--color-primary) !important; /* Dark red border */
+        color: var(--color-primary) !important; /* Turn dark red when active */
         box-shadow: 0 0 0 4px var(--color-surface-container-highest) !important;
     }
 

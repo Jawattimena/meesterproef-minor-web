@@ -34,14 +34,20 @@ const { title, name, value, checked } = Astro.props;
         display: none;
     }
 
-    /* standaard kleur */
+    /* standaard kleur (black by default) */
     .toegankelijk-button .icon svg {
         width: 24px;
         height: 24px;
-        fill: var(--color-primary);
+        fill: var(--color-on-surface);
+        transition: fill 0.2s;
     }
 
-    /* ALS gechecked → hele button rood */
+    /* interactie (hover) → turns light red */
+    .toegankelijk-button:hover .icon svg {
+        fill: var(--color-primary-container);
+    }
+
+    /* ALS gechecked → icon turns white */
     .toegankelijk-button input:checked + .icon svg {
         fill: var(--color-on-primary);
     }
