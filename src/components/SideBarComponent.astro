@@ -321,5 +321,37 @@ import ToegangkelijkButtonComponent from './ToegangkelijkButtonComponent.astro';
 </style>
 
 <script>
+    //@ts-nocheck
+     const hoofdSelect = document.getElementById("hoofdcategorie")
+     const subSelect = document.getElementById("subcategorie")
+     const subGroups = subSelect.querySelectorAll("optgroup")
+
+    function updateSubcategorieen() {
+        const gekozenHoofdCategorie = hoofdSelect.value;
+
+        subSelect.value = "";
+
+        subGroups.forEach((group) => {
+            const isActiveGroup = group.dataset.parent === gekozenHoofdCategorie;
+
+            group.hidden = !isActiveGroup;
+
+            group.querySelectorAll("option").forEach((option) => {
+                option.hidden = !isActiveGroup;
+                option.disabled = !isActiveGroup;
+            });
+        });
+    }
+
+        subGroups.forEach((group) => {
+            group.hidden = true;
+
+            group.querySelectorAll("option").forEach((option) => {
+                option.hidden = true;
+                option.disabled = true;
+        });
+    });
+
+    hoofdSelect.addEventListener('change', updateSubcategorieen);
 
 </script>
