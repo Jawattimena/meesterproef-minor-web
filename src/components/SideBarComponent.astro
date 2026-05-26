@@ -47,56 +47,32 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
             <label for="subcategorie">Subcategorie</label>
             <div class="select-wrapper">
                 <select id="subcategorie" name="subcategorie">
-                    <option value="" disabled selected
-                        >Kies een subcategorie...</option
-                    >
-                    <optgroup
-                        label="Cultuur en Kunst"
-                        data-parent="cultuur_kunst"
-                    >
-                        <option value="bioscopen">Bioscopen</option>
-                        <option value="galleries">Galleries</option>
-                        <option value="musea">Musea</option>
-                        <option value="theaters">Theaters</option>
-                    </optgroup>
-                    <optgroup
-                        label="Gezondheid en Zorg"
-                        data-parent="gezondheid_zorg"
-                    >
-                        <option value="apotheken">Apotheken</option>
-                        <option value="huisartsen">Huisartsen</option>
-                        <option value="ziekenhuizen">Ziekenhuizen</option>
-                    </optgroup>
-                    <optgroup
-                        label="Horeca en Toerisme"
-                        data-parent="horeca_toerisme"
-                    >
-                        <option value="hotels">Hotels</option>
-                        <option value="restaurants">Restaurants</option>
-                        <option value="bars">Bars</option>
-                    </optgroup>
-                    <optgroup
-                        label="Openbare diensten"
-                        data-parent="openbare_diensten"
-                    >
-                        <option value="bibliotheken">Bibliotheken</option>
-                        <option value="scholen">Scholen</option>
-                        <option value="politie">Politie</option>
-                    </optgroup>
-                    <optgroup label="Sport en Spel" data-parent="sport_spel">
-                        <option value="sportaccommodaties"
-                            >Sportaccommodaties</option
-                        >
-                        <option value="zwembaden">Zwembaden</option>
-                    </optgroup>
-                    <optgroup label="Vervoer" data-parent="vervoer">
-                        <option value="parkeergarages">Parkeergarages</option>
-                        <option value="treinstations">Treinstations</option>
-                    </optgroup>
-                    <optgroup label="Winkelen" data-parent="winkelen">
-                        <option value="supermarkten">Supermarkten</option>
-                        <option value="warenhuizen">Warenhuizen</option>
-                    </optgroup>
+                    <option value="" disabled selected>Kies een subcategorie...</option>
+                    <option value="bioscopen" data-parent="cultuur_kunst">Bioscopen</option>
+                    <option value="galleries" data-parent="cultuur_kunst">Galleries</option>
+                    <option value="musea" data-parent="cultuur_kunst">Musea</option>
+                    <option value="theaters" data-parent="cultuur_kunst">Theaters</option>
+
+                    <option value="apotheken" data-parent="gezondheid_zorg">Apotheken</option>
+                    <option value="huisartsen" data-parent="gezondheid_zorg">Huisartsen</option>
+                    <option value="ziekenhuizen" data-parent="gezondheid_zorg">Ziekenhuizen</option>
+
+                    <option value="hotels" data-parent="horeca_toerisme">Hotels</option>
+                    <option value="restaurants" data-parent="horeca_toerisme">Restaurants</option>
+                    <option value="bars" data-parent="horeca_toerisme">Bars</option>
+
+                    <option value="bibliotheken" data-parent="openbare_diensten">Bibliotheken</option>
+                    <option value="scholen" data-parent="openbare_diensten">Scholen</option>
+                    <option value="politie" data-parent="openbare_diensten">Politie</option>
+
+                    <option value="sportaccommodaties" data-parent="sport_spel">Sportaccommodaties</option>
+                    <option value="zwembaden" data-parent="sport_spel">Zwembaden</option>
+
+                    <option value="parkeergarages" data-parent="vervoer">Parkeergarages</option>
+                    <option value="treinstations" data-parent="vervoer">Treinstations</option>
+                    
+                    <option value="supermarkten" data-parent="winkelen">Supermarkten</option>
+                    <option value="warenhuizen" data-parent="winkelen">Warenhuizen</option>
                 </select>
                 <div class="select-icon">
                     <svg
@@ -385,4 +361,30 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
     }
 </style>
 
-<script></script>
+<script>
+    //@ts-nocheck
+     const hoofdSelect = document.getElementById("hoofdcategorie")
+     const subSelect = document.getElementById("subcategorie")
+     const subOptions = subSelect.querySelectorAll("option[data-parent]")
+
+    function updateSubcategorieen() {
+        const gekozenHoofdCategorie = hoofdSelect.value;
+
+        subSelect.value = "";
+
+        subOptions.forEach((option) => {
+            const isActiveOption = option.dataset.parent === gekozenHoofdCategorie;
+
+            option.hidden = !isActiveOption;
+            option.disabled = !isActiveOption;
+        });
+    }
+
+    subOptions.forEach((option) => {
+        option.hidden = true;
+        option.disabled = true;
+    });
+
+    hoofdSelect.addEventListener('change', updateSubcategorieen);
+
+</script>
