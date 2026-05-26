@@ -2,7 +2,8 @@
   color-scheme: light dark;
 
     /* Colors*/
-  --color-background-main: light-dark(#fff8f6, black);
+  --color-background-main: light-dark(#fff, black);
+  --color-background-secondairy: light-dark(#FFF0EE, black);
   --color-accent-1: light-dark(#ec0000, yellow);
 
   --color-border: light-dark(#000, white);
@@ -12,46 +13,7 @@
 
   --color-btn-primary-bg: light-dark(#fffdff, black);
   --color-btn-primary-content: light-dark(#000, white);
-  --color-btn-primary-bg-active: light-dark(#ec0000, yellow);
-
-
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-
 
   /* Typography */
   --font-family-base: "Amsterdam Sans", sans-serif;
@@ -85,6 +47,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  
 }
 
 body {
