@@ -42,11 +42,28 @@ import Header from '../components/Header.astro';
 	</body>
 </html>
 
+<style is:global>
+	html,
+	body {
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+
+	body {
+		display: flex;
+		flex-direction: column;
+	}
+</style>
+
 <style>
 	main {
-		height: 89.5vh;
+		flex: 1;
 		position: relative;
 		overflow: hidden;
+		display: flex;
+		flex-direction: column;
 	}
 </style>
 
