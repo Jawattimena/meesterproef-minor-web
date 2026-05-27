@@ -385,6 +385,15 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
         option.disabled = true;
     });
 
-    hoofdSelect.addEventListener('change', updateSubcategorieen);
+    hoofdSelect.addEventListener("change", updateSubcategorieen);
+
+    subSelect.addEventListener("change", () => {
+        if (subSelect.value === "restaurants") {
+            window.dispatchEvent(new CustomEvent("filter:restaurants"));
+        }
+        else {
+            window.dispatchEvent(new CustomEvent("filter:restaurants:hide"));
+        }
+    });
 
 </script>

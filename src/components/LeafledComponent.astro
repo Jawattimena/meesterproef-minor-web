@@ -6,26 +6,26 @@ const baseUrl = "https://api.data.amsterdam.nl/";
 let geojson = null;
 let schoolGeojson = null;
 
-try {
-    const endPoint =
-        "v1/horeca/v1/exploitatievergunning/?zaakCategorie=Caf%C3%A9&_pageSize=10&_format=geojson";
-    const url = baseUrl + endPoint;
-    const response = await fetch(url, {
-        headers: {
-            "X-Api-Key": apiKey,
-        },
-    });
+// try {
+//     const endPoint =
+//         "v1/horeca/v1/exploitatievergunning/?zaakCategorie=Caf%C3%A9&_pageSize=10&_format=geojson";
+//     const url = baseUrl + endPoint;
+//     const response = await fetch(url, {
+//         headers: {
+//             "X-Api-Key": apiKey,
+//         },
+//     });
 
-    if (!response.ok) {
-        console.error(
-            `Amsterdam API fout: ${response.status} ${response.statusText}`,
-        );
-    } else {
-        geojson = await response.json();
-    }
-} catch (err) {
-    console.error("Kon cafés niet ophalen:", err);
-}
+//     if (!response.ok) {
+//         console.error(
+//             `Amsterdam API fout: ${response.status} ${response.statusText}`,
+//         );
+//     } else {
+//         geojson = await response.json();
+//     }
+// } catch (err) {
+//     console.error("Kon cafés niet ophalen:", err);
+// }
 
 try {
     const endPoint =
@@ -367,8 +367,8 @@ window.addEventListener("load", function () {
         popupAnchor: [0, -42],
     });
 
-    if (geojson) {
-        L.geoJSON(geojson, {
+    function addRestaurantsMarkers(geojson) {
+       restaurantLayer = L.geoJSON(geojson, {
             pointToLayer(feature, latlng) {
                 return L.marker(latlng, { icon: defaultIcon });
             },
@@ -390,6 +390,41 @@ window.addEventListener("load", function () {
             },
         }).addTo(map);
     }
+
+    let restaurantsLoaded = false
+    let restaurantLayer = null
+
+    async function fetchRestaurants() {
+        if (restaurantsLoaded) return
+
+        restaurantsLoaded = true
+
+        const response = await fetch("/api/restaurants")
+
+        if (!response.ok) {
+            console.error("Kon restaurants niet ophalen")
+            return;
+        }
+
+        const data = await response.json()
+        addRestaurantsMarkers(data)
+    }
+
+    function hideRestaurants() {
+        if (!restaurantLayer) return
+
+        map.removeLayer(restaurantLayer)
+        restaurantLayer = null
+        restaurantsLoaded = false
+    }
+
+    window.addEventListener("filter:restaurants", () => {
+        fetchRestaurants()
+    });
+
+    window.addEventListener("filter:restaurants:hide", () => {
+        hideRestaurants()
+    });
 
     const defaultIconSchool = L.divIcon({
         className: "am-marker",
