@@ -190,144 +190,109 @@ const checkIconSvg = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none
       <path d="M5 10.5L8.5 14L15 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`;
 
-// SVG print-icoon
-const printIconSvg = `<svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M13 4H4V1H13V4ZM13 8.5C13 8.22 13.22 8 13.5 8C13.78 8 14 8.22 14 8.5C14 8.78 13.78 9 13.5 9C13.22 9 13 8.78 13 8.5ZM11 13H6V10H11V13ZM13 3H4C3.45 3 3 3.45 3 4V9C3 9.55 3.45 10 4 10H5V14H12V10H13C13.55 10 14 9.55 14 9V4C14 3.45 13.55 3 13 3Z" fill="#2a1613"/>
-    </svg>`;
+// SVG print-icoon (from Figma 121:1225)
+const printIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Shape">
+<path d="M6.175 2.46753H12.825V3.94805H6.175V2.46753Z" fill="currentColor"/>
+<path d="M15.2 9.49506C15.7247 9.49506 16.15 9.05316 16.15 8.50805C16.15 7.96293 15.7247 7.52103 15.2 7.52103C14.6753 7.52103 14.25 7.96293 14.25 8.50805C14.25 9.05316 14.6753 9.49506 15.2 9.49506Z" fill="currentColor"/>
+<path d="M10.7754 13.0779H6.65V14.5584H10.7754V13.0779Z" fill="currentColor"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15.675 0V4.93506H19V15.2987H14.9502L13.3689 19H3.8L3.89896 15.2987H0V4.93506H3.325V0H15.675ZM14.25 4.93506H4.75V1.48052H14.25V4.93506ZM17.1 6.90909H1.9V13.3247H3.95174L4.0375 10.1169H14.9625L15.1282 13.3247H17.1V6.90909ZM5.4625 11.5974H13.5375L13.775 14.2845L11.0532 16.3795L12.0365 17.5269H5.225L5.4625 11.5974Z" fill="currentColor"/>
+</g>
+</svg>`;
 
-// SVG deel-icoon
-const shareIconSvg = `<svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 11.08C11.52 11.08 11.09 11.27 10.76 11.57L5.91 8.74C5.94 8.59 5.96 8.44 5.96 8.28C5.96 8.12 5.94 7.97 5.91 7.82L10.71 5.01C11.05 5.33 11.5 5.52 12 5.52C13.1 5.52 14 4.62 14 3.52C14 2.42 13.1 1.52 12 1.52C10.9 1.52 10 2.42 10 3.52C10 3.68 10.02 3.83 10.05 3.98L5.25 6.79C4.91 6.47 4.46 6.28 3.96 6.28C2.86 6.28 1.96 7.18 1.96 8.28C1.96 9.38 2.86 10.28 3.96 10.28C4.46 10.28 4.91 10.09 5.25 9.77L10.1 12.61C10.07 12.74 10.05 12.88 10.05 13.02C10.05 14.09 10.93 14.96 12 14.96C13.07 14.96 13.95 14.09 13.95 13.02C13.95 11.95 13.07 11.08 12 11.08Z" fill="#2a1613"/>
-    </svg>`;
+// SVG deel-icoon (from Figma 121:1274)
+const shareIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Shape">
+<path d="M13.2929 6.62132L10.5 3.82841V13.4143H8.5V3.82844L5.70712 6.62132L4.29291 5.20711L9.50001 0L14.7071 5.20711L13.2929 6.62132Z" fill="currentColor"/>
+<path d="M19 11V17C19 18.1046 18.1046 19 17 19H2C0.89543 19 0 18.1046 0 17V11H2V17H17V11H19Z" fill="currentColor"/>
+</g>
+</svg>`;
 
-function buildPopupHtml(p) {
-    const isSchool = p.accommodatieId !== undefined;
-    const isBagObject = p.gebruiksdoel !== undefined;
-
-    let naam = p.zaaknaam ?? "Onbekende locatie";
-    if (isSchool) {
-        naam = p.juridischEigenaar ?? "Onbekende school";
-    } else if (isBagObject) {
-        const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? "";
-        let typeNaam = "Overig gebouw";
-        if (omschrijving.includes("winkelfunctie"))
-            typeNaam = "Winkel / Supermarkt";
-        else if (omschrijving.includes("gezondheidszorg"))
-            typeNaam = "Gezondheidszorg Locatie";
-        else if (omschrijving.includes("logiesfunctie"))
-            typeNaam = "Hotel / Logies";
-        else if (omschrijving.includes("bijeenkomst"))
-            typeNaam = "Bijeenkomst / Cultuur";
-        else if (omschrijving.includes("sportfunctie"))
-            typeNaam = "Sport & Spel";
-        naam = typeNaam;
-    }
-
-    let adres = p.adres ?? "";
-    let postcode = p.postcode ?? "";
-
-    if (isSchool || isBagObject) {
-        const toevoeging = p.adresHuisnummertoevoeging
-            ? ` ${p.adresHuisnummertoevoeging}`
-            : "";
-        const letter = p.adresHuisletter ? ` ${p.adresHuisletter}` : "";
-        adres = `${p.adresStraat ?? ""} ${p.adresHuisnummer ?? ""
-            }${letter}${toevoeging}`.trim();
-        postcode = p.adresPostcode ?? p.postcode ?? "";
-    }
-
-    let soort = p.zaakSpecificatie ?? p.zaakCategorie ?? "";
-    if (isSchool) {
-        soort = `School (${p.bestemming ?? "Onbekend"})`;
-    } else if (isBagObject) {
-        const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? "";
-        soort = `BAG (${omschrijving.charAt(0).toUpperCase() + omschrijving.slice(1)
-            })`;
-    }
-
-    const adresVolledig = [adres, postcode].filter(Boolean).join(", ");
-
-    const openZoDo =
-        p.openingstijdenZoDoVan && p.openingstijdenZoDoTot
-            ? `Zondag t/m donderdag: ${p.openingstijdenZoDoVan}  ${p.openingstijdenZoDoTot}`
-            : null;
-    const openVrZa =
-        p.openingstijdenVrZaVan && p.openingstijdenVrZaTot
-            ? `Vrijdag en zaterdag: ${p.openingstijdenVrZaVan} - ${p.openingstijdenVrZaTot}`
-            : null;
-
-    const items = [
-        soort
-            ? {
-                label: isSchool
-                    ? "Type bestemming"
-                    : isBagObject
-                        ? "Gebruiksdoel"
-                        : "Type horeca",
-                desc: soort,
+// Helper function to return SVG HTML for other buildings based on description and active state
+function getOtherMarkerHtml(omschrijving, isActive) {
+    let markerHtml = "";
+    if (omschrijving.includes("gezondheidszorg")) {
+        if (isActive) {
+            markerHtml = `<svg width="22" height="22" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 0H4.5V4H0V19H19V4H14.5V0ZM12.5 4V2H6.5V4H12.5ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+                </svg>`;
+        } else {
+            markerHtml = `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+                </svg>`;
+        }
+    } else if (omschrijving.includes("sportfunctie")) {
+        if (isActive) {
+            markerHtml = `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H10.25V4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V16H0V13.25H1C3.8995 13.25 6.25 10.8995 6.25 8C6.25 5.1005 3.8995 2.75 1 2.75H0V0ZM11.75 11.4195V16H22V13.25H21C18.1005 13.25 15.75 10.8995 15.75 8C15.75 5.1005 18.1005 2.75 21 2.75H22V0H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195ZM11.75 6.14538C12.483 6.44207 13 7.16066 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM0 4.25V11.75H1C3.07107 11.75 4.75 10.0711 4.75 8C4.75 5.92893 3.07107 4.25 1 4.25H0ZM21 4.25H22V11.75H21C18.9289 11.75 17.25 10.0711 17.25 8C17.25 5.92893 18.9289 4.25 21 4.25Z" fill="currentColor"/>
+                </svg>`;
+        } else {
+            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
+                </svg>`;
+        }
+    } else if (omschrijving.includes("logiesfunctie")) {
+        if (isActive) {
+            markerHtml = `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 4.96774V2.51886H10.6195V0H5.35076V2.52885H2.52151V4.97774H0V22H16V4.96774H13.4487ZM6.70269 9.09998H4V11.8027H6.70269V9.09998ZM9.29731 9.09998H12V11.8027H9.29731V9.09998ZM12 14.5054H9.29731V17.2081H12V14.5054ZM5 14.5054C4.44772 14.5054 4 14.9531 4 15.5054V19.9108H6.70269V15.5054C6.70269 14.9531 6.25498 14.5054 5.70269 14.5054H5Z" fill="currentColor"/>
+                </svg>`;
+        } else {
+            markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                    <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
+                    <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
+                    <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
+                </svg>`;
+        }
+    } else if (omschrijving.includes("bijeenkomst")) {
+        if (isActive) {
+            markerHtml = `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.31818V0H0V16H22V5.4L16.2857 2L12 4.31818ZM3.25 3.5H5.25V5.5H3.25V3.5ZM5.25 7H3.25V9H5.25V7ZM13.25 7H15.25V9H13.25V7ZM5.25 10.5H3.25V12.5H5.25V10.5ZM13.25 10.5H15.25V12.5H13.25V10.5ZM8.75 3.5H6.75V5.5H8.75V3.5ZM6.75 7H8.75V9H6.75V7ZM18.75 7H16.75V9H18.75V7ZM6.75 10.5H8.75V12.5H6.75V10.5ZM18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+                </svg>`;
+        } else {
+            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                    <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
+                    <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
+                    <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
+                    <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
+                    <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
+                    <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
+                    <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
+                    <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
+                    <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
+                    <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
+                </svg>`;
+        }
+    } else {
+        if (omschrijving.includes("winkelfunctie")) {
+            markerHtml = isActive 
+                ? `<span style="font-size:20px;line-height:1;">🛍️</span>`
+                : `<span style="font-size:16px;line-height:1;">🛍️</span>`;
+        } else {
+            if (isActive) {
+                markerHtml = `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 22V0H0V22H16ZM4 4H7V7H4V4ZM7 9H4V12H7V9ZM4 14H7V17H4V14ZM12 4H9V7H12V4ZM9 9H12V12H9V9ZM12 14H9V17H12V14Z" fill="currentColor"/>
+                    </svg>`;
+            } else {
+                markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+                        <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
+                        <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
+                        <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
+                        <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
+                        <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
+                        <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
+                    </svg>`;
             }
-            : null,
-        isBagObject && p.oppervlakte
-            ? { label: "Oppervlakte", desc: `${p.oppervlakte} m²` }
-            : null,
-        isBagObject && p.statusOmschrijving
-            ? { label: "Status", desc: p.statusOmschrijving }
-            : null,
-        openZoDo ? { label: "Openingstijden", desc: openZoDo } : null,
-        openVrZa
-            ? { label: "Openingstijden weekend", desc: openVrZa }
-            : null,
-    ].filter(Boolean);
-
-    const itemsHtml = items
-        .map(
-            (item) => `
-            <div class="am-popup__item">
-                <div class="am-popup__check">${checkIconSvg}</div>
-                <div class="am-popup__item-body">
-                    <p class="am-popup__item-label">${item.label}</p>
-                    <p class="am-popup__item-desc">${item.desc}</p>
-                </div>
-            </div>
-        `,
-        )
-        .join("");
-
-    return `
-            <div class="am-popup">
-                <div class="am-popup__header">
-                    <div class="am-popup__header-content">
-                        <h2 class="am-popup__title">${naam}</h2>
-                        <p class="am-popup__address">${adresVolledig}</p>
-                    </div>
-                    <button class="am-popup__close" onclick="window.amClosePopup()">×</button>
-                </div>
-                <div class="am-popup__body">
-                    ${itemsHtml}
-                </div>
-                <div class="am-popup__footer">
-                    <button class="am-popup__btn" onclick="window.print()">
-                        ${printIconSvg}
-                        <span>Print</span>
-                    </button>
-                    <button class="am-popup__btn" onclick="navigator.share ? navigator.share({ title: '${naam.replace(
-        /'/g,
-        "\\'",
-    )}', text: '${adresVolledig.replace(
-        /'/g,
-        "\\'",
-    )}' }) : alert('${adresVolledig.replace(/'/g, "\\'")}')">
-                        ${shareIconSvg}
-                        <span>Deel</span>
-                    </button>
-                </div>
-            </div>
-        `;
+        }
+    }
+    return markerHtml;
 }
 
 window.addEventListener("load", function () {
     const amsterdamBounds = L.latLngBounds(
-        [52.278, 4.728],
+        [52.278, 4.550], // Shifted further left (west) to allow panning western areas into view
         [52.431, 5.079],
     );
 
@@ -354,7 +319,7 @@ window.addEventListener("load", function () {
     const defaultIcon = L.divIcon({
         className: "am-marker",
         html: `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.09917C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.099917C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
             </svg>`,
         iconSize: [32, 32],
         iconAnchor: [16, 32],
@@ -371,30 +336,6 @@ window.addEventListener("load", function () {
         iconAnchor: [20, 40],
         popupAnchor: [0, -42],
     });
-
-    if (geojson) {
-        L.geoJSON(geojson, {
-            pointToLayer(feature, latlng) {
-                return L.marker(latlng, { icon: defaultIcon });
-            },
-            onEachFeature(feature, layer) {
-                layer.bindPopup(buildPopupHtml(feature.properties), {
-                    className: "am-popup-wrapper",
-                    closeButton: false,
-                    autoPanPaddingTopLeft: [10, 10],
-                    autoPanPaddingBottomRight: [10, 10],
-                });
-
-                // Wissel naar actief icoon bij openen popup
-                layer.on("popupopen", function () {
-                    layer.setIcon(activeIcon);
-                });
-                layer.on("popupclose", function () {
-                    layer.setIcon(defaultIcon);
-                });
-            },
-        }).addTo(map);
-    }
 
     const defaultIconSchool = L.divIcon({
         className: "am-marker",
@@ -417,25 +358,237 @@ window.addEventListener("load", function () {
         popupAnchor: [0, -42],
     });
 
+    // Active marker state management
+    let activeMarker = null;
+    let activeMarkerType = null; // 'cafe', 'school', 'other'
+    let activeMarkerOmschrijving = null;
+
+    function resetActiveMarker() {
+        if (activeMarker) {
+            if (activeMarkerType === 'cafe') {
+                activeMarker.setIcon(defaultIcon);
+            } else if (activeMarkerType === 'school') {
+                activeMarker.setIcon(defaultIconSchool);
+            } else if (activeMarkerType === 'other') {
+                const markerHtml = getOtherMarkerHtml(activeMarkerOmschrijving || "", false);
+                const defaultIconOther = L.divIcon({
+                    className: "am-marker",
+                    html: markerHtml,
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -34],
+                });
+                activeMarker.setIcon(defaultIconOther);
+            }
+            activeMarker = null;
+            activeMarkerType = null;
+            activeMarkerOmschrijving = null;
+        }
+    }
+
+    function setActiveMarker(layer, type, omschrijving = null) {
+        resetActiveMarker();
+        activeMarker = layer;
+        activeMarkerType = type;
+        activeMarkerOmschrijving = omschrijving;
+
+        if (type === 'cafe') {
+            layer.setIcon(activeIcon);
+        } else if (type === 'school') {
+            layer.setIcon(activeIconSchool);
+        } else if (type === 'other') {
+            const markerHtml = getOtherMarkerHtml(omschrijving || "", true);
+            const activeIconOther = L.divIcon({
+                className: "am-marker am-marker--active",
+                html: markerHtml,
+                iconSize: [40, 40],
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -42],
+            });
+            layer.setIcon(activeIconOther);
+        }
+    }
+
+    // Open side popover panel with location details
+    function openPopoverWithDetails(p, isSchool, isBagObject) {
+        const popover = document.getElementById("map-popover");
+        if (!popover) return;
+
+        let naam = p.zaaknaam ?? "Onbekende locatie";
+        if (isSchool) {
+            naam = p.juridischEigenaar ?? "Onbekende school";
+        } else if (isBagObject) {
+            const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? "";
+            let typeNaam = "Overig gebouw";
+            if (omschrijving.includes("winkelfunctie"))
+                typeNaam = "Winkel / Supermarkt";
+            else if (omschrijving.includes("gezondheidszorg"))
+                typeNaam = "Gezondheidszorg Locatie";
+            else if (omschrijving.includes("logiesfunctie"))
+                typeNaam = "Hotel / Logies";
+            else if (omschrijving.includes("bijeenkomst"))
+                typeNaam = "Bijeenkomst / Cultuur";
+            else if (omschrijving.includes("sportfunctie"))
+                typeNaam = "Sport & Spel";
+            naam = typeNaam;
+        }
+
+        let adres = p.adres ?? "";
+        let postcode = p.postcode ?? "";
+
+        if (isSchool || isBagObject) {
+            const toevoeging = p.adresHuisnummertoevoeging
+                ? ` ${p.adresHuisnummertoevoeging}`
+                : "";
+            const letter = p.adresHuisletter ? ` ${p.adresHuisletter}` : "";
+            adres = `${p.adresStraat ?? ""} ${p.adresHuisnummer ?? ""}${letter}${toevoeging}`.trim();
+            postcode = p.adresPostcode ?? p.postcode ?? "";
+        }
+
+        let soort = p.zaakSpecificatie ?? p.zaakCategorie ?? "";
+        if (isSchool) {
+            soort = `School (${p.bestemming ?? "Onbekend"})`;
+        } else if (isBagObject) {
+            const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? "";
+            soort = `BAG (${omschrijving.charAt(0).toUpperCase() + omschrijving.slice(1)})`;
+        }
+
+        const adresVolledig = [adres, postcode].filter(Boolean).join(", ");
+
+        const openZoDo =
+            p.openingstijdenZoDoVan && p.openingstijdenZoDoTot
+                ? `Zondag t/m donderdag: ${p.openingstijdenZoDoVan} - ${p.openingstijdenZoDoTot}`
+                : null;
+        const openVrZa =
+            p.openingstijdenVrZaVan && p.openingstijdenVrZaTot
+                ? `Vrijdag en zaterdag: ${p.openingstijdenVrZaVan} - ${p.openingstijdenVrZaTot}`
+                : null;
+
+        const items = [
+            soort
+                ? {
+                    label: isSchool
+                        ? "Type bestemming"
+                        : isBagObject
+                            ? "Gebruiksdoel"
+                            : "Type horeca",
+                    desc: soort,
+                }
+                : null,
+            isBagObject && p.oppervlakte
+                ? { label: "Oppervlakte", desc: `${p.oppervlakte} m²` }
+                : null,
+            isBagObject && p.statusOmschrijving
+                ? { label: "Status", desc: p.statusOmschrijving }
+                : null,
+            openZoDo ? { label: "Openingstijden", desc: openZoDo } : null,
+            openVrZa
+                ? { label: "Openingstijden weekend", desc: openVrZa }
+                : null,
+        ].filter(Boolean);
+
+        const itemsHtml = items
+            .map(
+                (item) => `
+                <div class="am-popup__item">
+                    <div class="am-popup__check">${checkIconSvg}</div>
+                    <div class="am-popup__item-body">
+                        <p class="am-popup__item-label">${item.label}</p>
+                        <p class="am-popup__item-desc">${item.desc}</p>
+                    </div>
+                </div>
+            `,
+            )
+            .join("");
+
+        // Inject details into Popover elements
+        const titleEl = document.getElementById("popover-title");
+        const addressEl = document.getElementById("popover-address");
+        const bodyEl = document.getElementById("popover-body-content");
+        const footerEl = document.getElementById("popover-footer-actions");
+
+        if (titleEl) titleEl.textContent = naam;
+        if (addressEl) addressEl.textContent = adresVolledig;
+        if (bodyEl) bodyEl.innerHTML = itemsHtml;
+        
+        if (footerEl) {
+            footerEl.innerHTML = `
+                <button class="am-popup__btn" id="popover-btn-print">
+                    ${printIconSvg}
+                    <span>Print</span>
+                </button>
+                <button class="am-popup__btn" id="popover-btn-share">
+                    ${shareIconSvg}
+                    <span>Deel</span>
+                </button>
+            `;
+
+            // Attach listeners to actions inside the popover
+            document.getElementById("popover-btn-print")?.addEventListener("click", () => {
+                window.print();
+            });
+
+            document.getElementById("popover-btn-share")?.addEventListener("click", () => {
+                if (navigator.share) {
+                    navigator.share({ title: naam, text: adresVolledig });
+                } else {
+                    alert(adresVolledig);
+                }
+            });
+        }
+
+        // Show popover
+        popover.classList.add("is-open");
+        popover.setAttribute("aria-hidden", "false");
+    }
+
+    function closePopover() {
+        const popover = document.getElementById("map-popover");
+        if (popover) {
+            popover.classList.remove("is-open");
+            popover.setAttribute("aria-hidden", "true");
+        }
+        resetActiveMarker();
+    }
+
+    // Set up the close button listener
+    const closeBtn = document.getElementById("popover-close-btn");
+    if (closeBtn) {
+        closeBtn.addEventListener("click", closePopover);
+    }
+
+    // Close popover when clicking map background
+    map.on("click", function () {
+        closePopover();
+    });
+
+    if (geojson) {
+        L.geoJSON(geojson, {
+            pointToLayer(feature, latlng) {
+                return L.marker(latlng, { icon: defaultIcon });
+            },
+            onEachFeature(feature, layer) {
+                layer.on("click", function (e) {
+                    L.DomEvent.stopPropagation(e); // Prevent map click from closing immediately
+                    setActiveMarker(layer, 'cafe');
+                    openPopoverWithDetails(feature.properties, false, false);
+                    map.panTo(layer.getLatLng()); // Center active marker
+                });
+            },
+        }).addTo(map);
+    }
+
     if (schoolGeojson) {
         L.geoJSON(schoolGeojson, {
             pointToLayer(feature, latlng) {
                 return L.marker(latlng, { icon: defaultIconSchool });
             },
             onEachFeature(feature, layer) {
-                layer.bindPopup(buildPopupHtml(feature.properties), {
-                    className: "am-popup-wrapper",
-                    closeButton: false,
-                    autoPanPaddingTopLeft: [10, 10],
-                    autoPanPaddingBottomRight: [10, 10],
-                });
-
-                // Wissel naar actief icoon bij openen popup
-                layer.on("popupopen", function () {
-                    layer.setIcon(activeIconSchool);
-                });
-                layer.on("popupclose", function () {
-                    layer.setIcon(defaultIconSchool);
+                layer.on("click", function (e) {
+                    L.DomEvent.stopPropagation(e);
+                    setActiveMarker(layer, 'school');
+                    openPopoverWithDetails(feature.properties, true, false);
+                    map.panTo(layer.getLatLng()); // Center active marker
                 });
             },
         }).addTo(map);
@@ -447,58 +600,7 @@ window.addEventListener("load", function () {
                 const omschrijving =
                     feature.properties.gebruiksdoel?.[0]?.omschrijving ??
                     "";
-                let emoji = "🏢";
-                let markerHtml = "";
-
-                if (omschrijving.includes("gezondheidszorg")) {
-                    // Use outline MedicalKit SVG from Figma
-                    markerHtml = `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
-                        </svg>`;
-                } else if (omschrijving.includes("sportfunctie")) {
-                    // Use outline SportsField SVG from Figma
-                    markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
-                        </svg>`;
-                } else if (omschrijving.includes("logiesfunctie")) {
-                    // Use outline HouseCanal SVG from Figma
-                    markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                            <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
-                            <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
-                            <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
-                        </svg>`;
-                } else if (omschrijving.includes("bijeenkomst")) {
-                    // Use outline Buildings SVG from Figma
-                    markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                            <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
-                            <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
-                            <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
-                            <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
-                            <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
-                            <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
-                            <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
-                            <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
-                            <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
-                            <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
-                        </svg>`;
-                } else {
-                    if (omschrijving.includes("winkelfunctie")) {
-                        markerHtml = `<span style="font-size:16px;line-height:1;">🛍️</span>`;
-                    } else {
-                        // Use outline Building SVG from Figma
-                        markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                                <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
-                                <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
-                                <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
-                                <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
-                                <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
-                                <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
-                            </svg>`;
-                    }
-                }
+                const markerHtml = getOtherMarkerHtml(omschrijving, false);
 
                 const defaultIconOther = L.divIcon({
                     className: "am-marker",
@@ -511,133 +613,19 @@ window.addEventListener("load", function () {
                 return L.marker(latlng, { icon: defaultIconOther });
             },
             onEachFeature(feature, layer) {
-                layer.bindPopup(buildPopupHtml(feature.properties), {
-                    className: "am-popup-wrapper",
-                    closeButton: false,
-                    autoPanPaddingTopLeft: [10, 10],
-                    autoPanPaddingBottomRight: [10, 10],
-                });
-
-                layer.on("popupopen", function () {
-                    const omschrijving =
-                        feature.properties.gebruiksdoel?.[0]
-                            ?.omschrijving ?? "";
-                    let emoji = "🏢";
-                    let markerHtml = "";
-
-                    if (omschrijving.includes("gezondheidszorg")) {
-                        // Use filled MedicalKitFill SVG from Figma
-                        markerHtml = `<svg width="22" height="22" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 0H4.5V4H0V19H19V4H14.5V0ZM12.5 4V2H6.5V4H12.5ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
-                            </svg>`;
-                    } else if (omschrijving.includes("sportfunctie")) {
-                        // Use filled SportsFieldFill SVG from Figma
-                        markerHtml = `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H10.25V4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V16H0V13.25H1C3.8995 13.25 6.25 10.8995 6.25 8C6.25 5.1005 3.8995 2.75 1 2.75H0V0ZM11.75 11.4195V16H22V13.25H21C18.1005 13.25 15.75 10.8995 15.75 8C15.75 5.1005 18.1005 2.75 21 2.75H22V0H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195ZM11.75 6.14538C12.483 6.44207 13 7.16066 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM0 4.25V11.75H1C3.07107 11.75 4.75 10.0711 4.75 8C4.75 5.92893 3.07107 4.25 1 4.25H0ZM21 4.25H22V11.75H21C18.9289 11.75 17.25 10.0711 17.25 8C17.25 5.92893 18.9289 4.25 21 4.25Z" fill="currentColor"/>
-                            </svg>`;
-                    } else if (omschrijving.includes("logiesfunctie")) {
-                        // Use filled HouseCanalFill SVG from Figma
-                        markerHtml = `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 4.96774V2.51886H10.6195V0H5.35076V2.52885H2.52151V4.97774H0V22H16V4.96774H13.4487ZM6.70269 9.09998H4V11.8027H6.70269V9.09998ZM9.29731 9.09998H12V11.8027H9.29731V9.09998ZM12 14.5054H9.29731V17.2081H12V14.5054ZM5 14.5054C4.44772 14.5054 4 14.9531 4 15.5054V19.9108H6.70269V15.5054C6.70269 14.9531 6.25498 14.5054 5.70269 14.5054H5Z" fill="currentColor"/>
-                            </svg>`;
-                    } else if (omschrijving.includes("bijeenkomst")) {
-                        // Use filled BuildingsFill SVG from Figma
-                        markerHtml = `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.31818V0H0V16H22V5.4L16.2857 2L12 4.31818ZM3.25 3.5H5.25V5.5H3.25V3.5ZM5.25 7H3.25V9H5.25V7ZM13.25 7H15.25V9H13.25V7ZM5.25 10.5H3.25V12.5H5.25V10.5ZM13.25 10.5H15.25V12.5H13.25V10.5ZM8.75 3.5H6.75V5.5H8.75V3.5ZM6.75 7H8.75V9H6.75V7ZM18.75 7H16.75V9H18.75V7ZM6.75 10.5H8.75V12.5H6.75V10.5ZM18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
-                            </svg>`;
-                    } else {
-                        if (omschrijving.includes("winkelfunctie")) {
-                            markerHtml = `<span style="font-size:20px;line-height:1;">🛍️</span>`;
-                        } else {
-                            // Use filled BuildingFill SVG from Figma
-                            markerHtml = `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 22V0H0V22H16ZM4 4H7V7H4V4ZM7 9H4V12H7V9ZM4 14H7V17H4V14ZM12 4H9V7H12V4ZM9 9H12V12H9V9ZM12 14H9V17H12V14Z" fill="currentColor"/>
-                                </svg>`;
-                        }
-                    }
-
-                    const activeIconOther = L.divIcon({
-                        className: "am-marker am-marker--active",
-                        html: markerHtml,
-                        iconSize: [40, 40],
-                        iconAnchor: [20, 40],
-                        popupAnchor: [0, -42],
-                    });
-                    layer.setIcon(activeIconOther);
-                });
-
-                layer.on("popupclose", function () {
-                    const omschrijving =
-                        feature.properties.gebruiksdoel?.[0]
-                            ?.omschrijving ?? "";
-                    let emoji = "🏢";
-                    let markerHtml = "";
-
-                    if (omschrijving.includes("gezondheidszorg")) {
-                        // Use outline MedicalKit SVG from Figma
-                        markerHtml = `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
-                            </svg>`;
-                    } else if (omschrijving.includes("sportfunctie")) {
-                        // Use outline SportsField SVG from Figma
-                        markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
-                            </svg>`;
-                    } else if (omschrijving.includes("logiesfunctie")) {
-                        // Use outline HouseCanal SVG from Figma
-                        markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                                <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
-                                <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
-                                <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
-                            </svg>`;
-                    } else if (omschrijving.includes("bijeenkomst")) {
-                        // Use outline Buildings SVG from Figma
-                        markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                                <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
-                                <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
-                                <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
-                                <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
-                                <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
-                                <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
-                                <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
-                                <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
-                                <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
-                                <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
-                            </svg>`;
-                    } else {
-                        if (omschrijving.includes("winkelfunctie")) {
-                            markerHtml = `<span style="font-size:16px;line-height:1;">🛍️</span>`;
-                        } else {
-                            // Use outline Building SVG from Figma
-                            markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                                    <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
-                                    <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
-                                    <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
-                                    <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
-                                    <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
-                                    <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
-                                </svg>`;
-                        }
-                    }
-
-                    const defaultIconOther = L.divIcon({
-                        className: "am-marker",
-                        html: markerHtml,
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 32],
-                        popupAnchor: [0, -34],
-                    });
-                    layer.setIcon(defaultIconOther);
+                layer.on("click", function (e) {
+                    L.DomEvent.stopPropagation(e);
+                    const omschrijving = feature.properties.gebruiksdoel?.[0]?.omschrijving ?? "";
+                    setActiveMarker(layer, 'other', omschrijving);
+                    openPopoverWithDetails(feature.properties, false, true);
+                    map.panTo(layer.getLatLng()); // Center active marker
                 });
             },
         }).addTo(map);
     }
 
-    // Sluiten via window zodat inline onclick het kan aanroepen
-    window.amClosePopup = () => map.closePopup();
+    // Exposed to window as general close callback if needed
+    window.amClosePopup = closePopover;
 });
 </script>
 

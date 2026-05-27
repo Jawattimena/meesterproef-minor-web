@@ -1,0 +1,324 @@
+---
+
+---
+
+<aside class="map-popover" id="map-popover" aria-label="Locatiedetails" aria-hidden="true">
+    <div class="popover-inner">
+        <!-- HEADER: Hero visual / Title & Close Button -->
+        <header class="popover-header">
+            <div class="hero-image-placeholder">
+                <!-- Fallback elegant gradient background -->
+                <div class="gradient-overlay"></div>
+                <button type="button" class="btn-close" id="popover-close-btn" aria-label="Sluit detailvenster">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 1.58663L16.5704 0L9.00522 7.49544L1.42957 0L0 1.58663L7.48174 9.00547L0 16.4134L1.42957 18L9.00522 10.5046L16.5704 18L18 16.4134L10.5183 9.00547L18 1.58663Z" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="header-text-container">
+                <h2 id="popover-title" class="popover-title">Selecteer een locatie</h2>
+                <p id="popover-address" class="popover-address">Klik op een marker op de kaart om de details te bekijken.</p>
+            </div>
+        </header>
+
+        <!-- ARTICLE: Primary Details (Accessibility criteria & metadata) -->
+        <article class="popover-body" id="popover-body-content">
+            <!-- Content will be dynamically inserted here -->
+            <div class="popover-placeholder-message">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/>
+                </svg>
+                <p>Kies een marker op de kaart om informatie over de toegankelijkheid te zien.</p>
+            </div>
+        </article>
+
+        <!-- FOOTER: Interactive actions (Print, Share, etc.) -->
+        <footer class="popover-footer" id="popover-footer-actions">
+            <!-- Footer actions will be dynamically updated here -->
+        </footer>
+    </div>
+</aside>
+
+<style>
+    .map-popover {
+        position: absolute;
+        top: 0;
+        left: 320px;
+        width: 360px;
+        height: 100%;
+        z-index: 999; 
+        background-color: var(--color-background-main);
+        border-right: 1px solid var(--color-border);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        
+        
+        transform: translateX(-100%);
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s;
+        visibility: hidden;
+    }
+
+    /* Open state */
+    .map-popover.is-open {
+        transform: translateX(0);
+        visibility: visible;
+    }
+
+    .popover-inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    /* Header & Hero Area */
+    .popover-header {
+        border-bottom: 1px solid var(--color-border);
+        background-color: var(--color-background-secondairy);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .hero-image-placeholder {
+        height: 140px;
+        background: linear-gradient(135deg, var(--color-background-secondairy) 0%, #ffdcd7 100%);
+        position: relative;
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding: 12px;
+        box-sizing: border-box;
+        transition: background 0.3s ease;
+    }
+
+    .gradient-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%);
+        pointer-events: none;
+    }
+
+    .btn-close {
+        background-color: var(--color-background-main);
+        border: 2px solid var(--color-border);
+        border-radius: 0; /* Fully square in Amsterdam Design System style */
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--color-text-main);
+        z-index: 2;
+        transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .btn-close:hover {
+        transform: translateY(-1px);
+        background-color: var(--color-accent-1); /* Red/Accent background on hover */
+        color: var(--color-background-main); /* White cross on hover */
+    }
+
+    .btn-close:active {
+        transform: scale(0.95);
+    }
+
+    .header-text-container {
+        padding: 20px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .popover-title {
+        color: var(--color-text-main);
+        font-family: var(--font-family-base);
+        font-size: 1.5rem;
+        font-weight: 800;
+        line-height: 1.3;
+        margin: 0;
+        letter-spacing: 0.01em;
+    }
+
+    .popover-address {
+        color: var(--color-text-muted);
+        font-family: var(--font-family-base);
+        font-size: 0.95rem;
+        font-weight: var(--font-weight-body-text);
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    /* Body Area (Scrollable detail list) */
+    .popover-body {
+        flex: 1;
+        padding: 24px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        background-color: var(--color-background-main);
+    }
+
+    .popover-placeholder-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 16px;
+        color: var(--color-text-muted);
+        height: 100%;
+        padding: 0 16px;
+    }
+
+    .popover-placeholder-message svg {
+        color: var(--color-accent-1);
+        opacity: 0.7;
+    }
+
+    .popover-placeholder-message p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    /* Dynamic Popup Items inside Popover */
+    :global(.am-popup__item) {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        padding: 12px 14px;
+        border: 1px solid var(--color-border);
+        background-color: var(--color-background-main);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+
+    :global(.am-popup__check) {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        color: var(--color-accent-1);
+    }
+
+    :global(.am-popup__item-body) {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    :global(.am-popup__item-label) {
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-text-muted);
+        margin: 0;
+    }
+
+    :global(.am-popup__item-desc) {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--color-text-main);
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    /* Footer / Actions Area */
+    .popover-footer {
+        border-top: 1px solid var(--color-border);
+        padding: 16px 24px;
+        background-color: var(--color-background-secondairy);
+        display: flex;
+        gap: 12px;
+        box-sizing: border-box;
+    }
+
+    :global(.am-popup__btn) {
+        flex: 1;
+        background-color: var(--color-btn-primary-bg);
+        border: 1px solid var(--color-border);
+        color: var(--color-btn-primary-content);
+        font-family: var(--font-family-base);
+        font-size: 0.9rem;
+        font-weight: 700;
+        padding: 12px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+    }
+
+    :global(.am-popup__btn svg) {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+    }
+
+
+    :global(.am-popup__btn:active) {
+        transform: translateY(0);
+    }
+
+    /* HIGH CONTRAST ACCESSIBILITY MODE SUPPORT */
+    :global(html:has(#contrast-toggle:checked)) .map-popover {
+        border-right: 2px solid var(--color-border);
+        box-shadow: none;
+    }
+
+    :global(html:has(#contrast-toggle:checked)) .hero-image-placeholder {
+        background: var(--color-background-secondairy);
+    }
+
+    :global(html:has(#contrast-toggle:checked)) .btn-close {
+        border: 2px solid var(--color-border);
+        box-shadow: none;
+    }
+
+    :global(html:has(#contrast-toggle:checked)) :global(.am-popup__item) {
+        border: 2px solid var(--color-border);
+    }
+
+    :global(html:has(#contrast-toggle:checked)) :global(.am-popup__btn) {
+        border: 2px solid var(--color-border);
+    }
+
+    :global(html:has(#contrast-toggle:checked)) :global(.am-popup__btn:hover) {
+        background-color: var(--color-accent-1);
+        color: var(--color-background-main);
+        outline: 2px solid var(--color-border);
+    }
+
+    /* RESPONSIVE ADAPTATIONS */
+    @media (max-width: 768px) {
+        .map-popover {
+            width: 100%;
+            left: 0;
+            height: 50%;
+            bottom: 0;
+            top: auto;
+            border-right: none;
+            border-top: 1px solid var(--color-border);
+            transform: translateY(100%);
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .map-popover.is-open {
+            transform: translateY(0);
+        }
+
+        .hero-image-placeholder {
+            height: 100px;
+        }
+    }
+</style>
