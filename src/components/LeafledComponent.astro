@@ -101,7 +101,7 @@ try {
         "sportfunctie",
     ];
     const fetchPromises = categories.map(async (cat) => {
-        const endPoint = `v1/bag/verblijfsobjecten/?_pageSize=10&_format=geojson&gebruiksdoel.omschrijving=${encodeURIComponent(
+        const endPoint = `v1/bag/verblijfsobjecten/?_pageSize=1&_format=geojson&gebruiksdoel.omschrijving=${encodeURIComponent(
             cat,
         )}`;
         const url = baseUrl + endPoint;
@@ -227,7 +227,7 @@ function getOtherMarkerHtml(omschrijving, isActive) {
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H10.25V4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V16H0V13.25H1C3.8995 13.25 6.25 10.8995 6.25 8C6.25 5.1005 3.8995 2.75 1 2.75H0V0ZM11.75 11.4195V16H22V13.25H21C18.1005 13.25 15.75 10.8995 15.75 8C15.75 5.1005 18.1005 2.75 21 2.75H22V0H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195ZM11.75 6.14538C12.483 6.44207 13 7.16066 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM0 4.25V11.75H1C3.07107 11.75 4.75 10.0711 4.75 8C4.75 5.92893 3.07107 4.25 1 4.25H0ZM21 4.25H22V11.75H21C18.9289 11.75 17.25 10.0711 17.25 8C17.25 5.92893 18.9289 4.25 21 4.25Z" fill="currentColor"/>
                 </svg>`;
         } else {
-            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
+            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-background-main); display: block;">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
                 </svg>`;
         }
@@ -302,18 +302,47 @@ window.addEventListener("load", function () {
         minZoom: 12,
     }).setView([52.3676, 4.9041], 13);
 
-    L.tileLayer(
+    const toggle = document.getElementById("contrast-toggle");
+
+    const lightLayer = L.tileLayer(
         "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
         {
             attribution:
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        },
-    ).addTo(map);
+        }
+    );
 
-    // Zorg ervoor dat Leaflet de nieuwe 100% flexbox-hoogte correct berekent
-    setTimeout(() => {
-        map.invalidateSize();
-    }, 100);
+    const darkLayer = L.tileLayer(
+        "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}",
+        {
+            minZoom: 0,
+            maxZoom: 20,
+            attribution:
+                '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            ext: "png",
+        }
+    );
+
+    // Initialiseer met de juiste laag op basis van de toggle status
+    if (toggle && toggle.checked) {
+        darkLayer.addTo(map);
+    } else {
+        lightLayer.addTo(map);
+    }
+
+    if (toggle) {
+        toggle.addEventListener("change", function () {
+            if (toggle.checked) {
+                map.removeLayer(lightLayer);
+                darkLayer.addTo(map);
+            } else {
+                map.removeLayer(darkLayer);
+                lightLayer.addTo(map);
+            }
+        });
+    }
+
+
 
     // Inactief marker-icoon (32px, wit)
     const defaultIcon = L.divIcon({
@@ -666,15 +695,12 @@ window.addEventListener("load", function () {
         color: inherit !important; /* Ensure SVG inherits container color */
     }
 
-    :global(.am-marker:hover) {
-        color: var(--color-primary-container) !important; /* Turn light red on hover interaction */
-        border-color: var(--color-primary-container) !important;
-    }
 
     :global(.am-marker--active) {
         background: var(--color-accent-1) !important;
         border-color: var(--color-border) !important;
         box-shadow: 0 0 0 4px var(--color-background-main) !important;
+        color: var(--color-background-main) !important;
     }
 
     /* ── Popup wrapper (Leaflet-level) ── */
@@ -843,5 +869,32 @@ window.addEventListener("load", function () {
 
     :global(.am-popup__btn:hover) {
         background: var(--color-background-main);
+    }
+
+    /* Leaflet Control Overrides in High Contrast Dark Mode */
+    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-bar) {
+        border-color: var(--color-border) !important;
+    }
+    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-bar a) {
+        background-color: var(--color-background-main) !important;
+        color: var(--color-text-main) !important;
+        border-bottom-color: var(--color-border) !important;
+    }
+    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-bar a:hover) {
+        background-color: var(--color-primary-container) !important;
+        color: var(--color-on-primary-container) !important;
+    }
+    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-bar a.leaflet-disabled) {
+        background-color: #222 !important;
+        color: #555 !important;
+    }
+    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-control-attribution) {
+        background-color: rgba(0, 0, 0, 0.8) !important;
+        color: var(--color-text-muted) !important;
+        border-left: 1px solid var(--color-border) !important;
+        border-top: 1px solid var(--color-border) !important;
+    }
+    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-control-attribution a) {
+        color: var(--color-primary) !important;
     }
 </style>

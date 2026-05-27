@@ -13,7 +13,6 @@
 
   --color-btn-primary-bg: #fffdff;
   --color-btn-primary-content: #000;
-
 }
 
 :root:has(#contrast-toggle:checked) {
