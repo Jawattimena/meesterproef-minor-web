@@ -1,11 +1,19 @@
 ---
 // @ts-nocheck
+import SearchComponent from './SearchComponent.astro';
+
 ---
 
 <header>
-    <a href="/"><img src="/public/icons/gemeenteLogo.svg" alt="" /></a>
-
-    <ul>
+    <div class="logo-section">
+        <a href="/"><img src="/public/icons/gemeenteLogo.svg" alt=""></a>
+    </div>
+    
+    <div class="search-section">
+        <SearchComponent />
+    </div>
+    
+    <ul class="actions-section">
         <li class="changeLang"><a href="/">English site</a></li>
         <li>
             <label for="contrast-toggle" class="contrast-label" aria-label="Toggle hoge contrast modus">
@@ -44,9 +52,39 @@
         background-color: var(--color-on-primary);
         padding: 1rem;
         border-bottom: 1px solid var(--color-on-secondary-container);
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 2rem;
         align-items: center;
+    }
+
+    .logo-section {
+        display: flex;
+        align-items: center;
+    }
+
+    .search-section {
+        display: flex;
+        justify-content: center;
+    }
+
+    .actions-section {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .changeLang {
+        font-family: 'Amsterdam Sans', sans-serif;
+        color: var(--color-primary-container);
+    }
+
+    img, svg {
+        height: 2rem;
+        fill: var(--color-accent-1);
     }
 
     .changeLang {
