@@ -3,7 +3,7 @@
 import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
 ---
 
-<aside class="sidebar">
+<form class="sidebar" onsubmit="event.preventDefault()">
     <div class="sidebar-header">
         <div class="title-container">
             <h1>Filters</h1>
@@ -199,9 +199,9 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
     </div>
 
     <div class="sidebar-footer">
-        <button class="btn-clear">Filters Wissen</button>
+        <button type="reset" class="btn-clear">Filters Wissen</button>
     </div>
-</aside>
+</form>
 
 <style>
     .sidebar {
@@ -385,4 +385,3 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
     }
 </style>
 
-<script></script>

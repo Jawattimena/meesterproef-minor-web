@@ -1,20 +1,43 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-    /* Colors*/
-  --color-background-main: light-dark(#fff, black);
-  --color-background-secondairy: light-dark(#FFF0EE, black);
-  --color-accent-1: light-dark(#ec0000, yellow);
+  /* Colors */
+  --color-background-main: #fff;
+  --color-background-secondairy: #FFF0EE;
+  --color-accent-1: #ec0000;
 
-  --color-border: light-dark(#000, white);
+  --color-border: #000;
 
-  --color-text-main: light-dark(#000, white);
-  --color-text-muted: light-dark(#5f3f39, #cfc9c6);
+  --color-text-main: #000;
+  --color-text-muted: #5f3f39;
 
-  --color-btn-primary-bg: light-dark(#fffdff, black);
-  --color-btn-primary-content: light-dark(#000, white);
-  
+  --color-btn-primary-bg: #fffdff;
+  --color-btn-primary-content: #000;
 
+}
+
+:root:has(#contrast-toggle:checked) {
+  /* High contrast dark mode overrides */
+  --color-background-main: black;
+  --color-background-secondairy: black;
+  --color-accent-1: yellow;
+
+  --color-border: white;
+
+  --color-text-main: white;
+  --color-text-muted: #cfc9c6;
+
+  --color-btn-primary-bg: black;
+  --color-btn-primary-content: white;
+
+  --color-primary: yellow;
+  --color-on-primary: black;
+  --color-primary-container: yellow;
+  --color-on-primary-container: black;
+  --color-surface-container-highest: #333;
+  --color-on-surface: white;
+}
+:root {
   /* Typography */
   --font-family-base: "Amsterdam Sans", sans-serif;
 
@@ -53,6 +76,9 @@
 body {
   color-scheme: light;
   font-family: var(--font-family-base);
+  background-color: var(--color-background-main);
+  color: var(--color-text-main);
+  transition: background-color 0.2s, color 0.2s;
 }
 
 @font-face {
@@ -69,4 +95,16 @@ body {
   font-weight: 800;
   font-style: normal;
   font-display: swap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

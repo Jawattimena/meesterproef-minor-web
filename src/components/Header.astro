@@ -8,8 +8,8 @@
     <ul>
         <li class="changeLang"><a href="/">English site</a></li>
         <li>
-            <a href="/"
-                ><svg
+            <label for="contrast-toggle" class="contrast-label" aria-label="Toggle hoge contrast modus">
+                <svg
                     aria-hidden="true"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -17,9 +17,8 @@
                     ><path
                         clip-rule="evenodd"
                         d="M1 12c0 6.075 4.925 11 11 11s11-4.925 11-11S18.075 1 12 1 1 5.925 1 12m11 9a9 9 0 1 1 0-18z"
-                        fill-rule="evenodd"></path></svg
-                ></a
-            >
+                        fill-rule="evenodd"></path></svg>
+            </label>
         </li>
         <li>
             <a href="/"
@@ -59,6 +58,12 @@
     svg {
         height: 2rem;
         fill: var(--color-accent-1);
+    }
+
+    .contrast-label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
     }
 
     ul {
