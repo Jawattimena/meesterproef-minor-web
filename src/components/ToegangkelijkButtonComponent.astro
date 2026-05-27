@@ -1,0 +1,65 @@
+---
+//@ts-nocheck
+
+const { title, name, value, checked } = Astro.props;
+---
+
+<label class="toegankelijk-button">
+    <input type="checkbox" name={name} value={value} checked={checked} />
+    <span class="icon">
+        <slot />
+    </span>
+    {title}
+</label>
+
+<style>
+    .toegankelijk-button {
+        display: flex;
+        width: 100%;
+        box-sizing: border-box;
+        flex-direction: column;
+        align-items: start;
+        gap: 0.5rem;
+        cursor: pointer;
+        padding: 1rem 0.8rem;
+        border: 2px solid var(--color-border);
+        margin: 0;
+        /* border-radius: 6px; */
+        transition: background 0.2s;
+        font-size: 1.3rem;
+    }
+
+    /* verberg checkbox */
+    .toegankelijk-button input {
+        display: none;
+    }
+
+    /* standaard kleur (black by default) */
+    .toegankelijk-button .icon svg {
+        width: 24px;
+        height: 24px;
+        fill: var(--color-accent-1);
+    }
+
+    /* ALS gechecked → icon turns white */
+    .toegankelijk-button input:checked + .icon svg {
+        fill: var(--color-background-main);
+    }
+
+    .toegankelijk-button input:checked ~ * {
+        color: var(--color-background-main);
+    }
+
+    /* achtergrond rood als checked */
+    .toegankelijk-button input:checked {
+        /* niets hier nodig */
+    }
+
+    /* dit is de belangrijkste regel */
+    .toegankelijk-button:has(input:checked) {
+        background-color: var(--color-accent-1);
+        border: 2px solid var(--color-border);
+        /* border-color: red; */
+        color: var(--color-background-main);
+    }
+</style>

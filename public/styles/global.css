@@ -1,0 +1,110 @@
+:root {
+  color-scheme: light;
+
+  /* Colors */
+  --color-background-main: #fff;
+  --color-background-secondairy: #FFF0EE;
+  --color-accent-1: #ec0000;
+
+  --color-border: #000;
+
+  --color-text-main: #000;
+  --color-text-muted: #5f3f39;
+
+  --color-btn-primary-bg: #fffdff;
+  --color-btn-primary-content: #000;
+
+}
+
+:root:has(#contrast-toggle:checked) {
+  /* High contrast dark mode overrides */
+  --color-background-main: black;
+  --color-background-secondairy: black;
+  --color-accent-1: yellow;
+
+  --color-border: white;
+
+  --color-text-main: white;
+  --color-text-muted: #cfc9c6;
+
+  --color-btn-primary-bg: black;
+  --color-btn-primary-content: white;
+
+  --color-primary: yellow;
+  --color-on-primary: black;
+  --color-primary-container: yellow;
+  --color-on-primary-container: black;
+  --color-surface-container-highest: #333;
+  --color-on-surface: white;
+}
+:root {
+  /* Typography */
+  --font-family-base: "Amsterdam Sans", sans-serif;
+
+  /* Font Sizes */
+  --font-size-h1: clamp(2rem, 3.333vw, 3rem);
+  --font-size-h2: clamp(1.3125rem, 1.736vw, 1.5625rem);
+  --font-size-h3: clamp(1.3125rem, 1.736vw, 1.5625rem);
+  --font-size-header-text: clamp(1.5rem, 3vw, 1.875rem);
+  --font-size-text: clamp(1.125rem, 1.389vw, 1.25rem);
+  --font-size-regular: 1rem;
+  /* 16px */
+  --font-size-small: 0.875rem;
+  /* 14px */
+
+  /* Font Weights */
+  --font-weight-h1: 800;
+  --font-weight-other-headings: 700;
+  --font-weight-body-text: 400;
+
+  /* line heights */
+  --heading-1-line-height: 1.2;
+  --heading-text-line-height: 1.6;
+  --heading-other-line-height: 1.3;
+
+  /* Spacing */
+
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  
+}
+
+body {
+  color-scheme: light;
+  font-family: var(--font-family-base);
+  background-color: var(--color-background-main);
+  color: var(--color-text-main);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+@font-face {
+  font-family: 'Amsterdam Sans';
+  src: url('https://www.amsterdam.nl/views/libs/design-system-assets/font/woff2/AmsterdamSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amsterdam Sans';
+  src: url('https://www.amsterdam.nl/views/libs/design-system-assets/font/woff2/AmsterdamSans-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

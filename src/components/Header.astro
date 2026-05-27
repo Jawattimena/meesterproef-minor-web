@@ -1,0 +1,125 @@
+---
+// @ts-nocheck
+import SearchComponent from './SearchComponent.astro';
+
+---
+
+<header>
+    <div class="logo-section">
+        <a href="/"><img src="/public/icons/gemeenteLogo.svg" alt=""></a>
+    </div>
+    
+    <div class="search-section">
+        <SearchComponent />
+    </div>
+    
+    <ul class="actions-section">
+        <li class="changeLang"><a href="/">English site</a></li>
+        <li>
+            <label for="contrast-toggle" class="contrast-label" aria-label="Toggle hoge contrast modus">
+                <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    ><path
+                        clip-rule="evenodd"
+                        d="M1 12c0 6.075 4.925 11 11 11s11-4.925 11-11S18.075 1 12 1 1 5.925 1 12m11 9a9 9 0 1 1 0-18z"
+                        fill-rule="evenodd"></path></svg>
+            </label>
+        </li>
+        <li>
+            <a href="/"
+                ><svg
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    ><path
+                        d="M19.275 15.89h-6.27l-.73-1.798H18.6l-3.25-8.344h-.05l-3.127 8.091-1.008-2.479L14.076 4h2.6L23 20h-2.15z"
+                    ></path><path
+                        clip-rule="evenodd"
+                        d="M5.68 8.48 1 20h2.412l.972-2.534h5.202L10.558 20h2.502L8.38 8.48zm-.594 7.072 1.872-4.857h.036l1.872 4.857z"
+                        fill-rule="evenodd"></path></svg
+                ></a
+            >
+        </li>
+    </ul>
+</header>
+
+<style>
+    header {
+        background-color: var(--color-on-primary);
+        padding: 1rem;
+        border-bottom: 1px solid var(--color-on-secondary-container);
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .logo-section {
+        display: flex;
+        align-items: center;
+    }
+
+    .search-section {
+        display: flex;
+        justify-content: center;
+    }
+
+    .actions-section {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .changeLang {
+        font-family: 'Amsterdam Sans', sans-serif;
+        color: var(--color-primary-container);
+    }
+
+    img, svg {
+        height: 2rem;
+        fill: var(--color-accent-1);
+    }
+
+    .changeLang {
+        font-family: "Amsterdam Sans", sans-serif;
+        color: var(--color-accent-1);
+    }
+
+    img,
+    svg {
+        height: 2rem;
+        fill: var(--color-accent-1);
+    }
+
+    .contrast-label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    ul {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        color: var(--color-text-main);
+    }
+
+    a {
+        color: var(--color-text-main);
+        text-decoration: none;
+    }
+</style>
