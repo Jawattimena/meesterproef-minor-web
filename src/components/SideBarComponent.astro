@@ -361,14 +361,23 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
 
 <script>
     //@ts-nocheck
-     const hoofdSelect = document.getElementById("hoofdcategorie")
-     const subSelect = document.getElementById("subcategorie")
-     const subOptions = subSelect.querySelectorAll("option[data-parent]")
+    const hoofdSelect = document.getElementById("hoofdcategorie")
+    const subSelect = document.getElementById("subcategorie")
+    const subOptions = subSelect.querySelectorAll("option[data-parent]")
+
+    // Houd bij welke filter momenteel actief is
+    let activeFilter = null;
 
     function updateSubcategorieen() {
         const gekozenHoofdCategorie = hoofdSelect.value;
 
         subSelect.value = "";
+
+        // Verberg de vorige filter als de hoofdcategorie wijzigt
+        if (activeFilter) {
+            window.dispatchEvent(new CustomEvent("filter:hide", { detail: { name: activeFilter } }));
+            activeFilter = null;
+        }
 
         subOptions.forEach((option) => {
             const isActiveOption = option.dataset.parent === gekozenHoofdCategorie;
@@ -383,6 +392,42 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
         option.disabled = true;
     });
 
-    hoofdSelect.addEventListener('change', updateSubcategorieen);
+    hoofdSelect.addEventListener("change", updateSubcategorieen);
 
+    subSelect.addEventListener("change", () => {
+        // Verberg de vorige filter
+        if (activeFilter) {
+            window.dispatchEvent(new CustomEvent("filter:hide", { detail: { name: activeFilter } }));
+        }
+
+        const newFilter = subSelect.value;
+
+        if (newFilter) {
+            // Toon de nieuwe filter
+            window.dispatchEvent(new CustomEvent("filter:show", { detail: { name: newFilter } }));
+            activeFilter = newFilter;
+        } else {
+            activeFilter = null;
+        }
+    });
+
+    // Reset button koppelen aan kaart en UI
+    const clearBtn = document.querySelector(".btn-clear");
+    if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+            // Stuur event om alle marker-lagen op de kaart te verbergen
+            window.dispatchEvent(new CustomEvent("filter:hideAll"));
+            
+            // Reset de select-dropdowns in de UI
+            hoofdSelect.value = "";
+            subSelect.value = "";
+            activeFilter = null;
+            
+            // Verberg alle subcategorie-opties weer
+            subOptions.forEach((option) => {
+                option.hidden = true;
+                option.disabled = true;
+            });
+        });
+    }
 </script>

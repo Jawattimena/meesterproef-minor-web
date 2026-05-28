@@ -52,5 +52,29 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
  **amsterdam api**
  https://api.data.amsterdam.nl/v1/docs/datasets/bag.html
 
+ - Astro Docs - Endpoints / API Routes  
+  Gebruikt voor het maken van de server-side API-route in `src/pages/api/restaurants.js`.  
+  https://docs.astro.build/en/guides/endpoints/
+
+- Gemeente Amsterdam Datapunt API - Horeca  
+  Gebruikt voor het ophalen van horeca-/restaurantdata uit de Amsterdam API.  
+  https://api.data.amsterdam.nl/v1/docs/datasets/horeca.html
+
+- Leaflet Documentation - GeoJSON  
+  Gebruikt voor het tonen van GeoJSON-data als markers op de kaart met `L.geoJSON()`.  
+  https://leafletjs.com/reference#geojson
+
+- Leaflet Documentation - Map `removeLayer()`  
+  Gebruikt om de restaurantlaag weer van de kaart te verwijderen wanneer een andere filter wordt gekozen.  
+  https://leafletjs.com/reference#map-removelayer
+
+- MDN Web Docs - `CustomEvent`  
+  Gebruikt om communicatie tussen de sidebar en de kaartcomponent mogelijk te maken.  
+  https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+
+- MDN Web Docs - `dispatchEvent()`  
+  Gebruikt voor het versturen van custom events zoals `filter:restaurants`.  
+  https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent
+
 # AI Bronnen
 Ik werk aan een Astro/Leaflet kaart met data uit de Amsterdam API. Sommige schoolgebouwen hebben geen bruikbare GeoJSON Point-coördinaten. Ik wil daarom met de PDOK Locatieserver zoeken op adres, huisnummer en postcode. De PDOK response geeft een veld `centroide_ll` terug als tekst in de vorm `POINT(lon lat)`. Hoe kan ik deze string met JavaScript omzetten naar een GeoJSON Point object met numerieke coordinates? Leg vooral uit waarom `.replace('POINT(', '').replace(')', '').split(' ')` wordt gebruikt.
