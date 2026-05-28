@@ -34,10 +34,10 @@
     input {
         flex: 1;
         padding: 8px 12px;
-        border: 1px solid var(--color-on-surface);
-        background: var(--color-on-primary);
+        border: 1px solid var(--color-border);
+        background: var(--color-background-main);
         font-size: var(--font-size-regular);
-        color: var(--color-on-surface);
+        color: var(--color-text-main);
         font-family: inherit;
         box-sizing: border-box;
     }
@@ -49,9 +49,9 @@
 
     button {
         padding: 9px 14px;
-        background: var(--color-primary-container);
-        color: var(--color-on-primary);
-        border: 1px solid var(--color-on-surface);
+        background: var(--color-accent-1);
+        color: var(--color-btn-primary-content);
+        border: 1px solid var(--color-border);
         cursor: pointer;
         font-family: inherit;
         font-weight: 500;
@@ -68,41 +68,43 @@
         top: calc(100% + 4px);
         left: 0;
         right: 0;
-        background: var(--color-on-primary);
-        border: 2px solid var(--color-on-surface);
+        background: var(--color-background-main);
+        /* border: 1px solid var(--color-border); */
         list-style: none;
         margin: 0;
         padding: 0;
-        z-index: 1000;
         border-radius: 4px;
         max-height: 250px;
         overflow-y: auto;
+        z-index: 9999;
     }
 
-    #zoekResultaten li {
+    :global(#zoekResultaten li) {
         padding: 10px 14px;
         cursor: pointer;
-        border-bottom: 1px solid var(--color-on-surface);
+        border-bottom: 2px solid var(--color-border);
+        border-right: 2px solid var(--color-border);
+        border-left: 2px solid var(--color-border);
         display: flex;
         flex-direction: column;
         gap: 2px;
     }
 
-    #zoekResultaten li:last-child {
-        border-bottom: none;
+    :global(#zoekResultaten li:last-child) {
+        border-bottom: 2px solid var(--color-border);
     }
 
-    #zoekResultaten li:hover {
-        background: var(--color-primary-container);
-        color: var(--color-on-primary);
+    :global(#zoekResultaten li:hover) {
+        background: var(--color-accent-1);
+        color: var(--color-btn-primary-content);
     }
 
-    .resultaatNaam {
+    :global(.resultaatNaam) {
         font-size: var(--font-size-regular);
         font-weight: 500;
     }
 
-    .resultaatAdres {
+    :global(.resultaatAdres) {
         font-size: var(--font-size-small, 0.85em);
         opacity: 0.7;
     }
@@ -127,6 +129,10 @@
     const invoerVeld = document.getElementById('zoek');
     const zoekResultaten = document.getElementById('zoekResultaten');
 
+    if (!appId || !searchKey) {
+        console.error('Algolia search werkt niet: PUBLIC_ALGOLIA_APP_ID of PUBLIC_ALGOLIA_SEARCH_KEY is niet ingesteld.');
+    }
+
 
     // ----------------------------------------
     // Luisteren terwijl gebruiker typt
@@ -134,26 +140,27 @@
 
     let wachtTimer = null;
 
-    invoerVeld.addEventListener('input', function() {
+    if (appId && searchKey && invoerVeld) {
+        invoerVeld.addEventListener('input', function() {
+            const zoekwoord = invoerVeld.value.trim();
 
-        const zoekwoord = invoerVeld.value.trim();
+            // Stop vorige timer
+            clearTimeout(wachtTimer);
 
-        // Stop vorige timer
-        clearTimeout(wachtTimer);
+            // Leeg veld? Verberg lijst
+            if (zoekwoord.length === 0) {
+                zoekResultaten.style.display = 'none';
+                return;
+            }
 
-        // Leeg veld? Verberg lijst
-        if (zoekwoord.length === 0) {
-            zoekResultaten.style.display = 'none';
-            return;
-        }
-
-        // Wacht 200ms nadat gebruiker stopt met typen
-        // (zodat we niet bij elke letter een verzoek sturen)
-        wachtTimer = setTimeout(async function() {
-            const resultaten = await zoekInAlgolia(zoekwoord);
-            toonResultaten(resultaten);
-        }, 200);
-    });
+            // Wacht 200ms nadat gebruiker stopt met typen
+            // (zodat we niet bij elke letter een verzoek sturen)
+            wachtTimer = setTimeout(async function() {
+                const resultaten = await zoekInAlgolia(zoekwoord);
+                toonResultaten(resultaten);
+            }, 200);
+        });
+    }
 
 
     // ----------------------------------------
