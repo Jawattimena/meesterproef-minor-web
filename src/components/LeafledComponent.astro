@@ -638,6 +638,13 @@ window.addEventListener("load", function () {
 
     // Sluiten via window zodat inline onclick het kan aanroepen
     window.amClosePopup = () => map.closePopup();
+
+    window.addEventListener('locatieGekozen', function(event) {
+    const lat = event.detail.lat;
+    const lng = event.detail.lng;
+
+    map.setView([lat, lng], 16);
+});
 });
 </script>
 

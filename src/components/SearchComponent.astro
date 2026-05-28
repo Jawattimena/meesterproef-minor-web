@@ -3,7 +3,7 @@
 ---
 
 <search>
-    <form action="./search/">
+    <form action="./search/" onsubmit="return false">
         <label for="zoek">Zoek een locatie</label>
         <input type="search" id="zoek" name="q" placeholder="Zoek een locatie..." autocomplete="off" />
         <button type="submit">Zoeken</button>
@@ -40,7 +40,6 @@
         color: var(--color-on-surface);
         font-family: inherit;
         box-sizing: border-box;
-        /* border-radius: 4px; */
     }
 
     input::placeholder {
@@ -76,6 +75,171 @@
         padding: 0;
         z-index: 1000;
         border-radius: 4px;
+        max-height: 250px;
+        overflow-y: auto;
     }
 
+    #zoekResultaten li {
+        padding: 10px 14px;
+        cursor: pointer;
+        border-bottom: 1px solid var(--color-on-surface);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    #zoekResultaten li:last-child {
+        border-bottom: none;
+    }
+
+    #zoekResultaten li:hover {
+        background: var(--color-primary-container);
+        color: var(--color-on-primary);
+    }
+
+    .resultaatNaam {
+        font-size: var(--font-size-regular);
+        font-weight: 500;
+    }
+
+    .resultaatAdres {
+        font-size: var(--font-size-small, 0.85em);
+        opacity: 0.7;
+    }
 </style>
+
+<script>
+
+    // @ts-nocheck
+    // ----------------------------------------
+    // Algolia verbinding
+    // ----------------------------------------
+
+    const appId = import.meta.env.PUBLIC_ALGOLIA_APP_ID;
+    const searchKey = import.meta.env.PUBLIC_ALGOLIA_SEARCH_KEY;
+    const algoliaUrl = `https://${appId}-dsn.algolia.net/1/indexes/locations/query`;
+
+
+    // ----------------------------------------
+    // HTML elementen ophalen
+    // ----------------------------------------
+
+    const invoerVeld = document.getElementById('zoek');
+    const zoekResultaten = document.getElementById('zoekResultaten');
+
+
+    // ----------------------------------------
+    // Luisteren terwijl gebruiker typt
+    // ----------------------------------------
+
+    let wachtTimer = null;
+
+    invoerVeld.addEventListener('input', function() {
+
+        const zoekwoord = invoerVeld.value.trim();
+
+        // Stop vorige timer
+        clearTimeout(wachtTimer);
+
+        // Leeg veld? Verberg lijst
+        if (zoekwoord.length === 0) {
+            zoekResultaten.style.display = 'none';
+            return;
+        }
+
+        // Wacht 200ms nadat gebruiker stopt met typen
+        // (zodat we niet bij elke letter een verzoek sturen)
+        wachtTimer = setTimeout(async function() {
+            const resultaten = await zoekInAlgolia(zoekwoord);
+            toonResultaten(resultaten);
+        }, 200);
+    });
+
+
+    // ----------------------------------------
+    // Zoeken in Algolia
+    // ----------------------------------------
+
+    async function zoekInAlgolia(zoekwoord) {
+        const antwoord = await fetch(algoliaUrl, {
+            method: 'POST',
+            headers: {
+                'X-Algolia-Application-Id': appId,
+                'X-Algolia-API-Key': searchKey,
+            },
+            body: JSON.stringify({
+                query: zoekwoord,
+                hitsPerPage: 8,
+            }),
+        });
+
+        const data = await antwoord.json();
+        return data.hits;
+    }
+
+
+    // ----------------------------------------
+    // Resultaten tonen in de dropdown
+    // ----------------------------------------
+
+    function toonResultaten(resultaten) {
+
+        // Lijst leegmaken
+        zoekResultaten.innerHTML = '';
+
+        // Geen resultaten? Verberg de lijst
+        if (resultaten.length === 0) {
+            zoekResultaten.style.display = 'none';
+            return;
+        }
+
+        // Maak voor elk resultaat een lijstitem
+        resultaten.forEach(function(resultaat) {
+
+            const lijstItem = document.createElement('li');
+
+            // Naam bovenaan
+            const naamSpan = document.createElement('span');
+            naamSpan.className = 'resultaatNaam';
+            naamSpan.textContent = resultaat.naam;
+
+            // Adres eronder
+            const adresSpan = document.createElement('span');
+            adresSpan.className = 'resultaatAdres';
+            adresSpan.textContent = resultaat.adres ?? '';
+
+            lijstItem.appendChild(naamSpan);
+            lijstItem.appendChild(adresSpan);
+
+            // Klik op een resultaat → stuur signaal naar kaart
+            lijstItem.addEventListener('click', function() {
+                invoerVeld.value = resultaat.naam;
+                zoekResultaten.style.display = 'none';
+
+                window.dispatchEvent(new CustomEvent('locatieGekozen', {
+                    detail: {
+                        lat: resultaat.lat,
+                        lng: resultaat.lng,
+                        naam: resultaat.naam,
+                    }
+                }));
+            });
+
+            zoekResultaten.appendChild(lijstItem);
+        });
+
+        // Toon de lijst
+        zoekResultaten.style.display = 'block';
+    }
+
+
+    // ----------------------------------------
+    // Lijst sluiten als je ergens anders klikt
+    // ----------------------------------------
+
+    document.addEventListener('click', function(klik) {
+        if (!invoerVeld.contains(klik.target) && !zoekResultaten.contains(klik.target)) {
+            zoekResultaten.style.display = 'none';
+        }
+    });
+</script>
