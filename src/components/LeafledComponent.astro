@@ -266,7 +266,7 @@ function getOtherMarkerHtml(omschrijving, isActive) {
         }
     } else {
         if (omschrijving.includes("winkelfunctie")) {
-            markerHtml = isActive 
+            markerHtml = isActive
                 ? `<span style="font-size:20px;line-height:1;">🛍️</span>`
                 : `<span style="font-size:16px;line-height:1;">🛍️</span>`;
         } else {
@@ -292,7 +292,7 @@ function getOtherMarkerHtml(omschrijving, isActive) {
 
 window.addEventListener("load", function () {
     const amsterdamBounds = L.latLngBounds(
-        [52.278, 4.550], // Shifted further left (west) to allow panning western areas into view
+        [52.278, 4.55], // Shifted further left (west) to allow panning western areas into view
         [52.431, 5.079],
     );
 
@@ -309,7 +309,7 @@ window.addEventListener("load", function () {
         {
             attribution:
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }
+        },
     );
 
     const darkLayer = L.tileLayer(
@@ -320,7 +320,7 @@ window.addEventListener("load", function () {
             attribution:
                 '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             ext: "png",
-        }
+        },
     );
 
     // Initialiseer met de juiste laag op basis van de toggle status
@@ -341,8 +341,6 @@ window.addEventListener("load", function () {
             }
         });
     }
-
-
 
     // Inactief marker-icoon (32px, wit)
     const defaultIcon = L.divIcon({
@@ -394,12 +392,15 @@ window.addEventListener("load", function () {
 
     function resetActiveMarker() {
         if (activeMarker) {
-            if (activeMarkerType === 'cafe') {
+            if (activeMarkerType === "cafe") {
                 activeMarker.setIcon(defaultIcon);
-            } else if (activeMarkerType === 'school') {
+            } else if (activeMarkerType === "school") {
                 activeMarker.setIcon(defaultIconSchool);
-            } else if (activeMarkerType === 'other') {
-                const markerHtml = getOtherMarkerHtml(activeMarkerOmschrijving || "", false);
+            } else if (activeMarkerType === "other") {
+                const markerHtml = getOtherMarkerHtml(
+                    activeMarkerOmschrijving || "",
+                    false,
+                );
                 const defaultIconOther = L.divIcon({
                     className: "am-marker",
                     html: markerHtml,
@@ -421,11 +422,11 @@ window.addEventListener("load", function () {
         activeMarkerType = type;
         activeMarkerOmschrijving = omschrijving;
 
-        if (type === 'cafe') {
+        if (type === "cafe") {
             layer.setIcon(activeIcon);
-        } else if (type === 'school') {
+        } else if (type === "school") {
             layer.setIcon(activeIconSchool);
-        } else if (type === 'other') {
+        } else if (type === "other") {
             const markerHtml = getOtherMarkerHtml(omschrijving || "", true);
             const activeIconOther = L.divIcon({
                 className: "am-marker am-marker--active",
@@ -470,7 +471,8 @@ window.addEventListener("load", function () {
                 ? ` ${p.adresHuisnummertoevoeging}`
                 : "";
             const letter = p.adresHuisletter ? ` ${p.adresHuisletter}` : "";
-            adres = `${p.adresStraat ?? ""} ${p.adresHuisnummer ?? ""}${letter}${toevoeging}`.trim();
+            adres = `${p.adresStraat ?? ""} ${p.adresHuisnummer ?? ""
+                }${letter}${toevoeging}`.trim();
             postcode = p.adresPostcode ?? p.postcode ?? "";
         }
 
@@ -479,7 +481,8 @@ window.addEventListener("load", function () {
             soort = `School (${p.bestemming ?? "Onbekend"})`;
         } else if (isBagObject) {
             const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? "";
-            soort = `BAG (${omschrijving.charAt(0).toUpperCase() + omschrijving.slice(1)})`;
+            soort = `BAG (${omschrijving.charAt(0).toUpperCase() + omschrijving.slice(1)
+                })`;
         }
 
         const adresVolledig = [adres, postcode].filter(Boolean).join(", ");
@@ -539,7 +542,7 @@ window.addEventListener("load", function () {
         if (titleEl) titleEl.textContent = naam;
         if (addressEl) addressEl.textContent = adresVolledig;
         if (bodyEl) bodyEl.innerHTML = itemsHtml;
-        
+
         if (footerEl) {
             footerEl.innerHTML = `
                 <button class="am-popup__btn" id="popover-btn-print">
@@ -553,17 +556,24 @@ window.addEventListener("load", function () {
             `;
 
             // Attach listeners to actions inside the popover
-            document.getElementById("popover-btn-print")?.addEventListener("click", () => {
-                window.print();
-            });
+            document
+                .getElementById("popover-btn-print")
+                ?.addEventListener("click", () => {
+                    window.print();
+                });
 
-            document.getElementById("popover-btn-share")?.addEventListener("click", () => {
-                if (navigator.share) {
-                    navigator.share({ title: naam, text: adresVolledig });
-                } else {
-                    alert(adresVolledig);
-                }
-            });
+            document
+                .getElementById("popover-btn-share")
+                ?.addEventListener("click", () => {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: naam,
+                            text: adresVolledig,
+                        });
+                    } else {
+                        alert(adresVolledig);
+                    }
+                });
         }
 
         // Show popover
@@ -599,8 +609,12 @@ window.addEventListener("load", function () {
             onEachFeature(feature, layer) {
                 layer.on("click", function (e) {
                     L.DomEvent.stopPropagation(e); // Prevent map click from closing immediately
-                    setActiveMarker(layer, 'cafe');
-                    openPopoverWithDetails(feature.properties, false, false);
+                    setActiveMarker(layer, "cafe");
+                    openPopoverWithDetails(
+                        feature.properties,
+                        false,
+                        false,
+                    );
                     map.panTo(layer.getLatLng()); // Center active marker
                 });
             },
@@ -615,7 +629,7 @@ window.addEventListener("load", function () {
             onEachFeature(feature, layer) {
                 layer.on("click", function (e) {
                     L.DomEvent.stopPropagation(e);
-                    setActiveMarker(layer, 'school');
+                    setActiveMarker(layer, "school");
                     openPopoverWithDetails(feature.properties, true, false);
                     map.panTo(layer.getLatLng()); // Center active marker
                 });
@@ -644,8 +658,10 @@ window.addEventListener("load", function () {
             onEachFeature(feature, layer) {
                 layer.on("click", function (e) {
                     L.DomEvent.stopPropagation(e);
-                    const omschrijving = feature.properties.gebruiksdoel?.[0]?.omschrijving ?? "";
-                    setActiveMarker(layer, 'other', omschrijving);
+                    const omschrijving =
+                        feature.properties.gebruiksdoel?.[0]
+                            ?.omschrijving ?? "";
+                    setActiveMarker(layer, "other", omschrijving);
                     openPopoverWithDetails(feature.properties, false, true);
                     map.panTo(layer.getLatLng()); // Center active marker
                 });
@@ -680,7 +696,9 @@ window.addEventListener("load", function () {
     :global(.am-marker) {
         background: var(--color-background-main) !important;
         border: 1px solid var(--color-border) !important;
-        color: var(--color-on-surface) !important; /* Icons default to black inside white marker */
+        color: var(
+            --color-on-surface
+        ) !important; /* Icons default to black inside white marker */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -694,7 +712,6 @@ window.addEventListener("load", function () {
     :global(.am-marker svg) {
         color: inherit !important; /* Ensure SVG inherits container color */
     }
-
 
     :global(.am-marker--active) {
         background: var(--color-accent-1) !important;
@@ -884,17 +901,20 @@ window.addEventListener("load", function () {
         background-color: var(--color-primary-container) !important;
         color: var(--color-on-primary-container) !important;
     }
-    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-bar a.leaflet-disabled) {
+    :global(html:has(#contrast-toggle:checked))
+        :global(.leaflet-bar a.leaflet-disabled) {
         background-color: #222 !important;
         color: #555 !important;
     }
-    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-control-attribution) {
+    :global(html:has(#contrast-toggle:checked))
+        :global(.leaflet-control-attribution) {
         background-color: rgba(0, 0, 0, 0.8) !important;
         color: var(--color-text-muted) !important;
         border-left: 1px solid var(--color-border) !important;
         border-top: 1px solid var(--color-border) !important;
     }
-    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-control-attribution a) {
+    :global(html:has(#contrast-toggle:checked))
+        :global(.leaflet-control-attribution a) {
         color: var(--color-primary) !important;
     }
 </style>

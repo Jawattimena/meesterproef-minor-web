@@ -3,7 +3,9 @@
 import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
 ---
 
-<form class="sidebar" onsubmit="event.preventDefault()">
+<form class="sidebar" onsubmit="
+event.preventDefault()
+">
     <div class="sidebar-header">
         <div class="title-container">
             <h1>Filters</h1>
@@ -47,32 +49,72 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
             <label for="subcategorie">Subcategorie</label>
             <div class="select-wrapper">
                 <select id="subcategorie" name="subcategorie">
-                    <option value="" disabled selected>Kies een subcategorie...</option>
-                    <option value="bioscopen" data-parent="cultuur_kunst">Bioscopen</option>
-                    <option value="galleries" data-parent="cultuur_kunst">Galleries</option>
-                    <option value="musea" data-parent="cultuur_kunst">Musea</option>
-                    <option value="theaters" data-parent="cultuur_kunst">Theaters</option>
+                    <option value="" disabled selected
+                        >Kies een subcategorie...</option
+                    >
+                    <option value="bioscopen" data-parent="cultuur_kunst"
+                        >Bioscopen</option
+                    >
+                    <option value="galleries" data-parent="cultuur_kunst"
+                        >Galleries</option
+                    >
+                    <option value="musea" data-parent="cultuur_kunst"
+                        >Musea</option
+                    >
+                    <option value="theaters" data-parent="cultuur_kunst"
+                        >Theaters</option
+                    >
 
-                    <option value="apotheken" data-parent="gezondheid_zorg">Apotheken</option>
-                    <option value="huisartsen" data-parent="gezondheid_zorg">Huisartsen</option>
-                    <option value="ziekenhuizen" data-parent="gezondheid_zorg">Ziekenhuizen</option>
+                    <option value="apotheken" data-parent="gezondheid_zorg"
+                        >Apotheken</option
+                    >
+                    <option value="huisartsen" data-parent="gezondheid_zorg"
+                        >Huisartsen</option
+                    >
+                    <option value="ziekenhuizen" data-parent="gezondheid_zorg"
+                        >Ziekenhuizen</option
+                    >
 
-                    <option value="hotels" data-parent="horeca_toerisme">Hotels</option>
-                    <option value="restaurants" data-parent="horeca_toerisme">Restaurants</option>
-                    <option value="bars" data-parent="horeca_toerisme">Bars</option>
+                    <option value="hotels" data-parent="horeca_toerisme"
+                        >Hotels</option
+                    >
+                    <option value="restaurants" data-parent="horeca_toerisme"
+                        >Restaurants</option
+                    >
+                    <option value="bars" data-parent="horeca_toerisme"
+                        >Bars</option
+                    >
 
-                    <option value="bibliotheken" data-parent="openbare_diensten">Bibliotheken</option>
-                    <option value="scholen" data-parent="openbare_diensten">Scholen</option>
-                    <option value="politie" data-parent="openbare_diensten">Politie</option>
+                    <option value="bibliotheken" data-parent="openbare_diensten"
+                        >Bibliotheken</option
+                    >
+                    <option value="scholen" data-parent="openbare_diensten"
+                        >Scholen</option
+                    >
+                    <option value="politie" data-parent="openbare_diensten"
+                        >Politie</option
+                    >
 
-                    <option value="sportaccommodaties" data-parent="sport_spel">Sportaccommodaties</option>
-                    <option value="zwembaden" data-parent="sport_spel">Zwembaden</option>
+                    <option value="sportaccommodaties" data-parent="sport_spel"
+                        >Sportaccommodaties</option
+                    >
+                    <option value="zwembaden" data-parent="sport_spel"
+                        >Zwembaden</option
+                    >
 
-                    <option value="parkeergarages" data-parent="vervoer">Parkeergarages</option>
-                    <option value="treinstations" data-parent="vervoer">Treinstations</option>
-                    
-                    <option value="supermarkten" data-parent="winkelen">Supermarkten</option>
-                    <option value="warenhuizen" data-parent="winkelen">Warenhuizen</option>
+                    <option value="parkeergarages" data-parent="vervoer"
+                        >Parkeergarages</option
+                    >
+                    <option value="treinstations" data-parent="vervoer"
+                        >Treinstations</option
+                    >
+
+                    <option value="supermarkten" data-parent="winkelen"
+                        >Supermarkten</option
+                    >
+                    <option value="warenhuizen" data-parent="winkelen"
+                        >Warenhuizen</option
+                    >
                 </select>
                 <div class="select-icon">
                     <svg
@@ -106,9 +148,15 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         <g id="Shape">
-                            <path d="M7.25 5C8.63071 5 9.75 3.88071 9.75 2.5C9.75 1.11929 8.63071 0 7.25 0C5.86929 0 4.75 1.11929 4.75 2.5C4.75 3.88071 5.86929 5 7.25 5Z" fill="currentColor"/>
-                            <path d="M8.2222 8.72095V6.41862H6.16665V14.8605H12.3658L14.6271 17.5621C14.9773 17.9806 15.5955 18.0525 16.0333 17.7256L18.0888 16.1907C18.5429 15.8517 18.635 15.2103 18.2944 14.7582C17.9538 14.3061 17.3096 14.2144 16.8555 14.5535L15.5811 15.5051L13.3286 12.814H8.2222V10.7675H12.8472C13.4148 10.7675 13.875 10.3093 13.875 9.74421C13.875 9.17908 13.4148 8.72095 12.8472 8.72095H8.2222Z" fill="currentColor"/>
-                            <path d="M4.1111 7.36369C1.68047 8.51328 0 10.9799 0 13.8372C0 17.7931 3.22105 21 7.19442 21C9.40171 21 11.3768 20.0103 12.6966 18.4524L11.403 16.907H11.3059C10.3684 18.1497 8.87568 18.9535 7.19442 18.9535C4.3563 18.9535 2.05555 16.6628 2.05555 13.8372C2.05555 12.1633 2.86292 10.6772 4.1111 9.74379V7.36369Z" fill="currentColor"/>
+                            <path
+                                d="M7.25 5C8.63071 5 9.75 3.88071 9.75 2.5C9.75 1.11929 8.63071 0 7.25 0C5.86929 0 4.75 1.11929 4.75 2.5C4.75 3.88071 5.86929 5 7.25 5Z"
+                                fill="currentColor"></path>
+                            <path
+                                d="M8.2222 8.72095V6.41862H6.16665V14.8605H12.3658L14.6271 17.5621C14.9773 17.9806 15.5955 18.0525 16.0333 17.7256L18.0888 16.1907C18.5429 15.8517 18.635 15.2103 18.2944 14.7582C17.9538 14.3061 17.3096 14.2144 16.8555 14.5535L15.5811 15.5051L13.3286 12.814H8.2222V10.7675H12.8472C13.4148 10.7675 13.875 10.3093 13.875 9.74421C13.875 9.17908 13.4148 8.72095 12.8472 8.72095H8.2222Z"
+                                fill="currentColor"></path>
+                            <path
+                                d="M4.1111 7.36369C1.68047 8.51328 0 10.9799 0 13.8372C0 17.7931 3.22105 21 7.19442 21C9.40171 21 11.3768 20.0103 12.6966 18.4524L11.403 16.907H11.3059C10.3684 18.1497 8.87568 18.9535 7.19442 18.9535C4.3563 18.9535 2.05555 16.6628 2.05555 13.8372C2.05555 12.1633 2.86292 10.6772 4.1111 9.74379V7.36369Z"
+                                fill="currentColor"></path>
                         </g>
                     </svg>
                 </ToegangkelijkButtonComponent>
@@ -126,8 +174,14 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         <g id="Shape">
-                            <path d="M15 8C15 10.2091 13.2091 12 11 12C8.79086 12 7 10.2091 7 8C7 5.79086 8.79086 4 11 4C13.2091 4 15 5.79086 15 8Z" fill="currentColor"/>
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 8C0 8 4 0 11 0C18 0 22 8 22 8C22 8 18 16 11 16C4 16 0 8 0 8ZM2.31 8C3.49 9.86 6.6 14 11 14C15.43 14 18.52 9.87 19.69 8C18.51 6.14 15.43 2 11 2C6.57 2 3.48 6.13 2.31 8Z" fill="currentColor"/>
+                            <path
+                                d="M15 8C15 10.2091 13.2091 12 11 12C8.79086 12 7 10.2091 7 8C7 5.79086 8.79086 4 11 4C13.2091 4 15 5.79086 15 8Z"
+                                fill="currentColor"></path>
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M0 8C0 8 4 0 11 0C18 0 22 8 22 8C22 8 18 16 11 16C4 16 0 8 0 8ZM2.31 8C3.49 9.86 6.6 14 11 14C15.43 14 18.52 9.87 19.69 8C18.51 6.14 15.43 2 11 2C6.57 2 3.48 6.13 2.31 8Z"
+                                fill="currentColor"></path>
                         </g>
                     </svg>
                 </ToegangkelijkButtonComponent>
@@ -143,22 +197,36 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
                         fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg"
                     >
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.14093 12H2V6.99996H5.14093L9.49999 3.88636V15.1136L5.14093 12ZM4.5 4.99995L11.5 0V19L4.5 14H0V4.99995H4.5ZM15.4692 16.2448C17.2757 14.5583 18.4016 12.1774 18.4016 9.53865C18.4016 7.06409 17.4114 4.81623 15.7984 3.15523L17.2826 1.70001C19.2752 3.73364 20.5 6.49592 20.5 9.53865C20.5 12.7456 19.1394 15.6409 16.9534 17.7L15.4692 16.2448ZM13.9848 14.7894C15.4118 13.4757 16.3032 11.6092 16.3032 9.53865C16.3032 7.6322 15.5476 5.89883 14.314 4.61063L12.8292 6.06648C13.6835 6.98146 14.2047 8.20037 14.2047 9.53865C14.2047 11.0411 13.5477 12.3931 12.5 13.3335L13.9848 14.7894Z" fill="currentColor"/>
+                        <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M5.14093 12H2V6.99996H5.14093L9.49999 3.88636V15.1136L5.14093 12ZM4.5 4.99995L11.5 0V19L4.5 14H0V4.99995H4.5ZM15.4692 16.2448C17.2757 14.5583 18.4016 12.1774 18.4016 9.53865C18.4016 7.06409 17.4114 4.81623 15.7984 3.15523L17.2826 1.70001C19.2752 3.73364 20.5 6.49592 20.5 9.53865C20.5 12.7456 19.1394 15.6409 16.9534 17.7L15.4692 16.2448ZM13.9848 14.7894C15.4118 13.4757 16.3032 11.6092 16.3032 9.53865C16.3032 7.6322 15.5476 5.89883 14.314 4.61063L12.8292 6.06648C13.6835 6.98146 14.2047 8.20037 14.2047 9.53865C14.2047 11.0411 13.5477 12.3931 12.5 13.3335L13.9848 14.7894Z"
+                            fill="currentColor"></path>
                     </svg>
                 </ToegangkelijkButtonComponent>
                 <ToegangkelijkButtonComponent
-                    title="Zintuiglijk"
+                    title="Niet-zichtbaar"
                     name="accessibility"
-                    value="sensory"
+                    value="hidden"
                 >
                     <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 22 22"
-                        fill="currentColor"
+                        width="22"
+                        height="20"
+                        viewBox="0 0 22 20"
+                        fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                     >
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M20 11C20 15.9706 15.9706 20 11 20C6.02944 20 2 15.9706 2 11C2 6.02944 6.02944 2 11 2C15.9706 2 20 6.02944 20 11ZM22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11ZM5.07692 13.3846C5.6092 14.6621 7.50229 17 11 17C14.4977 17 16.3908 14.6621 16.9231 13.3846L15.0769 12.6154C14.7759 13.3379 13.5023 15 11 15C8.49771 15 7.22413 13.3379 6.92308 12.6154L5.07692 13.3846ZM8.5 9.5C8.5 10.3284 7.82843 11 7 11C6.17157 11 5.5 10.3284 5.5 9.5C5.5 8.67157 6.17157 8 7 8C7.82843 8 8.5 8.67157 8.5 9.5ZM15 11C15.8284 11 16.5 10.3284 16.5 9.5C16.5 8.67157 15.8284 8 15 8C14.1716 8 13.5 8.67157 13.5 9.5C13.5 10.3284 14.1716 11 15 11Z" fill="currentColor"/>
+                        <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M1.7616 0L0.350318 1.41709L3.53321 4.61307C1.24113 6.81407 0 9.28643 0 9.28643C0 9.28643 4.00364 17.3266 11.01 17.3266C12.5514 17.3266 13.9427 16.9246 15.1838 16.3116L18.8571 20L20.2684 18.5829L1.7616 0ZM11 15.3065C6.59599 15.3065 3.48317 11.1457 2.30209 9.27638C2.82256 8.45226 3.71337 7.17588 4.92448 6.0201L7.14649 8.25126C7.05641 8.58291 6.99636 8.92462 6.99636 9.28643C6.99636 11.5075 8.78799 13.3065 11 13.3065C11.3603 13.3065 11.7006 13.2462 12.0309 13.1558L13.6624 14.794C12.8417 15.1156 11.9509 15.3166 11 15.3166V15.3065Z"
+                            fill="currentColor"></path>
+                        <path
+                            d="M8.34759 3.7588C9.16834 3.43719 10.0491 3.24623 11 3.24623C15.404 3.24623 18.5168 7.40704 19.6979 9.27638C19.1774 10.1005 18.2866 11.3668 17.0755 12.5226L18.4768 13.9296C20.7689 11.7286 22 9.26633 22 9.26633C22 9.26633 17.9964 1.22613 10.99 1.22613C9.44859 1.22613 8.05733 1.61809 6.82621 2.23116L8.34759 3.7588Z"
+                            fill="currentColor"></path>
+                        <path
+                            d="M11 5.25628C13.212 5.25628 15.0036 7.05527 15.0036 9.27638C15.0036 9.63819 14.9436 9.96985 14.8535 10.3015L9.97904 5.40703C10.3093 5.31658 10.6496 5.25628 11 5.25628Z"
+                            fill="currentColor"></path>
                     </svg>
                 </ToegangkelijkButtonComponent>
             </div>
@@ -361,9 +429,9 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
 
 <script>
     //@ts-nocheck
-     const hoofdSelect = document.getElementById("hoofdcategorie")
-     const subSelect = document.getElementById("subcategorie")
-     const subOptions = subSelect.querySelectorAll("option[data-parent]")
+    const hoofdSelect = document.getElementById("hoofdcategorie");
+    const subSelect = document.getElementById("subcategorie");
+    const subOptions = subSelect.querySelectorAll("option[data-parent]");
 
     function updateSubcategorieen() {
         const gekozenHoofdCategorie = hoofdSelect.value;
@@ -371,7 +439,8 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
         subSelect.value = "";
 
         subOptions.forEach((option) => {
-            const isActiveOption = option.dataset.parent === gekozenHoofdCategorie;
+            const isActiveOption =
+                option.dataset.parent === gekozenHoofdCategorie;
 
             option.hidden = !isActiveOption;
             option.disabled = !isActiveOption;
@@ -383,6 +452,5 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
         option.disabled = true;
     });
 
-    hoofdSelect.addEventListener('change', updateSubcategorieen);
-
+    hoofdSelect.addEventListener("change", updateSubcategorieen);
 </script>
