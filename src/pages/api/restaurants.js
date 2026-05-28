@@ -2,7 +2,7 @@ export async function GET() {
     const apiKey = import.meta.env.KEY_AMSTERDAM;
     const baseUrl = "https://api.data.amsterdam.nl/";
     const endPoint =
-        "v1/horeca/v1/exploitatievergunning/?zaakCategorie=Restaurant&_pageSize=10&_format=geojson";
+        "v1/horeca/v1/exploitatievergunning/?zaakCategorie=Restaurant&_pageSize=100&_format=geojson";
 
     const response = await fetch(baseUrl + endPoint, {
         headers: {

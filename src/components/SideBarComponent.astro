@@ -363,14 +363,23 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
 
 <script>
     //@ts-nocheck
-     const hoofdSelect = document.getElementById("hoofdcategorie")
-     const subSelect = document.getElementById("subcategorie")
-     const subOptions = subSelect.querySelectorAll("option[data-parent]")
+    const hoofdSelect = document.getElementById("hoofdcategorie")
+    const subSelect = document.getElementById("subcategorie")
+    const subOptions = subSelect.querySelectorAll("option[data-parent]")
+
+    // Houd bij welke filter momenteel actief is
+    let activeFilter = null;
 
     function updateSubcategorieen() {
         const gekozenHoofdCategorie = hoofdSelect.value;
 
         subSelect.value = "";
+
+        // Verberg de vorige filter als de hoofdcategorie wijzigt
+        if (activeFilter) {
+            window.dispatchEvent(new CustomEvent("filter:hide", { detail: { name: activeFilter } }));
+            activeFilter = null;
+        }
 
         subOptions.forEach((option) => {
             const isActiveOption = option.dataset.parent === gekozenHoofdCategorie;
@@ -388,11 +397,19 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
     hoofdSelect.addEventListener("change", updateSubcategorieen);
 
     subSelect.addEventListener("change", () => {
-        if (subSelect.value === "restaurants") {
-            window.dispatchEvent(new CustomEvent("filter:restaurants"));
+        // Verberg de vorige filter
+        if (activeFilter) {
+            window.dispatchEvent(new CustomEvent("filter:hide", { detail: { name: activeFilter } }));
         }
-        else {
-            window.dispatchEvent(new CustomEvent("filter:restaurants:hide"));
+
+        const newFilter = subSelect.value;
+
+        if (newFilter) {
+            // Toon de nieuwe filter
+            window.dispatchEvent(new CustomEvent("filter:show", { detail: { name: newFilter } }));
+            activeFilter = newFilter;
+        } else {
+            activeFilter = null;
         }
     });
 
