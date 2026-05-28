@@ -413,4 +413,23 @@ import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
         }
     });
 
+    // Reset button koppelen aan kaart en UI
+    const clearBtn = document.querySelector(".btn-clear");
+    if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+            // Stuur event om alle marker-lagen op de kaart te verbergen
+            window.dispatchEvent(new CustomEvent("filter:hideAll"));
+            
+            // Reset de select-dropdowns in de UI
+            hoofdSelect.value = "";
+            subSelect.value = "";
+            activeFilter = null;
+            
+            // Verberg alle subcategorie-opties weer
+            subOptions.forEach((option) => {
+                option.hidden = true;
+                option.disabled = true;
+            });
+        });
+    }
 </script>
