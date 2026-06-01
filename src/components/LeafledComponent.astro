@@ -91,7 +91,7 @@ function getOtherMarkerHtml(omschrijving, isActive) {
         }
     } else {
         if (omschrijving.includes("winkelfunctie")) {
-            markerHtml = isActive 
+            markerHtml = isActive
                 ? `<span style="font-size:20px;line-height:1;">🛍️</span>`
                 : `<span style="font-size:16px;line-height:1;">🛍️</span>`;
         } else {
@@ -117,7 +117,7 @@ function getOtherMarkerHtml(omschrijving, isActive) {
 
 window.addEventListener("load", function () {
     const amsterdamBounds = L.latLngBounds(
-        [52.278, 4.550], // Shifted further left (west) to allow panning western areas into view
+        [52.278, 4.55], // Shifted further left (west) to allow panning western areas into view
         [52.431, 5.079],
     );
 
@@ -134,7 +134,7 @@ window.addEventListener("load", function () {
         {
             attribution:
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }
+        },
     );
 
     const darkLayer = L.tileLayer(
@@ -145,7 +145,7 @@ window.addEventListener("load", function () {
             attribution:
                 '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             ext: "png",
-        }
+        },
     );
 
     // Initialiseer met de juiste laag op basis van de toggle status
@@ -166,8 +166,6 @@ window.addEventListener("load", function () {
             }
         });
     }
-
-
 
     // Inactief marker-icoon (32px, wit)
     const defaultIcon = L.divIcon({
@@ -219,12 +217,15 @@ window.addEventListener("load", function () {
 
     function resetActiveMarker() {
         if (activeMarker) {
-            if (activeMarkerType === 'cafe') {
+            if (activeMarkerType === "cafe") {
                 activeMarker.setIcon(defaultIcon);
-            } else if (activeMarkerType === 'school') {
+            } else if (activeMarkerType === "school") {
                 activeMarker.setIcon(defaultIconSchool);
-            } else if (activeMarkerType === 'other') {
-                const markerHtml = getOtherMarkerHtml(activeMarkerOmschrijving || "", false);
+            } else if (activeMarkerType === "other") {
+                const markerHtml = getOtherMarkerHtml(
+                    activeMarkerOmschrijving || "",
+                    false,
+                );
                 const defaultIconOther = L.divIcon({
                     className: "am-marker",
                     html: markerHtml,
@@ -246,11 +247,11 @@ window.addEventListener("load", function () {
         activeMarkerType = type;
         activeMarkerOmschrijving = omschrijving;
 
-        if (type === 'cafe') {
+        if (type === "cafe") {
             layer.setIcon(activeIcon);
-        } else if (type === 'school') {
+        } else if (type === "school") {
             layer.setIcon(activeIconSchool);
-        } else if (type === 'other') {
+        } else if (type === "other") {
             const markerHtml = getOtherMarkerHtml(omschrijving || "", true);
             const activeIconOther = L.divIcon({
                 className: "am-marker am-marker--active",
@@ -295,7 +296,8 @@ window.addEventListener("load", function () {
                 ? ` ${p.adresHuisnummertoevoeging}`
                 : "";
             const letter = p.adresHuisletter ? ` ${p.adresHuisletter}` : "";
-            adres = `${p.adresStraat ?? ""} ${p.adresHuisnummer ?? ""}${letter}${toevoeging}`.trim();
+            adres = `${p.adresStraat ?? ""} ${p.adresHuisnummer ?? ""
+                }${letter}${toevoeging}`.trim();
             postcode = p.adresPostcode ?? p.postcode ?? "";
         }
 
@@ -304,7 +306,8 @@ window.addEventListener("load", function () {
             soort = `School (${p.bestemming ?? "Onbekend"})`;
         } else if (isBagObject) {
             const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? "";
-            soort = `BAG (${omschrijving.charAt(0).toUpperCase() + omschrijving.slice(1)})`;
+            soort = `BAG (${omschrijving.charAt(0).toUpperCase() + omschrijving.slice(1)
+                })`;
         }
 
         const adresVolledig = [adres, postcode].filter(Boolean).join(", ");
@@ -355,198 +358,210 @@ window.addEventListener("load", function () {
             )
             .join("");
 
-    return `
-            <div class="am-popup">
-                <div class="am-popup__header">
-                    <div class="am-popup__header-content">
-                        <h2 class="am-popup__title">${naam}</h2>
-                        <p class="am-popup__address">${adresVolledig}</p>
-                    </div>
-                    <button class="am-popup__close" onclick="window.amClosePopup()">×</button>
-                </div>
-                <div class="am-popup__body">
-                    ${itemsHtml}
-                </div>
-                <div class="am-popup__footer">
-                    <button class="am-popup__btn" onclick="window.print()">
-                        ${printIconSvg}
-                        <span>Print</span>
-                    </button>
-                    <button class="am-popup__btn" onclick="navigator.share ? navigator.share({ title: '${naam.replace(
-        /'/g,
-        "\\'",
-    )}', text: '${adresVolledig.replace(
-        /'/g,
-        "\\'",
-    )}' }) : alert('${adresVolledig.replace(/'/g, "\\'")}')">
-                        ${shareIconSvg}
-                        <span>Deel</span>
-                    </button>
-                </div>
-            </div>
-        `;
-}
+        const titleEl = document.getElementById("popover-title");
+        const addressEl = document.getElementById("popover-address");
+        const bodyEl = document.getElementById("popover-body-content");
+        const footerEl = document.getElementById("popover-footer-actions");
 
-// Dynamisch marker icoon genereren op basis van categorie en status
-function createMarkerIcon(properties, isActive) {
-    const isSchool = properties.accommodatieId !== undefined;
-    const isBagObject = properties.gebruiksdoel !== undefined;
-    
-    let markerHtml = "";
-    
-    if (isSchool) {
-        markerHtml = `<span style="font-size:${isActive ? '20px' : '16px'};line-height:1;">🏫</span>`;
-    } else if (isBagObject) {
-        const omschrijving = properties.gebruiksdoel?.[0]?.omschrijving ?? "";
-        if (omschrijving.includes("gezondheidszorg")) {
-            markerHtml = `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
-            </svg>`;
-        } else if (omschrijving.includes("sportfunctie")) {
-            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
-            </svg>`;
-        } else if (omschrijving.includes("logiesfunctie")) {
-            markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
-                <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
-                <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
-            </svg>`;
-        } else if (omschrijving.includes("bijeenkomst")) {
-            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
-                <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
-                <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
-                <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
-                <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
-                <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
-                <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
-                <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
-                <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
-                <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
-            </svg>`;
-        } else if (omschrijving.includes("winkelfunctie")) {
-            markerHtml = `<span style="font-size:${isActive ? '20px' : '16px'};line-height:1;">🛍️</span>`;
+        if (titleEl) titleEl.textContent = naam;
+        if (addressEl) addressEl.textContent = adresVolledig;
+        if (bodyEl) bodyEl.innerHTML = itemsHtml;
+
+        if (footerEl) {
+            footerEl.innerHTML = `
+                <button class="am-popup__btn" id="popover-btn-print">
+                    ${printIconSvg}
+                    <span>Print</span>
+                </button>
+                <button class="am-popup__btn" id="popover-btn-share">
+                    ${shareIconSvg}
+                    <span>Deel</span>
+                </button>
+            `;
+
+            // Attach listeners to actions inside the popover
+            document
+                .getElementById("popover-btn-print")
+                ?.addEventListener("click", () => {
+                    window.print();
+                });
+
+            document
+                .getElementById("popover-btn-share")
+                ?.addEventListener("click", () => {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: naam,
+                            text: adresVolledig,
+                        });
+                    } else {
+                        alert(adresVolledig);
+                    }
+                });
+        }
+
+        // Show popover
+        popover.classList.add("is-open");
+        popover.setAttribute("aria-hidden", "false");
+    }
+
+    function closePopover() {
+        const popover = document.getElementById("map-popover");
+        if (popover) {
+            popover.classList.remove("is-open");
+            popover.setAttribute("aria-hidden", "true");
+        }
+        resetActiveMarker();
+    }
+
+    // Dynamisch marker icoon genereren op basis van categorie en status
+    function createMarkerIcon(properties, isActive) {
+        const isSchool = properties.accommodatieId !== undefined;
+        const isBagObject = properties.gebruiksdoel !== undefined;
+        
+        let markerHtml = "";
+        
+        if (isSchool) {
+            markerHtml = `<span style="font-size:${isActive ? '20px' : '16px'};line-height:1;">🏫</span>`;
+        } else if (isBagObject) {
+            const omschrijving = properties.gebruiksdoel?.[0]?.omschrijving ?? "";
+            if (omschrijving.includes("gezondheidszorg")) {
+                markerHtml = `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+                </svg>`;
+            } else if (omschrijving.includes("sportfunctie")) {
+                markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
+                </svg>`;
+            } else if (omschrijving.includes("logiesfunctie")) {
+                markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                    <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
+                    <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
+                    <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
+                </svg>`;
+            } else if (omschrijving.includes("bijeenkomst")) {
+                markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                    <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
+                    <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
+                    <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
+                    <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
+                    <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
+                    <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
+                    <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
+                    <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
+                    <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
+                    <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
+                </svg>`;
+            } else if (omschrijving.includes("winkelfunctie")) {
+                markerHtml = `<span style="font-size:${isActive ? '20px' : '16px'};line-height:1;">🛍️</span>`;
+            } else {
+                markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                    <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
+                    <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
+                    <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
+                    <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
+                    <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
+                    <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
+                </svg>`;
+            }
         } else {
+            // Horeca (Restaurants, bars)
             markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
-                <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
-                <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
-                <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
-                <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
-                <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.09998C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
             </svg>`;
         }
-    } else {
-        // Horeca (Restaurants, bars)
-        markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.09998C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
-        </svg>`;
-    }
-    
-    const size = isActive ? 40 : 32;
-    const anchor = size / 2;
-    
-    return L.divIcon({
-        className: isActive ? "am-marker am-marker--active" : "am-marker",
-        html: markerHtml,
-        iconSize: [size, size],
-        iconAnchor: [anchor, size],
-        popupAnchor: [0, -(size + 2)],
-    });
-}
-
-// ── LayerManager class: generiek lazy-load systeem voor alle categorieën ──
-class LayerManager {
-    constructor(map, buildPopupFn) {
-        this.map = map;
-        this.buildPopupFn = buildPopupFn;
-        // Per filter-naam: { layer, loaded }
-        this.layers = {};
+        
+        const size = isActive ? 40 : 32;
+        const anchor = size / 2;
+        
+        return L.divIcon({
+            className: isActive ? "am-marker am-marker--active" : "am-marker",
+            html: markerHtml,
+            iconSize: [size, size],
+            iconAnchor: [anchor, size],
+            popupAnchor: [0, -(size + 2)],
+        });
     }
 
-    // Registreer een filter met zijn API URL
-    register(name, apiUrl) {
-        this.layers[name] = { layer: null, loaded: false, apiUrl };
-    }
-
-    // Toon een laag (lazy-load als eerste keer)
-    async show(name) {
-        const entry = this.layers[name];
-        if (!entry) return;
-        if (entry.loaded && entry.layer) {
-            entry.layer.addTo(this.map);
-            return;
+    // ── LayerManager class: generiek lazy-load systeem voor alle categorieën ──
+    class LayerManager {
+        constructor(map) {
+            this.map = map;
+            // Per filter-naam: { layer, loaded }
+            this.layers = {};
         }
 
-        try {
-            const response = await fetch(entry.apiUrl);
-            if (!response.ok) {
-                console.error(`Kon ${name} niet ophalen`);
+        // Registreer een filter met zijn API URL
+        register(name, apiUrl) {
+            this.layers[name] = { layer: null, loaded: false, apiUrl };
+        }
+
+        // Toon een laag (lazy-load als eerste keer)
+        async show(name) {
+            const entry = this.layers[name];
+            if (!entry) return;
+            if (entry.loaded && entry.layer) {
+                entry.layer.addTo(this.map);
                 return;
             }
-            const data = await response.json();
-            entry.layer = L.geoJSON(data, {
-                pointToLayer: (feature, latlng) => {
-                    return L.marker(latlng, { icon: createMarkerIcon(feature.properties, false) });
-                },
-                onEachFeature: (feature, layer) => {
-                    layer.bindPopup(this.buildPopupFn(feature.properties), {
-                        className: "am-popup-wrapper",
-                        closeButton: false,
-                        autoPanPaddingTopLeft: [10, 10],
-                        autoPanPaddingBottomRight: [10, 10],
-                    });
-                    layer.on("popupopen", () => layer.setIcon(createMarkerIcon(feature.properties, true)));
-                    layer.on("popupclose", () => layer.setIcon(createMarkerIcon(feature.properties, false)));
-                },
-            }).addTo(this.map);
-            entry.loaded = true;
-        } catch (err) {
-            console.error(`Fout bij laden ${name}:`, err);
+
+            try {
+                const response = await fetch(entry.apiUrl);
+                if (!response.ok) {
+                    console.error(`Kon ${name} niet ophalen`);
+                    return;
+                }
+                const data = await response.json();
+                entry.layer = L.geoJSON(data, {
+                    pointToLayer: (feature, latlng) => {
+                        return L.marker(latlng, { icon: createMarkerIcon(feature.properties, false) });
+                    },
+                    onEachFeature: (feature, layer) => {
+                        layer.on("click", (e) => {
+                            L.DomEvent.stopPropagation(e); // Prevent map click from closing immediately
+                            const isSchool = feature.properties.accommodatieId !== undefined;
+                            const isBagObject = feature.properties.gebruiksdoel !== undefined;
+                            let type = "other";
+                            let omschrijving = null;
+                            if (isSchool) {
+                                type = "school";
+                            } else if (!isBagObject) {
+                                type = "cafe";
+                            } else {
+                                omschrijving = feature.properties.gebruiksdoel?.[0]?.omschrijving ?? "";
+                            }
+                            setActiveMarker(layer, type, omschrijving);
+                            openPopoverWithDetails(feature.properties, isSchool, isBagObject);
+                            this.map.panTo(layer.getLatLng());
+                        });
+                    },
+                }).addTo(this.map);
+                entry.loaded = true;
+            } catch (err) {
+                console.error(`Fout bij laden ${name}:`, err);
+            }
+        }
+
+        // Verberg een laag (verwijder van kaart, maar bewaar data)
+        hide(name) {
+            const entry = this.layers[name];
+            if (!entry || !entry.layer) return;
+            this.map.removeLayer(entry.layer);
+        }
+
+        // Verberg alle lagen
+        hideAll() {
+            for (const name in this.layers) {
+                this.hide(name);
+            }
         }
     }
-
-    // Verberg een laag (verwijder van kaart, maar bewaar data)
-    hide(name) {
-        const entry = this.layers[name];
-        if (!entry || !entry.layer) return;
-        this.map.removeLayer(entry.layer);
-    }
-
-    // Verberg alle lagen
-    hideAll() {
-        for (const name in this.layers) {
-            this.hide(name);
-        }
-    }
-}
-
-window.addEventListener("load", function () {
-    const amsterdamBounds = L.latLngBounds(
-        [52.278, 4.728],
-        [52.431, 5.079],
-    );
-
-    var map = L.map("map", {
-        maxBounds: amsterdamBounds,
-        maxBoundsViscosity: 1.0,
-        minZoom: 12,
-    }).setView([52.3676, 4.9041], 13);
-
-    L.tileLayer(
-        "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
-        {
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        },
-    ).addTo(map);
 
     // Maak de LayerManager aan
-    const layerManager = new LayerManager(map, buildPopupHtml);
+    const layerManager = new LayerManager(map);
 
     // Registreer alle subcategorieën met hun API URLs
     // Horeca & Toerisme
@@ -597,6 +612,17 @@ window.addEventListener("load", function () {
         layerManager.hideAll();
     });
 
+    // Set up the close button listener
+    const closeBtn = document.getElementById("popover-close-btn");
+    if (closeBtn) {
+        closeBtn.addEventListener("click", closePopover);
+    }
+
+    // Close popover when clicking map background
+    map.on("click", function () {
+        closePopover();
+    });
+
     // Exposed to window as general close callback if needed
     window.amClosePopup = closePopover;
 });
@@ -627,7 +653,9 @@ window.addEventListener("load", function () {
     :global(.am-marker) {
         background: var(--color-background-main) !important;
         border: 1px solid var(--color-border) !important;
-        color: var(--color-on-surface) !important; /* Icons default to black inside white marker */
+        color: var(
+            --color-on-surface
+        ) !important; /* Icons default to black inside white marker */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -641,7 +669,6 @@ window.addEventListener("load", function () {
     :global(.am-marker svg) {
         color: inherit !important; /* Ensure SVG inherits container color */
     }
-
 
     :global(.am-marker--active) {
         background: var(--color-accent-1) !important;
@@ -831,17 +858,20 @@ window.addEventListener("load", function () {
         background-color: var(--color-primary-container) !important;
         color: var(--color-on-primary-container) !important;
     }
-    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-bar a.leaflet-disabled) {
+    :global(html:has(#contrast-toggle:checked))
+        :global(.leaflet-bar a.leaflet-disabled) {
         background-color: #222 !important;
         color: #555 !important;
     }
-    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-control-attribution) {
+    :global(html:has(#contrast-toggle:checked))
+        :global(.leaflet-control-attribution) {
         background-color: rgba(0, 0, 0, 0.8) !important;
         color: var(--color-text-muted) !important;
         border-left: 1px solid var(--color-border) !important;
         border-top: 1px solid var(--color-border) !important;
     }
-    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-control-attribution a) {
+    :global(html:has(#contrast-toggle:checked))
+        :global(.leaflet-control-attribution a) {
         color: var(--color-primary) !important;
     }
 </style>
