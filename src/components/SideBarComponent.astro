@@ -21,13 +21,13 @@ event.preventDefault()
                     <option value="" disabled selected
                         >Kies een categorie...</option
                     >
-                    <option value="cultuur_kunst">Cultuur en Kunst</option>
-                    <option value="gezondheid_zorg">Gezondheid en Zorg</option>
-                    <option value="horeca_toerisme">Horeca en Toerisme</option>
-                    <option value="openbare_diensten">Openbare diensten</option>
-                    <option value="sport_spel">Sport en Spel</option>
-                    <option value="vervoer">Vervoer</option>
+                    <option value="cultuur_attracties">Cultuur en attracties</option>
+                    <option value="hospitality">Hospitality</option>
+                    <option value="publieke_diensten">Publieke diensten</option>
+                    <option value="zorg_gezondheid">Zorg en gezondheid</option>
                     <option value="winkelen">Winkelen</option>
+                    <option value="vervoer">Vervoer</option>
+                    <option value="sport_spel">Sport en Spel</option>
                 </select>
                 <div class="select-icon">
                     <svg
@@ -52,68 +52,138 @@ event.preventDefault()
                     <option value="" disabled selected
                         >Kies een subcategorie...</option
                     >
-                    <option value="bioscopen" data-parent="cultuur_kunst"
-                        >Bioscopen</option
+                    <!-- Cultuur en attracties -->
+                    <option value="Bioscopen en filmhuizen" data-parent="cultuur_attracties"
+                        >Bioscopen en filmhuizen</option
                     >
-                    <option value="galleries" data-parent="cultuur_kunst"
-                        >Galleries</option
-                    >
-                    <option value="musea" data-parent="cultuur_kunst"
+                    <option value="Musea" data-parent="cultuur_attracties"
                         >Musea</option
                     >
-                    <option value="theaters" data-parent="cultuur_kunst"
-                        >Theaters</option
+                    <option value="Rondvaartboten" data-parent="cultuur_attracties"
+                        >Rondvaartboten</option
+                    >
+                    <option value="Theaters en concertgebouwen" data-parent="cultuur_attracties"
+                        >Theaters en concertgebouwen</option
+                    >
+                    <option value="Toeristische attracties" data-parent="cultuur_attracties"
+                        >Toeristische attracties</option
+                    >
+                    <option value="Educatieve tuinen" data-parent="cultuur_attracties"
+                        >Educatieve tuinen</option
                     >
 
-                    <option value="apotheken" data-parent="gezondheid_zorg"
+                    <!-- Hospitality -->
+                    <option value="Cafés" data-parent="hospitality"
+                        >Cafés</option
+                    >
+                    <option value="Congres- en partyaccommodaties" data-parent="hospitality"
+                        >Congres- en partyaccommodaties</option
+                    >
+                    <option value="Hotels" data-parent="hospitality"
+                        >Hotels</option
+                    >
+                    <option value="Restaurants / eetgelegenheden" data-parent="hospitality"
+                        >Restaurants / eetgelegenheden</option
+                    >
+
+                    <!-- Publieke diensten -->
+                    <option value="Bibliotheken" data-parent="publieke_diensten"
+                        >Bibliotheken</option
+                    >
+                    <option value="Educatieve centra" data-parent="publieke_diensten"
+                        >Educatieve centra</option
+                    >
+                    <option value="Informatiecentra" data-parent="publieke_diensten"
+                        >Informatiecentra</option
+                    >
+                    <option value="Kerkgebouwen" data-parent="publieke_diensten"
+                        >Kerkgebouwen</option
+                    >
+                    <option value="Onderwijsinstellingen en scholen" data-parent="publieke_diensten"
+                        >Onderwijsinstellingen en scholen</option
+                    >
+                    <option value="Openbare gebouwen" data-parent="publieke_diensten"
+                        >Openbare gebouwen</option
+                    >
+                    <option value="Openbare toiletten" data-parent="publieke_diensten"
+                        >Openbare toiletten</option
+                    >
+                    <option value="Politiebureaus" data-parent="publieke_diensten"
+                        >Politiebureaus</option
+                    >
+                    <option value="Sociale Dienst" data-parent="publieke_diensten"
+                        >Sociale Dienst</option
+                    >
+                    <option value="Stadhuizen en stadsdeelkantoren" data-parent="publieke_diensten"
+                        >Stadhuizen en stadsdeelkantoren</option
+                    >
+                    <option value="Wijkcentra en buurthuizen" data-parent="publieke_diensten"
+                        >Wijkcentra en buurthuizen</option
+                    >
+
+                    <!-- Zorg en gezondheid -->
+                    <option value="Apotheken" data-parent="zorg_gezondheid"
                         >Apotheken</option
                     >
-                    <option value="huisartsen" data-parent="gezondheid_zorg"
+                    <option value="Fysiotherapeuten" data-parent="zorg_gezondheid"
+                        >Fysiotherapeuten</option
+                    >
+                    <option value="Gezondheidscentra" data-parent="zorg_gezondheid"
+                        >Gezondheidscentra</option
+                    >
+                    <option value="Huisartsen" data-parent="zorg_gezondheid"
                         >Huisartsen</option
                     >
-                    <option value="ziekenhuizen" data-parent="gezondheid_zorg"
+                    <option value="Klinieken" data-parent="zorg_gezondheid"
+                        >Klinieken</option
+                    >
+                    <option value="Revalidatiecentra" data-parent="zorg_gezondheid"
+                        >Revalidatiecentra</option
+                    >
+                    <option value="Tandartsen" data-parent="zorg_gezondheid"
+                        >Tandartsen</option
+                    >
+                    <option value="Verpleeg- en verzorgingshuizen" data-parent="zorg_gezondheid"
+                        >Verpleeg- en verzorgingshuizen</option
+                    >
+                    <option value="Ziekenhuizen" data-parent="zorg_gezondheid"
                         >Ziekenhuizen</option
                     >
 
-                    <option value="hotels" data-parent="horeca_toerisme"
-                        >Hotels</option
+                    <!-- Winkelen -->
+                    <option value="Galeries" data-parent="winkelen"
+                        >Galeries</option
                     >
-                    <option value="restaurants" data-parent="horeca_toerisme"
-                        >Restaurants</option
-                    >
-                    <option value="bars" data-parent="horeca_toerisme"
-                        >Bars</option
-                    >
-
-                    <option value="bibliotheken" data-parent="openbare_diensten"
-                        >Bibliotheken</option
-                    >
-                    <option value="scholen" data-parent="openbare_diensten"
-                        >Scholen</option
-                    >
-                    <option value="politie" data-parent="openbare_diensten"
-                        >Politie</option
-                    >
-
-                    <option value="sportaccommodaties" data-parent="sport_spel"
-                        >Sportaccommodaties</option
-                    >
-                    <option value="zwembaden" data-parent="sport_spel"
-                        >Zwembaden</option
-                    >
-
-                    <option value="parkeergarages" data-parent="vervoer"
-                        >Parkeergarages</option
-                    >
-                    <option value="treinstations" data-parent="vervoer"
-                        >Treinstations</option
-                    >
-
-                    <option value="supermarkten" data-parent="winkelen"
+                    <option value="Supermarkten" data-parent="winkelen"
                         >Supermarkten</option
                     >
-                    <option value="warenhuizen" data-parent="winkelen"
+                    <option value="Uiterlijke verzorging" data-parent="winkelen"
+                        >Uiterlijke verzorging</option
+                    >
+                    <option value="Warenhuizen" data-parent="winkelen"
                         >Warenhuizen</option
+                    >
+                    <option value="Winkelcentra" data-parent="winkelen"
+                        >Winkelcentra</option
+                    >
+                    <option value="Winkels" data-parent="winkelen"
+                        >Winkels</option
+                    >
+
+                    <!-- Vervoer -->
+                    <option value="Parkeergarages" data-parent="vervoer"
+                        >Parkeergarages</option
+                    >
+                    <option value="Stations" data-parent="vervoer"
+                        >Stations</option
+                    >
+
+                    <!-- Sport en Spel -->
+                    <option value="Sportaccommodaties" data-parent="sport_spel"
+                        >Sportaccommodaties</option
+                    >
+                    <option value="Zwembaden" data-parent="sport_spel"
+                        >Zwembaden</option
                     >
                 </select>
                 <div class="select-icon">
