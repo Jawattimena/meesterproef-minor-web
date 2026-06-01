@@ -3,7 +3,7 @@
 ---
 
 <search>
-    <form action="./search/">
+    <form action="./search/" onsubmit="return false">
         <label for="zoek">Zoek een locatie</label>
         <input type="search" id="zoek" name="q" placeholder="Zoek een locatie..." autocomplete="off" />
         <button type="submit">Zoeken</button>
@@ -34,13 +34,12 @@
     input {
         flex: 1;
         padding: 8px 12px;
-        border: 1px solid var(--color-on-surface);
-        background: var(--color-on-primary);
+        border: 1px solid var(--color-border);
+        background: var(--color-background-main);
         font-size: var(--font-size-regular);
-        color: var(--color-on-surface);
+        color: var(--color-text-main);
         font-family: inherit;
         box-sizing: border-box;
-        /* border-radius: 4px; */
     }
 
     input::placeholder {
@@ -50,9 +49,9 @@
 
     button {
         padding: 9px 14px;
-        background: var(--color-primary-container);
-        color: var(--color-on-primary);
-        border: 1px solid var(--color-on-surface);
+        background: var(--color-accent-1);
+        color: var(--color-btn-primary-content);
+        border: 1px solid var(--color-border);
         cursor: pointer;
         font-family: inherit;
         font-weight: 500;
@@ -69,13 +68,184 @@
         top: calc(100% + 4px);
         left: 0;
         right: 0;
-        background: var(--color-on-primary);
-        border: 2px solid var(--color-on-surface);
+        background: var(--color-background-main);
+        /* border: 1px solid var(--color-border); */
         list-style: none;
         margin: 0;
         padding: 0;
-        z-index: 1000;
         border-radius: 4px;
+        max-height: 250px;
+        overflow-y: auto;
+        z-index: 9999;
     }
 
+    :global(#zoekResultaten li) {
+        padding: 10px 14px;
+        cursor: pointer;
+        border-bottom: 2px solid var(--color-border);
+        border-right: 2px solid var(--color-border);
+        border-left: 2px solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    :global(#zoekResultaten li:last-child) {
+        border-bottom: 2px solid var(--color-border);
+    }
+
+    :global(#zoekResultaten li:hover) {
+        background: var(--color-accent-1);
+        color: var(--color-btn-primary-content);
+    }
+
+    :global(.resultaatNaam) {
+        font-size: var(--font-size-regular);
+        font-weight: 500;
+    }
+
+    :global(.resultaatAdres) {
+        font-size: var(--font-size-small, 0.85em);
+        opacity: 0.7;
+    }
 </style>
+
+<script>
+
+    // @ts-nocheck
+    // ----------------------------------------
+    // Algolia verbinding
+    // ----------------------------------------
+
+    const appId = import.meta.env.PUBLIC_ALGOLIA_APP_ID;
+    const searchKey = import.meta.env.PUBLIC_ALGOLIA_SEARCH_KEY;
+    const algoliaUrl = `https://${appId}-dsn.algolia.net/1/indexes/locations/query`;
+
+
+    // ----------------------------------------
+    // HTML elementen ophalen
+    // ----------------------------------------
+
+    const invoerVeld = document.getElementById('zoek');
+    const zoekResultaten = document.getElementById('zoekResultaten');
+
+    if (!appId || !searchKey) {
+        console.error('Algolia search werkt niet: PUBLIC_ALGOLIA_APP_ID of PUBLIC_ALGOLIA_SEARCH_KEY is niet ingesteld.');
+    }
+
+
+    // ----------------------------------------
+    // Luisteren terwijl gebruiker typt
+    // ----------------------------------------
+
+    let wachtTimer = null;
+
+    if (appId && searchKey && invoerVeld) {
+        invoerVeld.addEventListener('input', function() {
+            const zoekwoord = invoerVeld.value.trim();
+
+            // Stop vorige timer
+            clearTimeout(wachtTimer);
+
+            // Leeg veld? Verberg lijst
+            if (zoekwoord.length === 0) {
+                zoekResultaten.style.display = 'none';
+                return;
+            }
+
+            // Wacht 200ms nadat gebruiker stopt met typen, dan pas zoeken
+            wachtTimer = setTimeout(async function() {
+                const resultaten = await zoekInAlgolia(zoekwoord);
+                toonResultaten(resultaten);
+            }, 200);
+        });
+    }
+
+
+    // ----------------------------------------
+    // Zoeken in Algolia
+    // ----------------------------------------
+
+    async function zoekInAlgolia(zoekwoord) {
+        const antwoord = await fetch(algoliaUrl, {
+            method: 'POST',
+            headers: {
+                'X-Algolia-Application-Id': appId,
+                'X-Algolia-API-Key': searchKey,
+            },
+            body: JSON.stringify({
+                query: zoekwoord,
+                hitsPerPage: 8,
+            }),
+        });
+
+        const data = await antwoord.json();
+        return data.hits;
+    }
+
+
+    // ----------------------------------------
+    // Resultaten tonen in de dropdown
+    // ----------------------------------------
+
+    function toonResultaten(resultaten) {
+
+        // Lijst leegmaken
+        zoekResultaten.innerHTML = '';
+
+        // Geen resultaten? Verberg de lijst
+        if (resultaten.length === 0) {
+            zoekResultaten.style.display = 'none';
+            return;
+        }
+
+        // Maak voor elk resultaat een lijstitem
+        resultaten.forEach(function(resultaat) {
+
+            const lijstItem = document.createElement('li');
+
+            // Naam bovenaan
+            const naamSpan = document.createElement('span');
+            naamSpan.className = 'resultaatNaam';
+            naamSpan.textContent = resultaat.naam;
+
+            // Adres eronder
+            const adresSpan = document.createElement('span');
+            adresSpan.className = 'resultaatAdres';
+            adresSpan.textContent = resultaat.adres ?? '';
+
+            lijstItem.appendChild(naamSpan);
+            lijstItem.appendChild(adresSpan);
+
+            // Klik op een resultaat → stuur signaal naar kaart
+            lijstItem.addEventListener('click', function() {
+                invoerVeld.value = resultaat.naam;
+                zoekResultaten.style.display = 'none';
+
+                window.dispatchEvent(new CustomEvent('locatieGekozen', {
+                    detail: {
+                        lat: resultaat.lat,
+                        lng: resultaat.lng,
+                        naam: resultaat.naam,
+                    }
+                }));
+            });
+
+            zoekResultaten.appendChild(lijstItem);
+        });
+
+        // Toon de lijst
+        zoekResultaten.style.display = 'block';
+    }
+
+
+    // ----------------------------------------
+    // Lijst sluiten als je ergens anders klikt
+    // ----------------------------------------
+
+    document.addEventListener('click', function(klik) {
+        if (!invoerVeld.contains(klik.target) && !zoekResultaten.contains(klik.target)) {
+            zoekResultaten.style.display = 'none';
+        }
+    });
+</script>

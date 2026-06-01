@@ -625,6 +625,13 @@ window.addEventListener("load", function () {
 
     // Exposed to window as general close callback if needed
     window.amClosePopup = closePopover;
+
+    window.addEventListener('locatieGekozen', function(event) {
+    const lat = event.detail.lat;
+    const lng = event.detail.lng;
+
+    map.setView([lat, lng], 16);
+});
 });
 
 </script>
