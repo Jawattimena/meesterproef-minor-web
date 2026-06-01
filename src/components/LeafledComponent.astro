@@ -33,88 +33,6 @@ const shareIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none
 </g>
 </svg>`;
 
-// Helper function to return SVG HTML for other buildings based on description and active state
-function getOtherMarkerHtml(omschrijving, isActive) {
-    let markerHtml = "";
-    if (omschrijving.includes("gezondheidszorg")) {
-        if (isActive) {
-            markerHtml = `<svg width="22" height="22" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 0H4.5V4H0V19H19V4H14.5V0ZM12.5 4V2H6.5V4H12.5ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
-                </svg>`;
-        } else {
-            markerHtml = `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
-                </svg>`;
-        }
-    } else if (omschrijving.includes("sportfunctie")) {
-        if (isActive) {
-            markerHtml = `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H10.25V4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V16H0V13.25H1C3.8995 13.25 6.25 10.8995 6.25 8C6.25 5.1005 3.8995 2.75 1 2.75H0V0ZM11.75 11.4195V16H22V13.25H21C18.1005 13.25 15.75 10.8995 15.75 8C15.75 5.1005 18.1005 2.75 21 2.75H22V0H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195ZM11.75 6.14538C12.483 6.44207 13 7.16066 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM0 4.25V11.75H1C3.07107 11.75 4.75 10.0711 4.75 8C4.75 5.92893 3.07107 4.25 1 4.25H0ZM21 4.25H22V11.75H21C18.9289 11.75 17.25 10.0711 17.25 8C17.25 5.92893 18.9289 4.25 21 4.25Z" fill="currentColor"/>
-                </svg>`;
-        } else {
-            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-background-main); display: block;">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
-                </svg>`;
-        }
-    } else if (omschrijving.includes("logiesfunctie")) {
-        if (isActive) {
-            markerHtml = `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 4.96774V2.51886H10.6195V0H5.35076V2.52885H2.52151V4.97774H0V22H16V4.96774H13.4487ZM6.70269 9.09998H4V11.8027H6.70269V9.09998ZM9.29731 9.09998H12V11.8027H9.29731V9.09998ZM12 14.5054H9.29731V17.2081H12V14.5054ZM5 14.5054C4.44772 14.5054 4 14.9531 4 15.5054V19.9108H6.70269V15.5054C6.70269 14.9531 6.25498 14.5054 5.70269 14.5054H5Z" fill="currentColor"/>
-                </svg>`;
-        } else {
-            markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                    <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
-                    <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
-                    <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
-                </svg>`;
-        }
-    } else if (omschrijving.includes("bijeenkomst")) {
-        if (isActive) {
-            markerHtml = `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.31818V0H0V16H22V5.4L16.2857 2L12 4.31818ZM3.25 3.5H5.25V5.5H3.25V3.5ZM5.25 7H3.25V9H5.25V7ZM13.25 7H15.25V9H13.25V7ZM5.25 10.5H3.25V12.5H5.25V10.5ZM13.25 10.5H15.25V12.5H13.25V10.5ZM8.75 3.5H6.75V5.5H8.75V3.5ZM6.75 7H8.75V9H6.75V7ZM18.75 7H16.75V9H18.75V7ZM6.75 10.5H8.75V12.5H6.75V10.5ZM18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
-                </svg>`;
-        } else {
-            markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                    <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
-                    <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
-                    <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
-                    <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
-                    <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
-                    <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
-                    <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
-                    <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
-                    <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
-                    <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
-                </svg>`;
-        }
-    } else {
-        if (omschrijving.includes("winkelfunctie")) {
-            markerHtml = isActive
-                ? `<span style="font-size:20px;line-height:1;">🛍️</span>`
-                : `<span style="font-size:16px;line-height:1;">🛍️</span>`;
-        } else {
-            if (isActive) {
-                markerHtml = `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 22V0H0V22H16ZM4 4H7V7H4V4ZM7 9H4V12H7V9ZM4 14H7V17H4V14ZM12 4H9V7H12V4ZM9 9H12V12H9V9ZM12 14H9V17H12V14Z" fill="currentColor"/>
-                    </svg>`;
-            } else {
-                markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                        <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
-                        <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
-                        <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
-                        <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
-                        <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
-                        <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
-                    </svg>`;
-            }
-        }
-    }
-    return markerHtml;
-}
-
 window.addEventListener("load", function () {
     const amsterdamBounds = L.latLngBounds(
         [52.278, 4.55], // Shifted further left (west) to allow panning western areas into view
@@ -167,182 +85,226 @@ window.addEventListener("load", function () {
         });
     }
 
-    // Inactief marker-icoon (32px, wit)
-    const defaultIcon = L.divIcon({
-        className: "am-marker",
-        html: `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.099917C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
-            </svg>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -34],
-    });
+    // Helper function to resolve the visual Hoofdfilter category from Hoofdfilter and Subfilter
+    function getVisualHoofdfilter(hoofdfilter, subfilter) {
+        const h = (hoofdfilter || "").trim();
+        const s = (subfilter || "").trim();
 
-    // Actief marker-icoon (40px, rood)
-    const activeIcon = L.divIcon({
-        className: "am-marker am-marker--active",
-        html: `<svg width="15" height="20" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917Z" fill="currentColor"/>
-            </svg>`,
-        iconSize: [40, 40],
-        iconAnchor: [20, 40],
-        popupAnchor: [0, -42],
-    });
+        if (s === "Sportaccommodaties" || s === "Zwembaden") {
+            return "Sport en Spel";
+        }
+        if (s === "Stations" || s === "Parkeergarages") {
+            return "Vervoer";
+        }
+        if (s === "Educatieve tuinen") {
+            return "Cultuur en attracties";
+        }
+        return h;
+    }
 
-    const defaultIconSchool = L.divIcon({
-        className: "am-marker",
-        html: `<svg width="15" height="18" viewBox="0 0 17.217 20.2095" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-primary); display: block;">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.6 2H12.35V5.60495C12.5116 6.03931 12.6 6.50934 12.6 7.00001C12.6 9.20915 10.8091 11 8.59997 11C6.39083 11 4.59997 9.20915 4.59997 7.00001C4.59997 6.50934 4.68832 6.03931 4.84997 5.60495V2H3.38328V4.57426L3.92722 6.75001H1.33939L1.88328 4.57442V2H1.59997V0H15.6V2ZM6.86754 6C6.69737 6.29418 6.59997 6.63572 6.59997 7.00001C6.59997 8.10458 7.4954 9.00001 8.59997 9.00001C9.70454 9.00001 10.6 8.10458 10.6 7.00001C10.6 6.63572 10.5026 6.29418 10.3324 6H6.86754ZM6.84997 2H10.35V4H6.84997V2ZM4.18718 14.0014C3.73878 14.0254 3.35831 14.3471 3.26329 14.7905L2.10207 20.2095H0L1.30769 14.3714C1.60409 12.9882 2.82648 12 4.24109 12H13.0074C14.422 12 15.6444 12.9882 15.9408 14.3714L17.217 20.2095H15.1465L13.9852 14.7905C13.8869 14.3316 13.4828 14.0031 13.0141 14L8.59995 14L4.18718 14.0014ZM10.1857 14H8.59995H7.01417H10.1857Z" fill="currentColor"/>
-            </svg>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -34],
-    });
+    // ── CBA Marker Icons op basis van Hoofdfilter ──
+    // Genereer marker SVG HTML op basis van de CBA Hoofdfilter categorie
+    function getCbaMarkerSvg(hoofdfilter, isActive) {
+        const size = isActive ? "17" : "13";
+        const viewBox = "0 0 16 22";
+        const style = `color: ${isActive ? "var(--color-on-primary)" : "var(--color-primary)"}; display: block;`;
 
-    // Actief marker-icoon (40px, rood)
-    const activeIconSchool = L.divIcon({
-        className: "am-marker am-marker--active",
-        html: `<svg width="17" height="20" viewBox="0 0 17.217 20.2095" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-on-primary); display: block;">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.84998 2H3.38329V4.57426L3.92722 6.75001H1.33939L1.88329 4.57442V2H1.59998V0H15.6V2H12.35V4.5H4.84998V2ZM2.62142 12.4747C3.09199 12.1727 3.64974 12 4.24109 12H13.0074C13.5865 12 14.1334 12.1656 14.5977 12.4561C15.2677 12.8753 15.7658 13.5544 15.9408 14.3714L17.217 20.2095H0L1.30769 14.3714C1.48018 13.5664 1.96631 12.8952 2.62142 12.4747ZM5.08921 6C5.03083 6.25729 5 6.52505 5 6.80001C5 8.78824 6.61177 10.4 8.6 10.4C10.5882 10.4 12.2 8.78824 12.2 6.80001C12.2 6.52505 12.1692 6.25729 12.1108 6H5.08921Z" fill="currentColor"/>
-            </svg>`,
-        iconSize: [40, 40],
-        iconAnchor: [20, 40],
-        popupAnchor: [0, -42],
-    });
+        // Zorg en gezondheid — Medisch kruis
+        if (hoofdfilter === "Zorg en gezondheid") {
+            if (isActive) {
+                return `<svg width="22" height="22" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 0H4.5V4H0V19H19V4H14.5V0ZM12.5 4V2H6.5V4H12.5ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+                </svg>`;
+            }
+            return `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+            </svg>`;
+        }
+
+        // Sport en Spel — Ticket/Sport icoon (ook voor items uit "Onbekend" die we hergroepeerd hebben)
+        if (hoofdfilter === "Sport en Spel") {
+            if (isActive) {
+                return `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H10.25V4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V16H0V13.25H1C3.8995 13.25 6.25 10.8995 6.25 8C6.25 5.1005 3.8995 2.75 1 2.75H0V0ZM11.75 11.4195V16H22V13.25H21C18.1005 13.25 15.75 10.8995 15.75 8C15.75 5.1005 18.1005 2.75 21 2.75H22V0H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195Z" fill="currentColor"/>
+                </svg>`;
+            }
+            return `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM0 0V16H22V0H0Z" fill="currentColor"/>
+            </svg>`;
+        }
+
+        // Hospitality — Vork & Mes
+        if (hoofdfilter === "Hospitality") {
+            return `<svg width="${size}" height="${isActive ? "20" : "18"}" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.09998C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
+            </svg>`;
+        }
+
+        // Cultuur en attracties — Bijeenkomst gebouw
+        if (hoofdfilter === "Cultuur en attracties") {
+            if (isActive) {
+                return `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.31818V0H0V16H22V5.4L16.2857 2L12 4.31818ZM3.25 3.5H5.25V5.5H3.25V3.5ZM5.25 7H3.25V9H5.25V7ZM13.25 7H15.25V9H13.25V7ZM5.25 10.5H3.25V12.5H5.25V10.5ZM13.25 10.5H15.25V12.5H13.25V10.5ZM8.75 3.5H6.75V5.5H8.75V3.5ZM6.75 7H8.75V9H6.75V7ZM18.75 7H16.75V9H18.75V7ZM6.75 10.5H8.75V12.5H6.75V10.5ZM18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+                </svg>`;
+            }
+            return `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
+                <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
+                <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
+                <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
+                <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
+                <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
+                <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
+                <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
+                <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
+                <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
+            </svg>`;
+        }
+
+        // Winkelen — Winkeltas
+        if (hoofdfilter === "Winkelen") {
+            return `<span style="font-size:${isActive ? '20px' : '16px'};line-height:1;">🛍️</span>`;
+        }
+
+        // Vervoer — Trein/Auto
+        if (hoofdfilter === "Vervoer") {
+            return `<span style="font-size:${isActive ? '20px' : '16px'};line-height:1;">🚉</span>`;
+        }
+
+        // Publieke diensten — Gebouw met ramen
+        // Default fallback voor alle andere categorieën
+        if (isActive) {
+            return `<svg width="15" height="20" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 22V0H0V22H16ZM4 4H7V7H4V4ZM7 9H4V12H7V9ZM4 14H7V17H4V14ZM12 4H9V7H12V4ZM9 9H12V12H9V9ZM12 14H9V17H12V14Z" fill="currentColor"/>
+            </svg>`;
+        }
+        return `<svg width="${size}" height="18" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
+            <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
+            <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
+            <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
+            <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
+            <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
+        </svg>`;
+    }
+
+    // Maak een Leaflet divIcon op basis van Hoofdfilter
+    function createCbaMarkerIcon(hoofdfilter, isActive) {
+        const markerHtml = getCbaMarkerSvg(hoofdfilter, isActive);
+        const size = isActive ? 40 : 32;
+        const anchor = size / 2;
+
+        return L.divIcon({
+            className: isActive ? "am-marker am-marker--active" : "am-marker",
+            html: markerHtml,
+            iconSize: [size, size],
+            iconAnchor: [anchor, size],
+            popupAnchor: [0, -(size + 2)],
+        });
+    }
 
     // Active marker state management
     let activeMarker = null;
-    let activeMarkerType = null; // 'cafe', 'school', 'other'
-    let activeMarkerOmschrijving = null;
+    let activeMarkerType = null;
+    let activeMarkerHoofdfilter = null;
 
     function resetActiveMarker() {
         if (activeMarker) {
-            if (activeMarkerType === "cafe") {
-                activeMarker.setIcon(defaultIcon);
-            } else if (activeMarkerType === "school") {
-                activeMarker.setIcon(defaultIconSchool);
-            } else if (activeMarkerType === "other") {
-                const markerHtml = getOtherMarkerHtml(
-                    activeMarkerOmschrijving || "",
-                    false,
-                );
-                const defaultIconOther = L.divIcon({
-                    className: "am-marker",
-                    html: markerHtml,
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 32],
-                    popupAnchor: [0, -34],
-                });
-                activeMarker.setIcon(defaultIconOther);
-            }
+            activeMarker.setIcon(createCbaMarkerIcon(activeMarkerHoofdfilter || "", false));
             activeMarker = null;
             activeMarkerType = null;
-            activeMarkerOmschrijving = null;
+            activeMarkerHoofdfilter = null;
         }
     }
 
-    function setActiveMarker(layer, type, omschrijving = null) {
+    function setActiveMarker(layer, type, hoofdfilter = null) {
         resetActiveMarker();
         activeMarker = layer;
         activeMarkerType = type;
-        activeMarkerOmschrijving = omschrijving;
-
-        if (type === "cafe") {
-            layer.setIcon(activeIcon);
-        } else if (type === "school") {
-            layer.setIcon(activeIconSchool);
-        } else if (type === "other") {
-            const markerHtml = getOtherMarkerHtml(omschrijving || "", true);
-            const activeIconOther = L.divIcon({
-                className: "am-marker am-marker--active",
-                html: markerHtml,
-                iconSize: [40, 40],
-                iconAnchor: [20, 40],
-                popupAnchor: [0, -42],
-            });
-            layer.setIcon(activeIconOther);
-        }
+        activeMarkerHoofdfilter = hoofdfilter;
+        layer.setIcon(createCbaMarkerIcon(hoofdfilter || "", true));
     }
 
-    // Open side popover panel with location details
-    function openPopoverWithDetails(p, isSchool, isBagObject) {
+    // Open side popover panel with CBA location details
+    function openPopoverWithDetails(p) {
         const popover = document.getElementById("map-popover");
         if (!popover) return;
 
-        let naam = p.zaaknaam ?? "Onbekende locatie";
-        if (isSchool) {
-            naam = p.juridischEigenaar ?? "Onbekende school";
-        } else if (isBagObject) {
-            const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? "";
-            let typeNaam = "Overig gebouw";
-            if (omschrijving.includes("winkelfunctie"))
-                typeNaam = "Winkel / Supermarkt";
-            else if (omschrijving.includes("gezondheidszorg"))
-                typeNaam = "Gezondheidszorg Locatie";
-            else if (omschrijving.includes("logiesfunctie"))
-                typeNaam = "Hotel / Logies";
-            else if (omschrijving.includes("bijeenkomst"))
-                typeNaam = "Bijeenkomst / Cultuur";
-            else if (omschrijving.includes("sportfunctie"))
-                typeNaam = "Sport & Spel";
-            naam = typeNaam;
+        const naam = p.Naam_locatie ?? "Onbekende locatie";
+        const toevoeging = p.Toevoeging ? ` ${p.Toevoeging}` : "";
+        const adres = `${p.adres ?? ""} ${p.Huisnummer ?? ""}${toevoeging}`.trim();
+        const postcode = p.Postcode ?? "";
+        const plaats = p.Plaats ?? "";
+        const adresVolledig = [adres, postcode, plaats].filter(Boolean).join(", ");
+
+        const visualHoofd = getVisualHoofdfilter(p.Hoofdfilter, p.Subfilter);
+        const soort = `${visualHoofd} — ${(p.Subfilter ?? "").trim()}`;
+
+        // Toegankelijkheidsinformatie uit CBA dataset
+        const accessibilityFields = [
+            { key: "Gehandicaptenparkeerplaatsen_binnen_100_m_", label: "Gehandicaptenparkeerplaats (< 100m)" },
+            { key: "Voorrijden_toegestaan", label: "Voorrijden toegestaan" },
+            { key: "Toegankelijk_gebouw", label: "Toegankelijk gebouw" },
+            { key: "Assistentiehond_toegestaan", label: "Assistentiehond toegestaan" },
+            { key: "Persoonlijke_assistent", label: "Persoonlijke assistent" },
+            { key: "Rustplekken", label: "Rustplekken" },
+            { key: "Toegankelijke_lift", label: "Toegankelijke lift" },
+            { key: "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak", label: "Toegang zonder drempels" },
+            { key: "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed", label: "Drempelloos & brede doorgangen" },
+            { key: "Rolstoelvriendelijk_toilet", label: "Rolstoelvriendelijk toilet" },
+            { key: "Speciale_toeschouwersplaatsen_rolstoelgebruikers", label: "Rolstoelplaatsen" },
+            { key: "Restaurant_tafels_onderrijdbaar", label: "Onderrijdbare tafels" },
+            { key: "Toegankelijke_hotelkamers", label: "Toegankelijke hotelkamers" },
+            { key: "Toegankelijke_kleedkamer", label: "Toegankelijke kleedkamer" },
+            { key: "Toegankelijke_douche", label: "Toegankelijke douche" },
+            { key: "Geleidelijnen_en_vloermarkeringen", label: "Geleidelijnen & vloermarkeringen" },
+            { key: "Audiodescriptie_of_beeldbeschrijving", label: "Audiodescriptie" },
+            { key: "Materiaal_in_braille", label: "Materiaal in braille" },
+            { key: "Ringleiding_voor_slechthorenden", label: "Ringleiding" },
+            { key: "Tolk_gebarentaal", label: "Tolk gebarentaal" },
+            { key: "Prikkelarme_ruimte", label: "Prikkelarme ruimte" },
+            { key: "Prikkelarme_uren", label: "Prikkelarme uren" },
+            { key: "Herkenning_Sunflower_Keycord", label: "Sunflower Keycord" },
+        ];
+
+        // Bouw items: toon "Ja" als groene check, "Nee" als rood kruis
+        const items = [];
+
+        // Contactinfo als eerste items
+        if (p.Telefoonnummer && p.Telefoonnummer !== "Onbekend") {
+            items.push({ label: "Telefoon", desc: p.Telefoonnummer });
+        }
+        if (p.Website && p.Website !== "Onbekend") {
+            items.push({ label: "Website", desc: p.Website });
         }
 
-        let adres = p.adres ?? "";
-        let postcode = p.postcode ?? "";
+        // Categorie
+        items.push({ label: "Categorie", desc: soort });
 
-        if (isSchool || isBagObject) {
-            const toevoeging = p.adresHuisnummertoevoeging
-                ? ` ${p.adresHuisnummertoevoeging}`
-                : "";
-            const letter = p.adresHuisletter ? ` ${p.adresHuisletter}` : "";
-            adres = `${p.adresStraat ?? ""} ${p.adresHuisnummer ?? ""
-                }${letter}${toevoeging}`.trim();
-            postcode = p.adresPostcode ?? p.postcode ?? "";
+        // Traptreden info
+        if (p.Aantal_traptreden && p.Aantal_traptreden !== "Onbekend") {
+            items.push({ label: "Aantal traptreden", desc: p.Aantal_traptreden });
         }
 
-        let soort = p.zaakSpecificatie ?? p.zaakCategorie ?? "";
-        if (isSchool) {
-            soort = `School (${p.bestemming ?? "Onbekend"})`;
-        } else if (isBagObject) {
-            const omschrijving = p.gebruiksdoel?.[0]?.omschrijving ?? "";
-            soort = `BAG (${omschrijving.charAt(0).toUpperCase() + omschrijving.slice(1)
-                })`;
+        // Toegankelijkheidsfeatures die "Ja" zijn
+        const jaItems = accessibilityFields
+            .filter(f => p[f.key] === "Ja")
+            .map(f => f.label);
+
+        if (jaItems.length > 0) {
+            items.push({ label: "Toegankelijk", desc: jaItems.join(", ") });
         }
 
-        const adresVolledig = [adres, postcode].filter(Boolean).join(", ");
+        // Features die "Nee" zijn
+        const neeItems = accessibilityFields
+            .filter(f => p[f.key] === "Nee")
+            .map(f => f.label);
 
-        const openZoDo =
-            p.openingstijdenZoDoVan && p.openingstijdenZoDoTot
-                ? `Zondag t/m donderdag: ${p.openingstijdenZoDoVan} - ${p.openingstijdenZoDoTot}`
-                : null;
-        const openVrZa =
-            p.openingstijdenVrZaVan && p.openingstijdenVrZaTot
-                ? `Vrijdag en zaterdag: ${p.openingstijdenVrZaVan} - ${p.openingstijdenVrZaTot}`
-                : null;
-
-        const items = [
-            soort
-                ? {
-                    label: isSchool
-                        ? "Type bestemming"
-                        : isBagObject
-                            ? "Gebruiksdoel"
-                            : "Type horeca",
-                    desc: soort,
-                }
-                : null,
-            isBagObject && p.oppervlakte
-                ? { label: "Oppervlakte", desc: `${p.oppervlakte} m²` }
-                : null,
-            isBagObject && p.statusOmschrijving
-                ? { label: "Status", desc: p.statusOmschrijving }
-                : null,
-            openZoDo ? { label: "Openingstijden", desc: openZoDo } : null,
-            openVrZa
-                ? { label: "Openingstijden weekend", desc: openVrZa }
-                : null,
-        ].filter(Boolean);
+        if (neeItems.length > 0) {
+            items.push({ label: "Niet beschikbaar", desc: neeItems.join(", ") });
+        }
 
         const itemsHtml = items
             .map(
@@ -414,78 +376,6 @@ window.addEventListener("load", function () {
         resetActiveMarker();
     }
 
-    // Dynamisch marker icoon genereren op basis van categorie en status
-    function createMarkerIcon(properties, isActive) {
-        const isSchool = properties.accommodatieId !== undefined;
-        const isBagObject = properties.gebruiksdoel !== undefined;
-        
-        let markerHtml = "";
-        
-        if (isSchool) {
-            markerHtml = `<span style="font-size:${isActive ? '20px' : '16px'};line-height:1;">🏫</span>`;
-        } else if (isBagObject) {
-            const omschrijving = properties.gebruiksdoel?.[0]?.omschrijving ?? "";
-            if (omschrijving.includes("gezondheidszorg")) {
-                markerHtml = `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
-                </svg>`;
-            } else if (omschrijving.includes("sportfunctie")) {
-                markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
-                </svg>`;
-            } else if (omschrijving.includes("logiesfunctie")) {
-                markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                    <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
-                    <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
-                    <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
-                </svg>`;
-            } else if (omschrijving.includes("bijeenkomst")) {
-                markerHtml = `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                    <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
-                    <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
-                    <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
-                    <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
-                    <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
-                    <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
-                    <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
-                    <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
-                    <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
-                    <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
-                </svg>`;
-            } else if (omschrijving.includes("winkelfunctie")) {
-                markerHtml = `<span style="font-size:${isActive ? '20px' : '16px'};line-height:1;">🛍️</span>`;
-            } else {
-                markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                    <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
-                    <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
-                    <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
-                    <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
-                    <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
-                    <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
-                </svg>`;
-            }
-        } else {
-            // Horeca (Restaurants, bars)
-            markerHtml = `<svg width="13" height="18" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.09998C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
-            </svg>`;
-        }
-        
-        const size = isActive ? 40 : 32;
-        const anchor = size / 2;
-        
-        return L.divIcon({
-            className: isActive ? "am-marker am-marker--active" : "am-marker",
-            html: markerHtml,
-            iconSize: [size, size],
-            iconAnchor: [anchor, size],
-            popupAnchor: [0, -(size + 2)],
-        });
-    }
-
     // ── LayerManager class: generiek lazy-load systeem voor alle categorieën ──
     class LayerManager {
         constructor(map) {
@@ -517,24 +407,15 @@ window.addEventListener("load", function () {
                 const data = await response.json();
                 entry.layer = L.geoJSON(data, {
                     pointToLayer: (feature, latlng) => {
-                        return L.marker(latlng, { icon: createMarkerIcon(feature.properties, false) });
+                        const visualHoofdfilter = getVisualHoofdfilter(feature.properties.Hoofdfilter, feature.properties.Subfilter);
+                        return L.marker(latlng, { icon: createCbaMarkerIcon(visualHoofdfilter, false) });
                     },
                     onEachFeature: (feature, layer) => {
                         layer.on("click", (e) => {
-                            L.DomEvent.stopPropagation(e); // Prevent map click from closing immediately
-                            const isSchool = feature.properties.accommodatieId !== undefined;
-                            const isBagObject = feature.properties.gebruiksdoel !== undefined;
-                            let type = "other";
-                            let omschrijving = null;
-                            if (isSchool) {
-                                type = "school";
-                            } else if (!isBagObject) {
-                                type = "cafe";
-                            } else {
-                                omschrijving = feature.properties.gebruiksdoel?.[0]?.omschrijving ?? "";
-                            }
-                            setActiveMarker(layer, type, omschrijving);
-                            openPopoverWithDetails(feature.properties, isSchool, isBagObject);
+                            L.DomEvent.stopPropagation(e);
+                            const visualHoofdfilter = getVisualHoofdfilter(feature.properties.Hoofdfilter, feature.properties.Subfilter);
+                            setActiveMarker(layer, "cba", visualHoofdfilter);
+                            openPopoverWithDetails(feature.properties);
                             this.map.panTo(layer.getLatLng());
                         });
                     },
@@ -563,39 +444,60 @@ window.addEventListener("load", function () {
     // Maak de LayerManager aan
     const layerManager = new LayerManager(map);
 
-    // Registreer alle subcategorieën met hun API URLs
-    // Horeca & Toerisme
-    layerManager.register("restaurants", "/api/restaurants");
-    layerManager.register("bars", "/api/restaurants"); // Hergebruikt restaurant endpoint voor nu
-    layerManager.register("hotels", "/api/gebouwen/logiesfunctie");
+    // Registreer alle subcategorieën met hun CBA dataset API URLs
+    // Cultuur en attracties
+    layerManager.register("Bioscopen en filmhuizen", "/api/cba/Bioscopen en filmhuizen");
+    layerManager.register("Musea", "/api/cba/Musea");
+    layerManager.register("Rondvaartboten", "/api/cba/Rondvaartboten");
+    layerManager.register("Theaters en concertgebouwen", "/api/cba/Theaters en concertgebouwen");
+    layerManager.register("Toeristische attracties", "/api/cba/Toeristische attracties");
+    layerManager.register("Educatieve tuinen", "/api/cba/Educatieve tuinen");
 
-    // Openbare diensten
-    layerManager.register("scholen", "/api/scholen");
-    layerManager.register("bibliotheken", "/api/gebouwen/bijeenkomstfunctie");
-    layerManager.register("politie", "/api/gebouwen/kantoorfunctie");
+    // Hospitality
+    layerManager.register("Cafés", "/api/cba/Cafés");
+    layerManager.register("Congres- en partyaccommodaties", "/api/cba/Congres- en partyaccommodaties");
+    layerManager.register("Hotels", "/api/cba/Hotels");
+    layerManager.register("Restaurants / eetgelegenheden", "/api/cba/Restaurants / eetgelegenheden");
 
-    // Gezondheid & Zorg
-    layerManager.register("ziekenhuizen", "/api/gebouwen/gezondheidszorgfunctie");
-    layerManager.register("apotheken", "/api/gebouwen/gezondheidszorgfunctie");
-    layerManager.register("huisartsen", "/api/gebouwen/gezondheidszorgfunctie");
+    // Publieke diensten
+    layerManager.register("Bibliotheken", "/api/cba/Bibliotheken");
+    layerManager.register("Educatieve centra", "/api/cba/Educatieve centra");
+    layerManager.register("Informatiecentra", "/api/cba/Informatiecentra");
+    layerManager.register("Kerkgebouwen", "/api/cba/Kerkgebouwen");
+    layerManager.register("Onderwijsinstellingen en scholen", "/api/cba/Onderwijsinstellingen en scholen");
+    layerManager.register("Openbare gebouwen", "/api/cba/Openbare gebouwen");
+    layerManager.register("Openbare toiletten", "/api/cba/Openbare toiletten");
+    layerManager.register("Politiebureaus", "/api/cba/Politiebureaus");
+    layerManager.register("Sociale Dienst", "/api/cba/Sociale Dienst");
+    layerManager.register("Stadhuizen en stadsdeelkantoren", "/api/cba/Stadhuizen en stadsdeelkantoren");
+    layerManager.register("Wijkcentra en buurthuizen", "/api/cba/Wijkcentra en buurthuizen");
 
-    // Sport & Spel
-    layerManager.register("sportaccommodaties", "/api/gebouwen/sportfunctie");
-    layerManager.register("zwembaden", "/api/gebouwen/sportfunctie");
+    // Zorg en gezondheid
+    layerManager.register("Apotheken", "/api/cba/Apotheken");
+    layerManager.register("Fysiotherapeuten", "/api/cba/Fysiotherapeuten");
+    layerManager.register("Gezondheidscentra", "/api/cba/Gezondheidscentra");
+    layerManager.register("Huisartsen", "/api/cba/Huisartsen");
+    layerManager.register("Klinieken", "/api/cba/Klinieken");
+    layerManager.register("Revalidatiecentra", "/api/cba/Revalidatiecentra");
+    layerManager.register("Tandartsen", "/api/cba/Tandartsen");
+    layerManager.register("Verpleeg- en verzorgingshuizen", "/api/cba/Verpleeg- en verzorgingshuizen");
+    layerManager.register("Ziekenhuizen", "/api/cba/Ziekenhuizen");
 
     // Winkelen
-    layerManager.register("supermarkten", "/api/gebouwen/winkelfunctie");
-    layerManager.register("warenhuizen", "/api/gebouwen/winkelfunctie");
-
-    // Cultuur & Kunst
-    layerManager.register("musea", "/api/gebouwen/bijeenkomstfunctie");
-    layerManager.register("theaters", "/api/gebouwen/bijeenkomstfunctie");
-    layerManager.register("bioscopen", "/api/gebouwen/bijeenkomstfunctie");
-    layerManager.register("galleries", "/api/gebouwen/bijeenkomstfunctie");
+    layerManager.register("Galeries", "/api/cba/Galeries");
+    layerManager.register("Supermarkten", "/api/cba/Supermarkten");
+    layerManager.register("Uiterlijke verzorging", "/api/cba/Uiterlijke verzorging");
+    layerManager.register("Warenhuizen", "/api/cba/Warenhuizen");
+    layerManager.register("Winkelcentra", "/api/cba/Winkelcentra");
+    layerManager.register("Winkels", "/api/cba/Winkels");
 
     // Vervoer
-    layerManager.register("parkeergarages", "/api/gebouwen/overige gebruiksfunctie");
-    layerManager.register("treinstations", "/api/gebouwen/overige gebruiksfunctie");
+    layerManager.register("Parkeergarages", "/api/cba/Parkeergarages");
+    layerManager.register("Stations", "/api/cba/Stations");
+
+    // Sport en Spel
+    layerManager.register("Sportaccommodaties", "/api/cba/Sportaccommodaties");
+    layerManager.register("Zwembaden", "/api/cba/Zwembaden");
 
     // Luister naar generieke filter events van de sidebar
     window.addEventListener("filter:show", (e) => {
