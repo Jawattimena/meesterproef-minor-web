@@ -153,8 +153,7 @@
                 return;
             }
 
-            // Wacht 200ms nadat gebruiker stopt met typen
-            // (zodat we niet bij elke letter een verzoek sturen)
+            // Wacht 200ms nadat gebruiker stopt met typen, dan pas zoeken
             wachtTimer = setTimeout(async function() {
                 const resultaten = await zoekInAlgolia(zoekwoord);
                 toonResultaten(resultaten);
