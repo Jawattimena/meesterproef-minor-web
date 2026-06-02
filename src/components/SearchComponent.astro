@@ -218,7 +218,11 @@
             // Naam bovenaan
             const naamSpan = document.createElement('span');
             naamSpan.className = 'resultaatNaam';
-            naamSpan.textContent = resultaat.naam;
+            // naamSpan.textContent = resultaat.naam;
+            naamSpan.innerHTML = resultaat.naam.replaceAll(
+                invoerVeld.value,
+                `<b>${invoerVeld.value}</b>`
+            );
 
             // Adres eronder
             const adresSpan = document.createElement('span');
