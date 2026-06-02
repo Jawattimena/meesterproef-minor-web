@@ -43,13 +43,26 @@ window.addEventListener("load", function () {
         maxBounds: amsterdamBounds,
         maxBoundsViscosity: 1.0,
         minZoom: 12,
+        maxZoom: 21, // Verhoog maxZoom zodat je veel verder kunt inzoomen
     }).setView([52.3676, 4.9041], 13);
+
+    // Track zoom level op de map container voor CSS visibility
+    map.on("zoomend", function () {
+        const zoom = map.getZoom();
+        const mapContainer = map.getContainer();
+        mapContainer.className = mapContainer.className.replace(/\bmap-zoom-\d+\b/g, "");
+        mapContainer.classList.add(`map-zoom-${zoom}`);
+    });
+    // Initieer met huidige zoom
+    map.getContainer().classList.add(`map-zoom-${map.getZoom()}`);
 
     const toggle = document.getElementById("contrast-toggle");
 
     const lightLayer = L.tileLayer(
         "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
         {
+            maxZoom: 21,
+            maxNativeZoom: 19, // Vraag maximaal zoom 19 op bij de server, en schaal deze op voor zoom 20 & 21
             attribution:
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         },
@@ -59,7 +72,8 @@ window.addEventListener("load", function () {
         "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}",
         {
             minZoom: 0,
-            maxZoom: 20,
+            maxZoom: 21,
+            maxNativeZoom: 20, // Vraag maximaal zoom 20 op bij de server, en schaal deze op voor zoom 21
             attribution:
                 '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             ext: "png",
@@ -311,6 +325,16 @@ window.addEventListener("load", function () {
     function resetActiveMarker() {
         if (activeMarker) {
             activeMarker.setIcon(createCbaMarkerIcon(activeMarkerHoofdfilter || "", false, activeMarkerSubfilter || ""));
+            
+            // Verwijder active class van de tooltip van deze marker
+            if (activeMarker.getTooltip()) {
+                const tooltip = activeMarker.getTooltip();
+                tooltip.options.className = "am-marker-tooltip";
+                if (tooltip._container) {
+                    tooltip._container.classList.remove("am-marker-tooltip--active");
+                }
+            }
+
             activeMarker = null;
             activeMarkerType = null;
             activeMarkerHoofdfilter = null;
@@ -325,6 +349,15 @@ window.addEventListener("load", function () {
         activeMarkerHoofdfilter = hoofdfilter;
         activeMarkerSubfilter = subfilter;
         layer.setIcon(createCbaMarkerIcon(hoofdfilter || "", true, subfilter));
+
+        // Voeg active class toe aan de tooltip van deze marker
+        if (layer.getTooltip()) {
+            const tooltip = layer.getTooltip();
+            tooltip.options.className = "am-marker-tooltip am-marker-tooltip--active";
+            if (tooltip._container) {
+                tooltip._container.classList.add("am-marker-tooltip--active");
+            }
+        }
     }
 
     // Open side popover panel with CBA location details
@@ -489,12 +522,12 @@ window.addEventListener("load", function () {
             this.layers[name] = { layer: null, loaded: false, apiUrl };
         }
 
-        // Toon een laag (lazy-load als eerste keer)
+        // Toon een laag (lazy-load als eerste keer met Marker Clustering)
         async show(name) {
             const entry = this.layers[name];
             if (!entry) return;
             if (entry.loaded && entry.layer) {
-                entry.layer.addTo(this.map);
+                this.map.addLayer(entry.layer);
                 return;
             }
 
@@ -505,10 +538,32 @@ window.addEventListener("load", function () {
                     return;
                 }
                 const data = await response.json();
-                entry.layer = L.geoJSON(data, {
+
+                // Maak een marker cluster group aan voor deze laag
+                const clusterGroup = L.markerClusterGroup({
+                    showCoverageOnHover: false,
+                    maxClusterRadius: 40, // Straal in pixels waarin markers gegroepeerd worden
+                    spiderfyOnMaxZoom: true, // Spiderfy bij maximale zoom (indien exact zelfde coordinaten)
+                    disableClusteringAtZoom: 16, // Deactiveer clusters op hoge zoomniveaus zodat alle labels getoond worden!
+                    chunkedLoading: true // Verbeterde performance bij veel markers
+                });
+
+                const geoJsonLayer = L.geoJSON(data, {
                     pointToLayer: (feature, latlng) => {
                         const visualHoofdfilter = getVisualHoofdfilter(feature.properties.Hoofdfilter, feature.properties.Subfilter);
-                        return L.marker(latlng, { icon: createCbaMarkerIcon(visualHoofdfilter, false, feature.properties.Subfilter) });
+                        const marker = L.marker(latlng, { 
+                            icon: createCbaMarkerIcon(visualHoofdfilter, false, feature.properties.Subfilter),
+                            riseOnHover: true // Markers naar de voorgrond bij hover
+                        });
+                        if (feature.properties.Naam_locatie) {
+                            marker.bindTooltip(feature.properties.Naam_locatie, {
+                                permanent: true, // Labels altijd tonen
+                                direction: "right", // Google Maps-stijl uitlijning rechts naast de marker
+                                className: "am-marker-tooltip",
+                                offset: [12, -16] // -16px om perfect verticaal in het midden van de 32px marker uit te lijnen
+                            });
+                        }
+                        return marker;
                     },
                     onEachFeature: (feature, layer) => {
                         layer.on("click", (e) => {
@@ -519,7 +574,13 @@ window.addEventListener("load", function () {
                             this.map.panTo(layer.getLatLng());
                         });
                     },
-                }).addTo(this.map);
+                });
+
+                // Voeg de GeoJSON-laag recursief toe aan de clustergroep
+                geoJsonLayer.addTo(clusterGroup);
+                this.map.addLayer(clusterGroup);
+
+                entry.layer = clusterGroup;
                 entry.loaded = true;
             } catch (err) {
                 console.error(`Fout bij laden ${name}:`, err);
@@ -620,7 +681,54 @@ window.addEventListener("load", function () {
         closeBtn.addEventListener("click", closePopover);
     }
 
-    // Close popover when clicking map background
+    // Botsingsdetectie voor labels om overlap te voorkomen
+    function resolveLabelCollisions() {
+        const tooltips = Array.from(document.querySelectorAll('.am-marker-tooltip'));
+        const visibleRects = [];
+        
+        tooltips.forEach((tooltip) => {
+            // Tijdelijk resetten om de echte bounding box te kunnen berekenen
+            tooltip.style.opacity = '';
+            tooltip.style.visibility = '';
+            
+            const rect = tooltip.getBoundingClientRect();
+            
+            // Controleer overlap met al succesvol geplaatste labels
+            let overlaps = false;
+            const buffer = 6; // 6px marge voor extra ademruimte rondom labels
+            
+            for (const r of visibleRects) {
+                if (!(rect.right + buffer < r.left || 
+                      rect.left - buffer > r.right || 
+                      rect.bottom + buffer < r.top || 
+                      rect.top - buffer > r.bottom)) {
+                    overlaps = true;
+                    break;
+                }
+            }
+            
+            if (overlaps) {
+                tooltip.style.setProperty('opacity', '0', 'important');
+                tooltip.style.setProperty('visibility', 'hidden', 'important');
+            } else {
+                visibleRects.push(rect);
+            }
+        });
+    }
+
+    // Debounced trigger om performance hoog te houden tijdens zoomen/pannen
+    let collisionTimeout;
+    function triggerCollisionResolve() {
+        clearTimeout(collisionTimeout);
+        collisionTimeout = setTimeout(resolveLabelCollisions, 100);
+    }
+
+    // Koppel aan alle relevante Leaflet en kaart events
+    map.on("zoomend moveend layeradd", triggerCollisionResolve);
+    // Luister ook naar algemene interacties op de kaart
+    map.on("viewreset", triggerCollisionResolve);
+
+    // Sluit popover wanneer op de kaartachtergrond wordt geklikt
     map.on("click", function () {
         closePopover();
     });
@@ -647,9 +755,101 @@ window.addEventListener("load", function () {
         display: flex;
         flex-direction: column;
     }
+
+
+    /* ── Google Maps-stijl Clean Tooltips (zonder achtergrond en met witte gloed/halo) ── */
+    :global(.leaflet-tooltip.am-marker-tooltip) {
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
+        font-size: 11px !important;
+        font-weight: 800 !important; /* Bold voor sterke leesbaarheid */
+        color: #1c1c1c !important; /* Donkergrijs/zwart conform Google Maps labels */
+        box-shadow: none !important;
+        white-space: nowrap !important;
+        pointer-events: none !important;
+        letter-spacing: 0.3px !important;
+        text-transform: none !important; /* Google Maps-look: geen hoofdletters */
+        text-shadow: 
+            -1.5px -1.5px 0 #ffffff,  
+             1.5px -1.5px 0 #ffffff,
+            -1.5px  1.5px 0 #ffffff,
+             1.5px  1.5px 0 #ffffff,
+             0px 0px 4px #ffffff,
+             0px 0px 8px #ffffff !important;
+        transition: font-size 0.15s ease, color 0.15s ease !important;
+    }
+
+    /* Actieve marker tooltip styling voor optimale contrast en focus */
+    :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active) {
+        font-size: 12px !important;
+        font-weight: 900 !important;
+        color: #000000 !important;
+        margin-left: 8px !important; /* Verschuif iets naar rechts om overlap met de grotere actieve marker te voorkomen */
+        text-shadow: 
+            -2px -2px 0 #ffffff,  
+             2px -2px 0 #ffffff,
+            -2px  2px 0 #ffffff,
+             2px  2px 0 #ffffff,
+             0px 0px 6px #ffffff,
+             0px 0px 10px #ffffff !important;
+        z-index: 99999 !important;
+    }
+
+    /* In High Contrast modus kleurt de tekst wit voor optimale leesbaarheid op donkere kaart */
+    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-tooltip.am-marker-tooltip) {
+        color: #ffffff !important;
+        text-shadow: 
+            -1.5px -1.5px 0 #000000,  
+             1.5px -1.5px 0 #000000,
+            -1.5px  1.5px 0 #000000,
+             1.5px  1.5px 0 #000000,
+             0px 0px 4px #000000,
+             0px 0px 8px #000000 !important;
+    }
+
+    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active) {
+        color: var(--color-accent-1, #ec0000) !important;
+        text-shadow: 
+            -2px -2px 0 #000000,  
+             2px -2px 0 #000000,
+            -2px  2px 0 #000000,
+             2px  2px 0 #000000,
+             0px 0px 6px #000000,
+             0px 0px 10px #000000 !important;
+    }
+
+    /* Verberg het driehoekige pijltje */
+    :global(.leaflet-tooltip.am-marker-tooltip::before) {
+        display: none !important;
+    }
+
     #map {
         flex: 1;
         width: 100%;
+    }
+
+    /* ── Amsterdam Huisstijl voor Marker Clusters ── */
+    :global(.marker-cluster) {
+        background: transparent !important;
+    }
+    :global(.marker-cluster div) {
+        background-color: var(--color-background-main, #ffffff) !important;
+        border: 2px solid var(--color-border, #000000) !important;
+        color: var(--color-text-main, #000000) !important;
+        font-family: "Amsterdam Sans", sans-serif !important;
+        font-weight: 800 !important;
+        font-size: 13px !important;
+        border-radius: 50% !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+        transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease !important;
+    }
+    :global(.marker-cluster:hover div) {
+        transform: scale(1.1);
+        background-color: var(--color-accent-1, #ec0000) !important;
+        color: var(--color-background-main, #ffffff) !important;
     }
 
     /* ── Neutraliseer Leaflet's eigen divIcon styling ── */

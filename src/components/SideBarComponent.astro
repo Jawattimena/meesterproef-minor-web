@@ -48,7 +48,7 @@ event.preventDefault()
         <div class="filter-group">
             <label for="subcategorie">Subcategorie</label>
             <div class="select-wrapper">
-                <select id="subcategorie" name="subcategorie">
+                <select id="subcategorie" name="subcategorie" disabled>
                     <option value="" disabled selected
                         >Kies een subcategorie...</option
                     >
@@ -406,6 +406,15 @@ event.preventDefault()
         cursor: pointer;
     }
 
+    .select-wrapper select:disabled {
+        cursor: not-allowed;
+        color: var(--color-text-muted);
+    }
+
+    .select-wrapper:has(select:disabled) {
+        opacity: 0.5;
+    }
+
     .select-icon {
         position: absolute;
         right: 10px;
@@ -504,6 +513,7 @@ event.preventDefault()
         const gekozenHoofdCategorie = hoofdSelect.value;
 
         subSelect.value = "";
+        subSelect.disabled = !gekozenHoofdCategorie;
 
         // Verberg de vorige filter als de hoofdcategorie wijzigt
         if (activeFilter) {
@@ -564,6 +574,7 @@ event.preventDefault()
             // Reset de select-dropdowns in de UI
             hoofdSelect.value = "";
             subSelect.value = "";
+            subSelect.disabled = true;
             activeFilter = null;
 
             // Verberg alle subcategorie-opties weer
