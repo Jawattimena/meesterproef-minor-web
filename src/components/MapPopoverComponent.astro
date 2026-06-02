@@ -2,23 +2,45 @@
 
 ---
 
-<aside class="map-popover" id="map-popover" aria-label="Locatiedetails" aria-hidden="true">
+<aside
+    class="map-popover"
+    id="map-popover"
+    aria-label="Locatiedetails"
+    aria-hidden="true"
+>
     <div class="popover-inner">
         <!-- HEADER: Hero visual / Title & Close Button -->
         <header class="popover-header">
             <div class="hero-image-placeholder">
                 <!-- Fallback elegant gradient background -->
                 <div class="gradient-overlay"></div>
-                <button type="button" class="btn-close" id="popover-close-btn" aria-label="Sluit detailvenster">
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M18 1.58663L16.5704 0L9.00522 7.49544L1.42957 0L0 1.58663L7.48174 9.00547L0 16.4134L1.42957 18L9.00522 10.5046L16.5704 18L18 16.4134L10.5183 9.00547L18 1.58663Z" fill="currentColor"/>
+                <button
+                    type="button"
+                    class="btn-close"
+                    id="popover-close-btn"
+                    aria-label="Sluit detailvenster"
+                >
+                    <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M18 1.58663L16.5704 0L9.00522 7.49544L1.42957 0L0 1.58663L7.48174 9.00547L0 16.4134L1.42957 18L9.00522 10.5046L16.5704 18L18 16.4134L10.5183 9.00547L18 1.58663Z"
+                            fill="currentColor"></path>
                     </svg>
                 </button>
             </div>
-            
+
             <div class="header-text-container">
-                <h2 id="popover-title" class="popover-title">Selecteer een locatie</h2>
-                <p id="popover-address" class="popover-address">Klik op een marker op de kaart om de details te bekijken.</p>
+                <h2 id="popover-title" class="popover-title">
+                    Selecteer een locatie
+                </h2>
+                <p id="popover-address" class="popover-address">
+                    Klik op een marker op de kaart om de details te bekijken.
+                </p>
             </div>
         </header>
 
@@ -26,10 +48,21 @@
         <article class="popover-body" id="popover-body-content">
             <!-- Content will be dynamically inserted here -->
             <div class="popover-placeholder-message">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/>
+                <svg
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                        fill="currentColor"></path>
                 </svg>
-                <p>Kies een marker op de kaart om informatie over de toegankelijkheid te zien.</p>
+                <p>
+                    Kies een marker op de kaart om informatie over de
+                    toegankelijkheid te zien.
+                </p>
             </div>
         </article>
 
@@ -47,16 +80,17 @@
         left: 320px;
         width: 360px;
         height: 100%;
-        z-index: 999; 
+        z-index: 999;
         background-color: var(--color-background-main);
         border-right: 1px solid var(--color-border);
         box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
         display: flex;
         flex-direction: column;
-        
-        
+
         transform: translateX(-100%);
-        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s;
+        transition:
+            transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0.35s;
         visibility: hidden;
     }
 
@@ -85,7 +119,11 @@
 
     .hero-image-placeholder {
         height: 140px;
-        background: linear-gradient(135deg, var(--color-background-secondairy) 0%, #ffdcd7 100%);
+        background: linear-gradient(
+            135deg,
+            var(--color-background-secondairy) 0%,
+            #ffdcd7 100%
+        );
         position: relative;
         width: 100%;
         display: flex;
@@ -102,7 +140,11 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%);
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0) 100%
+        );
         pointer-events: none;
     }
 
@@ -118,12 +160,17 @@
         cursor: pointer;
         color: var(--color-text-main);
         z-index: 2;
-        transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+        transition:
+            transform 0.15s ease,
+            background-color 0.15s ease,
+            color 0.15s ease;
     }
 
     .btn-close:hover {
         transform: translateY(-1px);
-        background-color: var(--color-accent-1); /* Red/Accent background on hover */
+        background-color: var(
+            --color-accent-1
+        ); /* Red/Accent background on hover */
         color: var(--color-background-main); /* White cross on hover */
     }
 
@@ -198,9 +245,10 @@
         padding: 12px 14px;
         border: 1px solid var(--color-border);
         background-color: var(--color-background-main);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        transition:
+            transform 0.15s ease,
+            box-shadow 0.15s ease;
     }
-
 
     :global(.am-popup__check) {
         flex-shrink: 0;
@@ -232,6 +280,75 @@
         line-height: 1.4;
     }
 
+    :global(.am-popup__category) {
+        display: block;
+        color: var(--color-text-muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    :global(.am-popup__accessibility-list) {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    :global(.am-popup__accessibility-row) {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    :global(.am-popup__accessibility-row:last-child) {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    :global(.am-popup__accessibility-label) {
+        display: block;
+        color: var(--color-text-main);
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    :global(.am-popup__empty-accessibility) {
+        color: var(--color-text-muted);
+        font-size: 0.95rem;
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    :global(.am-popup__value) {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        min-height: 28px;
+        padding: 3px 8px;
+        border: 1px solid var(--color-border);
+        background-color: var(--color-background-secondairy);
+        font-weight: 800;
+    }
+
+    :global(.am-popup__value--yes) {
+        border-color: #007a3d;
+        color: #007a3d;
+        background-color: #eef9f1;
+    }
+
+    :global(.am-popup__value--no) {
+        border-color: var(--color-accent-1);
+        color: var(--color-accent-1);
+        background-color: #fff1ef;
+    }
+
+    :global(.am-popup__value--unknown) {
+        color: var(--color-text-muted);
+    }
+
     /* Footer / Actions Area */
     .popover-footer {
         border-top: 1px solid var(--color-border);
@@ -258,7 +375,10 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+        transition:
+            transform 0.15s ease,
+            background-color 0.15s ease,
+            color 0.15s ease;
     }
 
     :global(.am-popup__btn svg) {
@@ -266,7 +386,6 @@
         height: 16px;
         fill: currentColor;
     }
-
 
     :global(.am-popup__btn:active) {
         transform: translateY(0);
