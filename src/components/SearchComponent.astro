@@ -129,6 +129,7 @@
     const invoerVeld = document.getElementById('zoek');
     const zoekResultaten = document.getElementById('zoekResultaten');
 
+    // Als de keys niet gevonden worden, toon een foutmelding in de console
     if (!appId || !searchKey) {
         console.error('Algolia search werkt niet: PUBLIC_ALGOLIA_APP_ID of PUBLIC_ALGOLIA_SEARCH_KEY is niet ingesteld.');
     }
@@ -138,6 +139,9 @@
     // Luisteren terwijl gebruiker typt
     // ----------------------------------------
 
+
+    // wachtTimer gebruiken we om even te wachten tussen toetsaanslagen
+    // zodat er niet bij elke letter een verzoek word gestuurd naar Algolia
     let wachtTimer = null;
 
     if (appId && searchKey && invoerVeld) {
@@ -166,6 +170,9 @@
     // Zoeken in Algolia
     // ----------------------------------------
 
+
+    // Stuur een verzoek naar Algolia
+    // method POST = we sturen data mee
     async function zoekInAlgolia(zoekwoord) {
         const antwoord = await fetch(algoliaUrl, {
             method: 'POST',
@@ -175,11 +182,15 @@
             },
             body: JSON.stringify({
                 query: zoekwoord,
-                hitsPerPage: 8,
+                hitsPerPage: 8, // maximaal 8 resultaten tonen
             }),
         });
 
+        // Zet het antwoord om naar JavaScript data
         const data = await antwoord.json();
+
+        // Geef de lijst met gevonden resultaten terug
+        // data.hits = de array met gevonden locaties
         return data.hits;
     }
 
@@ -219,9 +230,14 @@
 
             // Klik op een resultaat → stuur signaal naar kaart
             lijstItem.addEventListener('click', function() {
+
+                // Zet de naam in het invoerveld en verberg de lijst
                 invoerVeld.value = resultaat.naam;
                 zoekResultaten.style.display = 'none';
 
+                // Stuur een signaal naar de kaart
+                // CustomEvent = een zelfgemaakt event met data erin
+                // LeafledComponent luistert naar dit event
                 window.dispatchEvent(new CustomEvent('locatieGekozen', {
                     detail: {
                         lat: resultaat.lat,
