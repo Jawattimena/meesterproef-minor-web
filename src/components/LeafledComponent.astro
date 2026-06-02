@@ -7,16 +7,16 @@
 </section>
 
 <script>
-//@ts-nocheck
+    //@ts-nocheck
 
-// SVG voor de rode cirkel-checkmark (uit Figma)
-const checkIconSvg = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    // SVG voor de rode cirkel-checkmark (uit Figma)
+    const checkIconSvg = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="10" cy="10" r="10" fill="#EC0000"/>
       <path d="M5 10.5L8.5 14L15 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`;
 
-// SVG print-icoon (from Figma 121:1225)
-const printIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+    // SVG print-icoon (from Figma 121:1225)
+    const printIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Shape">
 <path d="M6.175 2.46753H12.825V3.94805H6.175V2.46753Z" fill="currentColor"/>
 <path d="M15.2 9.49506C15.7247 9.49506 16.15 9.05316 16.15 8.50805C16.15 7.96293 15.7247 7.52103 15.2 7.52103C14.6753 7.52103 14.25 7.96293 14.25 8.50805C14.25 9.05316 14.6753 9.49506 15.2 9.49506Z" fill="currentColor"/>
@@ -25,124 +25,123 @@ const printIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none
 </g>
 </svg>`;
 
-// SVG deel-icoon (from Figma 121:1274)
-const shareIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+    // SVG deel-icoon (from Figma 121:1274)
+    const shareIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Shape">
 <path d="M13.2929 6.62132L10.5 3.82841V13.4143H8.5V3.82844L5.70712 6.62132L4.29291 5.20711L9.50001 0L14.7071 5.20711L13.2929 6.62132Z" fill="currentColor"/>
 <path d="M19 11V17C19 18.1046 18.1046 19 17 19H2C0.89543 19 0 18.1046 0 17V11H2V17H17V11H19Z" fill="currentColor"/>
 </g>
 </svg>`;
 
-window.addEventListener("load", function () {
-    const amsterdamBounds = L.latLngBounds(
-        [52.278, 4.55], // Shifted further left (west) to allow panning western areas into view
-        [52.431, 5.079],
-    );
+    window.addEventListener("load", function () {
+        const amsterdamBounds = L.latLngBounds(
+            [52.278, 4.55], // Shifted further left (west) to allow panning western areas into view
+            [52.431, 5.079],
+        );
 
-    var map = L.map("map", {
-        maxBounds: amsterdamBounds,
-        maxBoundsViscosity: 1.0,
-        minZoom: 12,
-    }).setView([52.3676, 4.9041], 13);
+        var map = L.map("map", {
+            maxBounds: amsterdamBounds,
+            maxBoundsViscosity: 1.0,
+            minZoom: 12,
+        }).setView([52.3676, 4.9041], 13);
 
-    const toggle = document.getElementById("contrast-toggle");
+        const toggle = document.getElementById("contrast-toggle");
 
-    const lightLayer = L.tileLayer(
-        "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
-        {
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        },
-    );
+        const lightLayer = L.tileLayer(
+            "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
+            {
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            },
+        );
 
-    const darkLayer = L.tileLayer(
-        "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}",
-        {
-            minZoom: 0,
-            maxZoom: 20,
-            attribution:
-                '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            ext: "png",
-        },
-    );
+        const darkLayer = L.tileLayer(
+            "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}",
+            {
+                minZoom: 0,
+                maxZoom: 20,
+                attribution:
+                    '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                ext: "png",
+            },
+        );
 
-    // Initialiseer met de juiste laag op basis van de toggle status
-    if (toggle && toggle.checked) {
-        darkLayer.addTo(map);
-    } else {
-        lightLayer.addTo(map);
-    }
+        // Initialiseer met de juiste laag op basis van de toggle status
+        if (toggle && toggle.checked) {
+            darkLayer.addTo(map);
+        } else {
+            lightLayer.addTo(map);
+        }
 
-    if (toggle) {
-        toggle.addEventListener("change", function () {
-            if (toggle.checked) {
-                map.removeLayer(lightLayer);
-                darkLayer.addTo(map);
-            } else {
-                map.removeLayer(darkLayer);
-                lightLayer.addTo(map);
+        if (toggle) {
+            toggle.addEventListener("change", function () {
+                if (toggle.checked) {
+                    map.removeLayer(lightLayer);
+                    darkLayer.addTo(map);
+                } else {
+                    map.removeLayer(darkLayer);
+                    lightLayer.addTo(map);
+                }
+            });
+        }
+
+        // Helper function to resolve the visual Hoofdfilter category from Hoofdfilter and Subfilter
+        function getVisualHoofdfilter(hoofdfilter, subfilter) {
+            const h = (hoofdfilter || "").trim();
+            const s = (subfilter || "").trim();
+
+            if (s === "Sportaccommodaties" || s === "Zwembaden") {
+                return "Sport en Spel";
             }
-        });
-    }
-
-    // Helper function to resolve the visual Hoofdfilter category from Hoofdfilter and Subfilter
-    function getVisualHoofdfilter(hoofdfilter, subfilter) {
-        const h = (hoofdfilter || "").trim();
-        const s = (subfilter || "").trim();
-
-        if (s === "Sportaccommodaties" || s === "Zwembaden") {
-            return "Sport en Spel";
+            if (s === "Stations" || s === "Parkeergarages") {
+                return "Vervoer";
+            }
+            if (s === "Educatieve tuinen") {
+                return "Cultuur en attracties";
+            }
+            return h;
         }
-        if (s === "Stations" || s === "Parkeergarages") {
-            return "Vervoer";
-        }
-        if (s === "Educatieve tuinen") {
-            return "Cultuur en attracties";
-        }
-        return h;
-    }
 
-    // ── CBA Marker Icons op basis van Hoofdfilter ──
-    // Genereer marker SVG HTML op basis van de CBA Hoofdfilter categorie
-    function getCbaMarkerSvg(hoofdfilter, isActive, subfilter = "") {
-        const size = isActive ? "17" : "13";
-        const viewBox = "0 0 16 22";
-        const style = `color: ${isActive ? "var(--color-on-primary)" : "var(--color-primary)"}; display: block;`;
+        // ── CBA Marker Icons op basis van Hoofdfilter ──
+        // Genereer marker SVG HTML op basis van de CBA Hoofdfilter categorie
+        function getCbaMarkerSvg(hoofdfilter, isActive, subfilter = "") {
+            const size = isActive ? "17" : "13";
+            const viewBox = "0 0 16 22";
+            const style = `color: ${isActive ? "var(--color-on-primary)" : "var(--color-primary)"}; display: block;`;
 
-        const s = (subfilter || "").trim();
+            const s = (subfilter || "").trim();
 
-
-        if (s === "Onderwijsinstellingen en scholen") {
-            const w = isActive ? "22" : "18";
-            const h = isActive ? "18" : "15";
-            if (isActive) {
-                return `<svg width="${w}" height="${h}" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            if (s === "Onderwijsinstellingen en scholen") {
+                const w = isActive ? "22" : "18";
+                const h = isActive ? "18" : "15";
+                if (isActive) {
+                    return `<svg width="${w}" height="${h}" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M2.25001 7.74171V10.388L2.96059 13.2303H0.0394287L0.750011 10.388V6.8718L0 6.43684L10.9149 0L21.7739 6.29759L10.859 12.7344L2.25001 7.74171ZM18 10.845V13.2902L16.6989 14.8323C15.2821 16.5114 13.197 17.4803 11 17.4803C8.80302 17.4803 6.71786 16.5114 5.3011 14.8323L4 13.2902V11.0686L10.8675 15.0513L18 10.845Z" fill="currentColor"/>
                 </svg>`;
-            }
-            return `<svg width="${w}" height="${h}" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                }
+                return `<svg width="${w}" height="${h}" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M0.75 6.8718L0 6.43684L10.9149 0L21.7739 6.2976L18 8.52317V13.2903L16.6989 14.8323C15.2821 16.5114 13.197 17.4803 11 17.4803C8.80302 17.4803 6.71786 16.5114 5.3011 14.8323L4 13.2903V8.75661L2.25 7.74171V10.3879L2.96059 13.2303H0.0394287L0.75 10.388V6.8718ZM6 9.9165V12.5592L6.82968 13.5426C7.86643 14.7713 9.39231 15.4803 11 15.4803C12.6077 15.4803 14.1336 14.7713 15.1703 13.5426L16 12.5592V9.70263L10.859 12.7344L6 9.9165ZM10.8506 10.4175L3.96168 6.42239L10.9233 2.3169L17.8122 6.31205L10.8506 10.4175Z" fill="currentColor"/>
             </svg>`;
-        }
+            }
 
-        // Zwembaden — Water Ladder
-        if (s === "Zwembaden") {
-            const sizePx = isActive ? "22" : "18";
-            return `<svg width="${sizePx}" height="${sizePx}" viewBox="0 0 19.5 19.5" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Zwembaden — Water Ladder
+            if (s === "Zwembaden") {
+                const sizePx = isActive ? "22" : "18";
+                return `<svg width="${sizePx}" height="${sizePx}" viewBox="0 0 19.5 19.5" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70365 0C6.08624 0 4.77508 1.31117 4.77508 2.92857V12.7506C3.69561 12.3761 2.48246 12.5151 1.50223 13.1676L0 14.1676L1.10826 15.8324L2.61049 14.8324C3.18476 14.4502 3.93243 14.4502 4.5067 14.8324C5.75224 15.6616 7.37388 15.6616 8.61943 14.8324C9.19298 14.4506 9.94234 14.4508 10.5173 14.8336C11.7601 15.6608 13.3808 15.6629 14.625 14.8347C15.1994 14.4523 15.9476 14.4539 16.5203 14.8386L17.9966 15.8301L19.1117 14.1699L17.6355 13.1783C16.6952 12.5468 15.5375 12.3904 14.4893 12.7098V2.92857C14.4893 2.41574 14.9051 2 15.4179 2C15.9307 2 16.3465 2.41574 16.3465 2.92857V3.57143H18.3465V2.92857C18.3465 1.31117 17.0353 0 15.4179 0C13.8005 0 12.4893 1.31117 12.4893 2.92857V5H6.77508V2.92857C6.77508 2.41574 7.19081 2 7.70365 2C8.21648 2 8.63222 2.41574 8.63222 2.92857V3.57143H10.6322V2.92857C10.6322 1.31117 9.32105 0 7.70365 0ZM7.51117 13.1676C7.28556 13.3178 7.03318 13.4089 6.77508 13.4411V11H12.4893V13.4529C12.1873 13.4382 11.8882 13.3435 11.6256 13.1687C10.3808 12.34 8.75743 12.338 7.51117 13.1676ZM12.4893 9V7H6.77508V9H12.4893ZM4.5067 18.3324C3.93243 17.9502 3.18476 17.9502 2.61049 18.3324L1.10826 19.3324L0 17.6676L1.50223 16.6676C2.74778 15.8384 4.36941 15.8384 5.61496 16.6676C6.18923 17.0498 6.9369 17.0498 7.51117 16.6676C8.75743 15.838 10.3808 15.84 11.6256 16.6687C12.1985 17.0501 12.9452 17.0503 13.5167 16.6698C14.7649 15.8389 16.3908 15.8423 17.6355 16.6783L19.1117 17.6699L17.9966 19.3301L16.5203 18.3386C15.9476 17.9539 15.1994 17.9523 14.625 18.3347C13.3808 19.1629 11.7601 19.1608 10.5173 18.3336C9.94234 17.9508 9.19298 17.9506 8.61943 18.3324C7.37388 19.1616 5.75224 19.1616 4.5067 18.3324Z" fill="currentColor"/>
             </svg>`;
-        }
+            }
 
-        // Hotels — HouseCanal (Amsterdam canal house)
-        if (s === "Hotels") {
-            const w = isActive ? "17" : "13";
-            const h = isActive ? "22" : "18";
-            if (isActive) {
-                return `<svg width="${w}" height="${h}" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Hotels — HouseCanal (Amsterdam canal house)
+            if (s === "Hotels") {
+                const w = isActive ? "17" : "13";
+                const h = isActive ? "22" : "18";
+                if (isActive) {
+                    return `<svg width="${w}" height="${h}" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 4.96774V2.51886H10.6195V0H5.35076V2.52885H2.52151V4.97774H0V22H16V4.96774H13.4487ZM6.70269 9.09998H4V11.8027H6.70269V9.09998ZM9.29731 9.09998H12V11.8027H9.29731V9.09998ZM12 14.5054H9.29731V17.2081H12V14.5054ZM5 14.5054C4.44772 14.5054 4 14.9531 4 15.5054V19.9108H6.70269V15.5054C6.70269 14.9531 6.25498 14.5054 5.70269 14.5054H5Z" fill="currentColor"/>
                 </svg>`;
-            }
-            return `<svg width="${w}" height="${h}" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                }
+                return `<svg width="${w}" height="${h}" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <g id="Shape">
                     <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
                     <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
@@ -150,74 +149,74 @@ window.addEventListener("load", function () {
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
                 </g>
             </svg>`;
-        }
+            }
 
-        // Congres- en partyaccommodaties — Cake (Birthday cake with candles)
-        if (s === "Congres- en partyaccommodaties") {
-            const w = isActive ? "22" : "18";
-            const h = isActive ? "22.5" : "18.5";
-            if (isActive) {
-                return `<svg width="${w}" height="${h}" viewBox="0 0 19 19.5" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Congres- en partyaccommodaties — Cake (Birthday cake with candles)
+            if (s === "Congres- en partyaccommodaties") {
+                const w = isActive ? "22" : "18";
+                const h = isActive ? "22.5" : "18.5";
+                if (isActive) {
+                    return `<svg width="${w}" height="${h}" viewBox="0 0 19 19.5" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 5C10.3284 5 11 4.32843 11 3.5C11 2.67157 9.5 0 9.5 0C9.5 0 8 2.67157 8 3.5C8 4.32843 8.67157 5 9.5 5ZM10.5 6V8.5H13V7H15V8.5H16C17.5456 8.5 18.8182 9.66878 18.9821 11.1707L18.3514 11.7384L16.9316 12.882C16.2681 13.4165 15.3389 13.4719 14.6165 13.0202L12.6982 11.8206L10.5604 13.1574C9.91168 13.5631 9.08832 13.5631 8.43957 13.1574L6.30182 11.8206L4.38345 13.0202C3.66111 13.4719 2.73189 13.4165 2.06841 12.882L0.637585 11.7295L0.0147991 11.2001C0.165252 9.68408 1.44435 8.5 3 8.5H4V7H6V8.5H8.5V6H10.5ZM19 13.7841L18.1862 14.4396C16.8592 15.5085 15.0008 15.6194 13.5561 14.716L12.6982 14.1794L11.6209 14.8531C10.3234 15.6645 8.67664 15.6645 7.37914 14.8531L6.30182 14.1794L5.44388 14.716C3.99919 15.6194 2.14076 15.5085 0.813794 14.4396L0 13.7841V19.5H19V13.7841ZM5 6C5.82843 6 6.5 5.32843 6.5 4.5C6.5 3.67157 5 1 5 1C5 1 3.5 3.67157 3.5 4.5C3.5 5.32843 4.17157 6 5 6ZM14 6C14.8284 6 15.5 5.32843 15.5 4.5C15.5 3.67157 14 1 14 1C14 1 12.5 3.67157 12.5 4.5C12.5 5.32843 13.1716 6 14 6Z" fill="currentColor"/>
                 </svg>`;
-            }
-            return `<svg width="${w}" height="${h}" viewBox="0 0 19 19.5" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                }
+                return `<svg width="${w}" height="${h}" viewBox="0 0 19 19.5" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <g id="Shape">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 5C10.3284 5 11 4.32843 11 3.5C11 2.67157 9.5 0 9.5 0C9.5 0 8 2.67157 8 3.5C8 4.32843 8.67157 5 9.5 5ZM10.5 6V8.5H13V7H15V8.5H16C17.6569 8.5 19 9.84315 19 11.5V19.5H0V11.5C0 9.84315 1.34315 8.5 3 8.5H4V7H6V8.5H8.5V6H10.5ZM2 11.5C2 10.9477 2.44771 10.5 3 10.5H16C16.5523 10.5 17 10.9477 17 11.5V12.827L16.9316 12.8821C16.2681 13.4165 15.3389 13.472 14.6166 13.0202L12.6982 11.8206L10.5604 13.1574C9.91169 13.5631 9.08833 13.5631 8.43958 13.1574L6.30183 11.8206L4.38346 13.0202C3.66112 13.472 2.7319 13.4165 2.06842 12.8821L2 12.8269V11.5ZM2 15.0996V17.5H17V15.0996C15.8755 15.4935 14.6065 15.3728 13.5561 14.716L12.6982 14.1794L11.6209 14.8532C10.3234 15.6646 8.67665 15.6645 7.37915 14.8532L6.30183 14.1794L5.4439 14.716C4.39354 15.3728 3.1245 15.4935 2 15.0996ZM5 6C5.82843 6 6.5 5.32843 6.5 4.5C6.5 3.67157 5 1 5 1C5 1 3.5 3.67157 3.5 4.5C3.5 5.32843 4.17157 6 5 6ZM14 6C14.8284 6 15.5 5.32843 15.5 4.5C15.5 3.67157 14 1 14 1C14 1 12.5 3.67157 12.5 4.5C12.5 5.32843 13.1716 6 14 6Z" fill="currentColor"/>
                 </g>
             </svg>`;
-        }
+            }
 
-        // Stations — Bus (Public transport bus)
-        if (s === "Stations") {
-            const w = isActive ? "22" : "18";
-            const h = isActive ? "19" : "15.5";
-            if (isActive) {
-                return `<svg width="${w}" height="${h}" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Stations — Bus (Public transport bus)
+            if (s === "Stations") {
+                const w = isActive ? "22" : "18";
+                const h = isActive ? "19" : "15.5";
+                if (isActive) {
+                    return `<svg width="${w}" height="${h}" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                     <path id="Shape" fill-rule="evenodd" clip-rule="evenodd" d="M5 2H7V3.5H5V2ZM9 3.5V2H17V3.5H9ZM5 8.91967L6.01555 9.49999H15.9844L17 8.91966V5.5H5V8.91967ZM3 2C3 0.89543 3.89543 0 5 0H17C18.1046 0 19 0.895431 19 2V3.5H21C21.5523 3.5 22 3.94772 22 4.5V8.5C22 9.05228 21.5523 9.5 21 9.5H20V5.5H19V17H18V19H14V17H8V19H4V17H3V5.5H2V9.5H1C0.447715 9.5 0 9.05228 0 8.5V4.5C0 3.94772 0.447715 3.5 1 3.5H3V2ZM5.5 14.25H8V12.25H5.5V14.25ZM14 14.25H16.5V12.25H14V14.25Z" fill="currentColor"/>
                 </svg>`;
-            }
-            return `<svg width="${w}" height="${h}" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                }
+                return `<svg width="${w}" height="${h}" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <path id="Shape" fill-rule="evenodd" clip-rule="evenodd" d="M9 2H17V3.5H9V2ZM7 2H5V3.5H7V2ZM5 5.5V8.91968L6.01556 9.5H15.9844L17 8.91968V5.5H5ZM5 15V11.2232L5.48444 11.5H16.5156L17 11.2232V15H5ZM3 2C3 0.89543 3.89543 0 5 0H17C18.1046 0 19 0.895431 19 2V3.5H21C21.5523 3.5 22 3.94772 22 4.5V8.5C22 9.05228 21.5523 9.5 21 9.5H20V5.5H19V17H18V19H14V17H8V19H4V17H3V5.5H2V9.5H1C0.447715 9.5 0 9.05228 0 8.5V4.5C0 3.94772 0.447715 3.5 1 3.5H3V2ZM16.5 14.25H14V12.25H16.5V14.25ZM5.5 14.25H8V12.25H5.5V14.25Z" fill="currentColor"/>
             </svg>`;
-        }
+            }
 
-        // Zorg en gezondheid — Medisch kruis
-        if (hoofdfilter === "Zorg en gezondheid") {
-            if (isActive) {
-                return `<svg width="22" height="22" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Zorg en gezondheid — Medisch kruis
+            if (hoofdfilter === "Zorg en gezondheid") {
+                if (isActive) {
+                    return `<svg width="22" height="22" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 0H4.5V4H0V19H19V4H14.5V0ZM12.5 4V2H6.5V4H12.5ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
                 </svg>`;
-            }
-            return `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                }
+                return `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
             </svg>`;
-        }
+            }
 
-        // Sport en Spel — Sports Field (both active and inactive states)
-        if (hoofdfilter === "Sport en Spel") {
-            const w = isActive ? "24" : "20";
-            const h = isActive ? "17" : "15";
-            return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Sport en Spel — Sports Field (both active and inactive states)
+            if (hoofdfilter === "Sport en Spel") {
+                const w = isActive ? "24" : "20";
+                const h = isActive ? "17" : "15";
+                return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
             </svg>`;
-        }
+            }
 
-        // Hospitality — Vork & Mes
-        if (hoofdfilter === "Hospitality") {
-            return `<svg width="${size}" height="${isActive ? "20" : "18"}" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Hospitality — Vork & Mes
+            if (hoofdfilter === "Hospitality") {
+                return `<svg width="${size}" height="${isActive ? "20" : "18"}" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.09998C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
             </svg>`;
-        }
+            }
 
-        // Cultuur en attracties — Bijeenkomst gebouw
-        if (hoofdfilter === "Cultuur en attracties") {
-            if (isActive) {
-                return `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Cultuur en attracties — Bijeenkomst gebouw
+            if (hoofdfilter === "Cultuur en attracties") {
+                if (isActive) {
+                    return `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.31818V0H0V16H22V5.4L16.2857 2L12 4.31818ZM3.25 3.5H5.25V5.5H3.25V3.5ZM5.25 7H3.25V9H5.25V7ZM13.25 7H15.25V9H13.25V7ZM5.25 10.5H3.25V12.5H5.25V10.5ZM13.25 10.5H15.25V12.5H13.25V10.5ZM8.75 3.5H6.75V5.5H8.75V3.5ZM6.75 7H8.75V9H6.75V7ZM18.75 7H16.75V9H18.75V7ZM6.75 10.5H8.75V12.5H6.75V10.5ZM18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
                 </svg>`;
-            }
-            return `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                }
+                return `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
                 <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
                 <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
@@ -230,53 +229,53 @@ window.addEventListener("load", function () {
                 <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
             </svg>`;
-        }
+            }
 
-        // Winkelen — Person at Desk (Winkelbediende / Balie)
-        if (hoofdfilter === "Winkelen") {
-            const w = isActive ? "22" : "18";
-            const h = isActive ? "16" : "13";
-            if (isActive) {
-                return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Winkelen — Person at Desk (Winkelbediende / Balie)
+            if (hoofdfilter === "Winkelen") {
+                const w = isActive ? "22" : "18";
+                const h = isActive ? "16" : "13";
+                if (isActive) {
+                    return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                     <path d="M22 9H18V10H22V12H20.5V16H1.5V12H0V10H16V9H12V2H22V9Z" fill="currentColor"/>
                     <path d="M8.91504 6.11133C9.83247 6.11152 10.6318 6.73597 10.8545 7.62598L11.1982 9H1.96973L2.31348 7.62598C2.53613 6.73577 3.33626 6.11134 4.25391 6.11133H8.91504Z" fill="currentColor"/>
                     <path d="M6.58496 0C8.05746 0.000309617 9.25098 1.19442 9.25098 2.66699C9.2508 4.13941 8.05735 5.3327 6.58496 5.33301C5.11231 5.33301 3.91814 4.1396 3.91797 2.66699C3.91797 1.19423 5.1122 0 6.58496 0Z" fill="currentColor"/>
                 </svg>`;
-            }
-            return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                }
+                return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <g id="Shape">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M22 9H18V10H22V12H20.5V16H18.5V12H3.5V16H1.5V12H0V10H1.71973L2.31348 7.62598C2.53606 6.73565 3.33619 6.11134 4.25391 6.11133H8.91504C9.83255 6.11152 10.6319 6.73585 10.8545 7.62598L11.4482 10H16V9H12V2H22V9ZM3.78223 10H9.38672L8.91504 8.11133H4.25391L3.78223 10ZM14 7H16V6H18V7H20V4H14V7Z" fill="currentColor"/>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M6.85742 0.0136719C8.20187 0.150458 9.25098 1.28645 9.25098 2.66699L9.2373 2.93945C9.1007 4.28384 7.96531 5.33266 6.58496 5.33301L6.31152 5.31934C5.05677 5.19168 4.05915 4.19425 3.93164 2.93945L3.91797 2.66699C3.91797 1.19423 5.1122 0 6.58496 0L6.85742 0.0136719ZM6.58496 2C6.21677 2 5.91797 2.2988 5.91797 2.66699C5.91814 3.03503 6.21688 3.33301 6.58496 3.33301C6.95272 3.33263 7.2508 3.0348 7.25098 2.66699C7.25098 2.29903 6.95283 2.00038 6.58496 2Z" fill="currentColor"/>
                 </g>
             </svg>`;
-        }
+            }
 
-        // Vervoer — Car
-        if (hoofdfilter === "Vervoer") {
-            const w = isActive ? "22" : "18";
-            const h = isActive ? "16" : "13";
-            if (isActive) {
-                return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Vervoer — Car
+            if (hoofdfilter === "Vervoer") {
+                const w = isActive ? "22" : "18";
+                const h = isActive ? "16" : "13";
+                if (isActive) {
+                    return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M22 3H18.5L17 0H5L3.5 3H0V5H2.5L2 6H1V16H4V14H18V16H21V6H20L19.5 5H22V3ZM6.24 2H15.77L17.77 6H4.24L6.24 2ZM7 11H4V9H7V11ZM18 11H15V9H18V11Z" fill="currentColor"/>
                 </svg>`;
-            }
-            return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                }
+                return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <g id="Shape">
                     <path d="M7 9H4V11H7V9Z" fill="currentColor"/>
                     <path d="M15 9H18V11H15V9Z" fill="currentColor"/>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M22 3H18.5L17 0H5L3.5 3H0V5H2.5L2 6H1V16H4V14H18V16H21V6H20L19.5 5H22V3ZM6.24 2H15.77L17.77 6H4.24L6.24 2ZM19 12H3V8H19V12Z" fill="currentColor"/>
                 </g>
             </svg>`;
-        }
+            }
 
-        // Publieke diensten — Gebouw met ramen
-        // Default fallback voor alle andere categorieën
-        if (isActive) {
-            return `<svg width="15" height="20" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            // Publieke diensten — Gebouw met ramen
+            // Default fallback voor alle andere categorieën
+            if (isActive) {
+                return `<svg width="15" height="20" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 22V0H0V22H16ZM4 4H7V7H4V4ZM7 9H4V12H7V9ZM4 14H7V17H4V14ZM12 4H9V7H12V4ZM9 9H12V12H9V9ZM12 14H9V17H12V14Z" fill="currentColor"/>
             </svg>`;
-        }
-        return `<svg width="${size}" height="18" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            }
+            return `<svg width="${size}" height="18" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
             <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
             <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
             <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
@@ -285,152 +284,371 @@ window.addEventListener("load", function () {
             <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
         </svg>`;
-    }
-
-    // Maak een Leaflet divIcon op basis van Hoofdfilter
-    function createCbaMarkerIcon(hoofdfilter, isActive, subfilter = "") {
-        const markerHtml = getCbaMarkerSvg(hoofdfilter, isActive, subfilter);
-        const size = isActive ? 40 : 32;
-        const anchor = size / 2;
-
-        return L.divIcon({
-            className: isActive ? "am-marker am-marker--active" : "am-marker",
-            html: markerHtml,
-            iconSize: [size, size],
-            iconAnchor: [anchor, size],
-            popupAnchor: [0, -(size + 2)],
-        });
-    }
-
-    // Active marker state management
-    let activeMarker = null;
-    let activeMarkerType = null;
-    let activeMarkerHoofdfilter = null;
-    let activeMarkerSubfilter = null;
-
-    function resetActiveMarker() {
-        if (activeMarker) {
-            activeMarker.setIcon(createCbaMarkerIcon(activeMarkerHoofdfilter || "", false, activeMarkerSubfilter || ""));
-            activeMarker = null;
-            activeMarkerType = null;
-            activeMarkerHoofdfilter = null;
-            activeMarkerSubfilter = null;
-        }
-    }
-
-    function setActiveMarker(layer, type, hoofdfilter = null, subfilter = "") {
-        resetActiveMarker();
-        activeMarker = layer;
-        activeMarkerType = type;
-        activeMarkerHoofdfilter = hoofdfilter;
-        activeMarkerSubfilter = subfilter;
-        layer.setIcon(createCbaMarkerIcon(hoofdfilter || "", true, subfilter));
-    }
-
-    // Open side popover panel with CBA location details
-    function openPopoverWithDetails(p) {
-        const popover = document.getElementById("map-popover");
-        if (!popover) return;
-
-        const naam = p.Naam_locatie ?? "Onbekende locatie";
-        const toevoeging = p.Toevoeging ? ` ${p.Toevoeging}` : "";
-        const adres = `${p.adres ?? ""} ${p.Huisnummer ?? ""}${toevoeging}`.trim();
-        const postcode = p.Postcode ?? "";
-        const plaats = p.Plaats ?? "";
-        const adresVolledig = [adres, postcode, plaats].filter(Boolean).join(", ");
-
-        const visualHoofd = getVisualHoofdfilter(p.Hoofdfilter, p.Subfilter);
-        const soort = `${visualHoofd} — ${(p.Subfilter ?? "").trim()}`;
-
-        // Toegankelijkheidsinformatie uit CBA dataset
-        const accessibilityFields = [
-            { key: "Gehandicaptenparkeerplaatsen_binnen_100_m_", label: "Gehandicaptenparkeerplaats (< 100m)" },
-            { key: "Voorrijden_toegestaan", label: "Voorrijden toegestaan" },
-            { key: "Toegankelijk_gebouw", label: "Toegankelijk gebouw" },
-            { key: "Assistentiehond_toegestaan", label: "Assistentiehond toegestaan" },
-            { key: "Persoonlijke_assistent", label: "Persoonlijke assistent" },
-            { key: "Rustplekken", label: "Rustplekken" },
-            { key: "Toegankelijke_lift", label: "Toegankelijke lift" },
-            { key: "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak", label: "Toegang zonder drempels" },
-            { key: "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed", label: "Drempelloos & brede doorgangen" },
-            { key: "Rolstoelvriendelijk_toilet", label: "Rolstoelvriendelijk toilet" },
-            { key: "Speciale_toeschouwersplaatsen_rolstoelgebruikers", label: "Rolstoelplaatsen" },
-            { key: "Restaurant_tafels_onderrijdbaar", label: "Onderrijdbare tafels" },
-            { key: "Toegankelijke_hotelkamers", label: "Toegankelijke hotelkamers" },
-            { key: "Toegankelijke_kleedkamer", label: "Toegankelijke kleedkamer" },
-            { key: "Toegankelijke_douche", label: "Toegankelijke douche" },
-            { key: "Geleidelijnen_en_vloermarkeringen", label: "Geleidelijnen & vloermarkeringen" },
-            { key: "Audiodescriptie_of_beeldbeschrijving", label: "Audiodescriptie" },
-            { key: "Materiaal_in_braille", label: "Materiaal in braille" },
-            { key: "Ringleiding_voor_slechthorenden", label: "Ringleiding" },
-            { key: "Tolk_gebarentaal", label: "Tolk gebarentaal" },
-            { key: "Prikkelarme_ruimte", label: "Prikkelarme ruimte" },
-            { key: "Prikkelarme_uren", label: "Prikkelarme uren" },
-            { key: "Herkenning_Sunflower_Keycord", label: "Sunflower Keycord" },
-        ];
-
-        // Bouw items: toon "Ja" als groene check, "Nee" als rood kruis
-        const items = [];
-
-        // Contactinfo als eerste items
-        if (p.Telefoonnummer && p.Telefoonnummer !== "Onbekend") {
-            items.push({ label: "Telefoon", desc: p.Telefoonnummer });
-        }
-        if (p.Website && p.Website !== "Onbekend") {
-            items.push({ label: "Website", desc: p.Website });
         }
 
-        // Categorie
-        items.push({ label: "Categorie", desc: soort });
+        // Maak een Leaflet divIcon op basis van Hoofdfilter
+        function createCbaMarkerIcon(hoofdfilter, isActive, subfilter = "") {
+            const markerHtml = getCbaMarkerSvg(
+                hoofdfilter,
+                isActive,
+                subfilter,
+            );
+            const size = isActive ? 40 : 32;
+            const anchor = size / 2;
 
-        // Traptreden info
-        if (p.Aantal_traptreden && p.Aantal_traptreden !== "Onbekend") {
-            items.push({ label: "Aantal traptreden", desc: p.Aantal_traptreden });
+            return L.divIcon({
+                className: isActive
+                    ? "am-marker am-marker--active"
+                    : "am-marker",
+                html: markerHtml,
+                iconSize: [size, size],
+                iconAnchor: [anchor, size],
+                popupAnchor: [0, -(size + 2)],
+            });
         }
 
-        // Toegankelijkheidsfeatures die "Ja" zijn
-        const jaItems = accessibilityFields
-            .filter(f => p[f.key] === "Ja")
-            .map(f => f.label);
+        // Active marker state management
+        let activeMarker = null;
+        let activeMarkerType = null;
+        let activeMarkerHoofdfilter = null;
+        let activeMarkerSubfilter = null;
 
-        if (jaItems.length > 0) {
-            items.push({ label: "Toegankelijk", desc: jaItems.join(", ") });
+        function resetActiveMarker() {
+            if (activeMarker) {
+                activeMarker.setIcon(
+                    createCbaMarkerIcon(
+                        activeMarkerHoofdfilter || "",
+                        false,
+                        activeMarkerSubfilter || "",
+                    ),
+                );
+                activeMarker = null;
+                activeMarkerType = null;
+                activeMarkerHoofdfilter = null;
+                activeMarkerSubfilter = null;
+            }
         }
 
-        // Features die "Nee" zijn
-        const neeItems = accessibilityFields
-            .filter(f => p[f.key] === "Nee")
-            .map(f => f.label);
-
-        if (neeItems.length > 0) {
-            items.push({ label: "Niet beschikbaar", desc: neeItems.join(", ") });
+        function setActiveMarker(
+            layer,
+            type,
+            hoofdfilter = null,
+            subfilter = "",
+        ) {
+            resetActiveMarker();
+            activeMarker = layer;
+            activeMarkerType = type;
+            activeMarkerHoofdfilter = hoofdfilter;
+            activeMarkerSubfilter = subfilter;
+            layer.setIcon(
+                createCbaMarkerIcon(hoofdfilter || "", true, subfilter),
+            );
         }
 
-        const itemsHtml = items
-            .map(
-                (item) => `
+        let currentPopoverProperties = null;
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function normalizeAccessibilityValue(value) {
+            const cleanValue = String(value ?? "").trim();
+            return cleanValue || "Onbekend";
+        }
+
+        // Open side popover panel with CBA location details
+        function openPopoverWithDetails(p) {
+            const popover = document.getElementById("map-popover");
+            if (!popover) return;
+            currentPopoverProperties = p;
+
+            const naam = p.Naam_locatie ?? "Onbekende locatie";
+            const toevoeging = p.Toevoeging ? ` ${p.Toevoeging}` : "";
+            const adres =
+                `${p.adres ?? ""} ${p.Huisnummer ?? ""}${toevoeging}`.trim();
+            const postcode = p.Postcode ?? "";
+            const plaats = p.Plaats ?? "";
+            const adresVolledig = [adres, postcode, plaats]
+                .filter(Boolean)
+                .join(", ");
+
+            const visualHoofd = getVisualHoofdfilter(
+                p.Hoofdfilter,
+                p.Subfilter,
+            );
+            const soort = `${visualHoofd} — ${(p.Subfilter ?? "").trim()}`;
+
+            const accessibilityFieldGroups = {
+                mobility: {
+                    label: "Mobiliteit",
+                    fields: [
+                        {
+                            key: "Gehandicaptenparkeerplaatsen_binnen_100_m_",
+                            label: "Gehandicaptenparkeerplaats (< 100m)",
+                        },
+                        {
+                            key: "Voorrijden_toegestaan",
+                            label: "Voorrijden toegestaan",
+                        },
+                        {
+                            key: "Toegankelijk_gebouw",
+                            label: "Toegankelijk gebouw",
+                        },
+                        {
+                            key: "Persoonlijke_assistent",
+                            label: "Persoonlijke assistent",
+                        },
+                        { key: "Rustplekken", label: "Rustplekken" },
+                        {
+                            key: "Trappen_met_leuning_entree",
+                            label: "Trappen met leuning",
+                        },
+                        {
+                            key: "Aantal_traptreden",
+                            label: "Aantal traptreden",
+                        },
+                        {
+                            key: "Toegankelijke_lift",
+                            label: "Toegankelijke lift",
+                        },
+                        {
+                            key: "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak",
+                            label: "Toegang zonder drempels",
+                        },
+                        {
+                            key: "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed",
+                            label: "Drempelloos & brede doorgangen",
+                        },
+                        {
+                            key: "Rolstoelvriendelijk_toilet",
+                            label: "Rolstoelvriendelijk toilet",
+                        },
+                        {
+                            key: "Speciale_toeschouwersplaatsen_rolstoelgebruikers",
+                            label: "Rolstoelplaatsen",
+                        },
+                        {
+                            key: "Restaurant_tafels_onderrijdbaar",
+                            label: "Onderrijdbare tafels",
+                        },
+                        {
+                            key: "Toegankelijke_hotelkamers",
+                            label: "Toegankelijke hotelkamers",
+                        },
+                        {
+                            key: "Toegankelijke_kleedkamer",
+                            label: "Toegankelijke kleedkamer",
+                        },
+                        {
+                            key: "Toegankelijke_douche",
+                            label: "Toegankelijke douche",
+                        },
+                        { key: "Mobiele_pin", label: "Mobiele pin" },
+                    ],
+                },
+                visual: {
+                    label: "Visueel",
+                    fields: [
+                        {
+                            key: "Gehandicaptenparkeerplaatsen_binnen_100_m_",
+                            label: "Gehandicaptenparkeerplaats (< 100m)",
+                        },
+                        {
+                            key: "Persoonlijke_assistent",
+                            label: "Persoonlijke assistent",
+                        },
+                        { key: "Rustplekken", label: "Rustplekken" },
+                        {
+                            key: "Trappen_met_leuning_entree",
+                            label: "Trappen met leuning",
+                        },
+                        {
+                            key: "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak",
+                            label: "Toegang zonder drempels",
+                        },
+                        {
+                            key: "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed",
+                            label: "Drempelloos & brede doorgangen",
+                        },
+                        {
+                            key: "Assistentiehond_toegestaan",
+                            label: "Assistentiehond toegestaan",
+                        },
+                        {
+                            key: "Geleidelijnen_en_vloermarkeringen",
+                            label: "Geleidelijnen & vloermarkeringen",
+                        },
+                        {
+                            key: "Audiodescriptie_of_beeldbeschrijving",
+                            label: "Audiodescriptie",
+                        },
+                        {
+                            key: "Materiaal_in_braille",
+                            label: "Materiaal in braille",
+                        },
+                        {
+                            key: "Toegankelijke_afdruk",
+                            label: "Toegankelijke afdruk",
+                        },
+                        {
+                            key: "Toegankelijke_lift",
+                            label: "Toegankelijke lift",
+                        },
+                        { key: "Mobiele_pin", label: "Mobiele pin" },
+                    ],
+                },
+                auditory: {
+                    label: "Auditief",
+                    fields: [
+                        {
+                            key: "Open_ondertiteling",
+                            label: "Open ondertiteling",
+                        },
+                        {
+                            key: "Gesloten_ondertiteling",
+                            label: "Gesloten ondertiteling",
+                        },
+                        {
+                            key: "Ringleiding_voor_slechthorenden",
+                            label: "Ringleiding",
+                        },
+                        {
+                            key: "Tolk_gebarentaal",
+                            label: "Tolk gebarentaal",
+                        },
+                        {
+                            key: "Audiodescriptie_of_beeldbeschrijving",
+                            label: "Audiodescriptie",
+                        },
+                        {
+                            key: "Persoonlijke_assistent",
+                            label: "Persoonlijke assistent",
+                        },
+                    ],
+                },
+                hidden: {
+                    label: "Prikkelgevoelig",
+                    fields: [
+                        { key: "Rustplekken", label: "Rustplekken" },
+                        {
+                            key: "Persoonlijke_assistent",
+                            label: "Persoonlijke assistent",
+                        },
+                        {
+                            key: "Zintuigelijke_beleving",
+                            label: "Zintuigelijke beleving",
+                        },
+                        {
+                            key: "Prikkelarme_ruimte",
+                            label: "Prikkelarme ruimte",
+                        },
+                        {
+                            key: "Prikkelarme_uren",
+                            label: "Prikkelarme uren",
+                        },
+                        {
+                            key: "Herkenning_Sunflower_Keycord",
+                            label: "Sunflower Keycord",
+                        },
+                        {
+                            key: "Toegankelijk_gebouw",
+                            label: "Toegankelijk gebouw",
+                        },
+                        {
+                            key: "Voorrijden_toegestaan",
+                            label: "Voorrijden toegestaan",
+                        },
+                        { key: "Mobiele_pin", label: "Mobiele pin" },
+                    ],
+                },
+            };
+
+            // Bouw items: toon "Ja" als groene check, "Nee" als rood kruis
+            const items = [];
+
+            // Contactinfo als eerste items
+            if (p.Telefoonnummer && p.Telefoonnummer !== "Onbekend") {
+                items.push({ label: "Telefoon", desc: p.Telefoonnummer });
+            }
+            if (p.Website && p.Website !== "Onbekend") {
+                items.push({ label: "Website", desc: p.Website });
+            }
+
+            // Categorie
+            items.push({ label: "Categorie", desc: soort });
+
+            const selectedAccessibilityCategories =
+                window.amAccessibilityCategories || [];
+            const renderedFields = new Set();
+            const accessibilityRows = [];
+
+            selectedAccessibilityCategories.forEach((category) => {
+                const group = accessibilityFieldGroups[category];
+                if (!group) return;
+
+                group.fields.forEach((field) => {
+                    if (renderedFields.has(field.key)) return;
+                    renderedFields.add(field.key);
+
+                    const value = normalizeAccessibilityValue(p[field.key]);
+                    const status = value.toLowerCase();
+                    const modifier =
+                        status === "ja"
+                            ? "yes"
+                            : status === "nee"
+                              ? "no"
+                              : "unknown";
+
+                    accessibilityRows.push(`
+                        <div class="am-popup__accessibility-row">
+                            <span>
+                                <span class="am-popup__category">${escapeHtml(group.label)}</span>
+                                <span class="am-popup__accessibility-label">${escapeHtml(field.label)}</span>
+                            </span>
+                            <span class="am-popup__value am-popup__value--${modifier}">${escapeHtml(value)}</span>
+                        </div>
+                    `);
+                });
+            });
+
+            items.push({
+                label: "Toegankelijkheidskenmerken",
+                desc: selectedAccessibilityCategories.length
+                    ? `<div class="am-popup__accessibility-list">${accessibilityRows.join("")}</div>`
+                    : `<p class="am-popup__empty-accessibility">Selecteer een toegankelijkheidsoptie.</p>`,
+                isHtml: true,
+            });
+
+            const itemsHtml = items
+                .map(
+                    (item) => `
                 <div class="am-popup__item">
                     <div class="am-popup__check">${checkIconSvg}</div>
                     <div class="am-popup__item-body">
-                        <p class="am-popup__item-label">${item.label}</p>
-                        <p class="am-popup__item-desc">${item.desc}</p>
+                        <p class="am-popup__item-label">${escapeHtml(item.label)}</p>
+                        <div class="am-popup__item-desc">${item.isHtml ? item.desc : escapeHtml(item.desc)}</div>
                     </div>
                 </div>
             `,
-            )
-            .join("");
+                )
+                .join("");
 
-        const titleEl = document.getElementById("popover-title");
-        const addressEl = document.getElementById("popover-address");
-        const bodyEl = document.getElementById("popover-body-content");
-        const footerEl = document.getElementById("popover-footer-actions");
+            const titleEl = document.getElementById("popover-title");
+            const addressEl = document.getElementById("popover-address");
+            const bodyEl = document.getElementById("popover-body-content");
+            const footerEl = document.getElementById("popover-footer-actions");
 
-        if (titleEl) titleEl.textContent = naam;
-        if (addressEl) addressEl.textContent = adresVolledig;
-        if (bodyEl) bodyEl.innerHTML = itemsHtml;
+            if (titleEl) titleEl.textContent = naam;
+            if (addressEl) addressEl.textContent = adresVolledig;
+            if (bodyEl) bodyEl.innerHTML = itemsHtml;
 
-        if (footerEl) {
-            footerEl.innerHTML = `
+            if (footerEl) {
+                footerEl.innerHTML = `
                 <button class="am-popup__btn" id="popover-btn-print">
                     ${printIconSvg}
                     <span>Print</span>
@@ -441,204 +659,279 @@ window.addEventListener("load", function () {
                 </button>
             `;
 
-            // Attach listeners to actions inside the popover
-            document
-                .getElementById("popover-btn-print")
-                ?.addEventListener("click", () => {
-                    window.print();
-                });
+                // Attach listeners to actions inside the popover
+                document
+                    .getElementById("popover-btn-print")
+                    ?.addEventListener("click", () => {
+                        window.print();
+                    });
 
-            document
-                .getElementById("popover-btn-share")
-                ?.addEventListener("click", () => {
-                    if (navigator.share) {
-                        navigator.share({
-                            title: naam,
-                            text: adresVolledig,
-                        });
-                    } else {
-                        alert(adresVolledig);
-                    }
-                });
-        }
-
-        // Show popover
-        popover.classList.add("is-open");
-        popover.setAttribute("aria-hidden", "false");
-    }
-
-    function closePopover() {
-        const popover = document.getElementById("map-popover");
-        if (popover) {
-            popover.classList.remove("is-open");
-            popover.setAttribute("aria-hidden", "true");
-        }
-        resetActiveMarker();
-    }
-
-    // ── LayerManager class: generiek lazy-load systeem voor alle categorieën ──
-    class LayerManager {
-        constructor(map) {
-            this.map = map;
-            // Per filter-naam: { layer, loaded }
-            this.layers = {};
-        }
-
-        // Registreer een filter met zijn API URL
-        register(name, apiUrl) {
-            this.layers[name] = { layer: null, loaded: false, apiUrl };
-        }
-
-        // Toon een laag (lazy-load als eerste keer)
-        async show(name) {
-            const entry = this.layers[name];
-            if (!entry) return;
-            if (entry.loaded && entry.layer) {
-                entry.layer.addTo(this.map);
-                return;
+                document
+                    .getElementById("popover-btn-share")
+                    ?.addEventListener("click", () => {
+                        if (navigator.share) {
+                            navigator.share({
+                                title: naam,
+                                text: adresVolledig,
+                            });
+                        } else {
+                            alert(adresVolledig);
+                        }
+                    });
             }
 
-            try {
-                const response = await fetch(entry.apiUrl);
-                if (!response.ok) {
-                    console.error(`Kon ${name} niet ophalen`);
+            // Show popover
+            popover.classList.add("is-open");
+            popover.setAttribute("aria-hidden", "false");
+        }
+
+        window.addEventListener("accessibility:change", () => {
+            const popover = document.getElementById("map-popover");
+            if (
+                currentPopoverProperties &&
+                popover?.classList.contains("is-open")
+            ) {
+                openPopoverWithDetails(currentPopoverProperties);
+            }
+        });
+
+        function closePopover() {
+            const popover = document.getElementById("map-popover");
+            if (popover) {
+                popover.classList.remove("is-open");
+                popover.setAttribute("aria-hidden", "true");
+            }
+            resetActiveMarker();
+        }
+
+        // ── LayerManager class: generiek lazy-load systeem voor alle categorieën ──
+        class LayerManager {
+            constructor(map) {
+                this.map = map;
+                // Per filter-naam: { layer, loaded }
+                this.layers = {};
+            }
+
+            // Registreer een filter met zijn API URL
+            register(name, apiUrl) {
+                this.layers[name] = { layer: null, loaded: false, apiUrl };
+            }
+
+            // Toon een laag (lazy-load als eerste keer)
+            async show(name) {
+                const entry = this.layers[name];
+                if (!entry) return;
+                if (entry.loaded && entry.layer) {
+                    entry.layer.addTo(this.map);
                     return;
                 }
-                const data = await response.json();
-                entry.layer = L.geoJSON(data, {
-                    pointToLayer: (feature, latlng) => {
-                        const visualHoofdfilter = getVisualHoofdfilter(feature.properties.Hoofdfilter, feature.properties.Subfilter);
-                        return L.marker(latlng, { icon: createCbaMarkerIcon(visualHoofdfilter, false, feature.properties.Subfilter) });
-                    },
-                    onEachFeature: (feature, layer) => {
-                        layer.on("click", (e) => {
-                            L.DomEvent.stopPropagation(e);
-                            const visualHoofdfilter = getVisualHoofdfilter(feature.properties.Hoofdfilter, feature.properties.Subfilter);
-                            setActiveMarker(layer, "cba", visualHoofdfilter, feature.properties.Subfilter);
-                            openPopoverWithDetails(feature.properties);
-                            this.map.panTo(layer.getLatLng());
-                        });
-                    },
-                }).addTo(this.map);
-                entry.loaded = true;
-            } catch (err) {
-                console.error(`Fout bij laden ${name}:`, err);
+
+                try {
+                    const response = await fetch(entry.apiUrl);
+                    if (!response.ok) {
+                        console.error(`Kon ${name} niet ophalen`);
+                        return;
+                    }
+                    const data = await response.json();
+                    entry.layer = L.geoJSON(data, {
+                        pointToLayer: (feature, latlng) => {
+                            const visualHoofdfilter = getVisualHoofdfilter(
+                                feature.properties.Hoofdfilter,
+                                feature.properties.Subfilter,
+                            );
+                            return L.marker(latlng, {
+                                icon: createCbaMarkerIcon(
+                                    visualHoofdfilter,
+                                    false,
+                                    feature.properties.Subfilter,
+                                ),
+                            });
+                        },
+                        onEachFeature: (feature, layer) => {
+                            layer.on("click", (e) => {
+                                L.DomEvent.stopPropagation(e);
+                                const visualHoofdfilter = getVisualHoofdfilter(
+                                    feature.properties.Hoofdfilter,
+                                    feature.properties.Subfilter,
+                                );
+                                setActiveMarker(
+                                    layer,
+                                    "cba",
+                                    visualHoofdfilter,
+                                    feature.properties.Subfilter,
+                                );
+                                openPopoverWithDetails(feature.properties);
+                                this.map.panTo(layer.getLatLng());
+                            });
+                        },
+                    }).addTo(this.map);
+                    entry.loaded = true;
+                } catch (err) {
+                    console.error(`Fout bij laden ${name}:`, err);
+                }
+            }
+
+            // Verberg een laag (verwijder van kaart, maar bewaar data)
+            hide(name) {
+                const entry = this.layers[name];
+                if (!entry || !entry.layer) return;
+                this.map.removeLayer(entry.layer);
+            }
+
+            // Verberg alle lagen
+            hideAll() {
+                for (const name in this.layers) {
+                    this.hide(name);
+                }
             }
         }
 
-        // Verberg een laag (verwijder van kaart, maar bewaar data)
-        hide(name) {
-            const entry = this.layers[name];
-            if (!entry || !entry.layer) return;
-            this.map.removeLayer(entry.layer);
+        // Maak de LayerManager aan
+        const layerManager = new LayerManager(map);
+
+        // Registreer alle subcategorieën met hun CBA dataset API URLs
+        // Cultuur en attracties
+        layerManager.register(
+            "Bioscopen en filmhuizen",
+            "/api/cba/Bioscopen en filmhuizen",
+        );
+        layerManager.register("Musea", "/api/cba/Musea");
+        layerManager.register("Rondvaartboten", "/api/cba/Rondvaartboten");
+        layerManager.register(
+            "Theaters en concertgebouwen",
+            "/api/cba/Theaters en concertgebouwen",
+        );
+        layerManager.register(
+            "Toeristische attracties",
+            "/api/cba/Toeristische attracties",
+        );
+        layerManager.register(
+            "Educatieve tuinen",
+            "/api/cba/Educatieve tuinen",
+        );
+
+        // Hospitality
+        layerManager.register("Cafés", "/api/cba/Cafés");
+        layerManager.register(
+            "Congres- en partyaccommodaties",
+            "/api/cba/Congres- en partyaccommodaties",
+        );
+        layerManager.register("Hotels", "/api/cba/Hotels");
+        layerManager.register(
+            "Restaurants / eetgelegenheden",
+            "/api/cba/Restaurants / eetgelegenheden",
+        );
+
+        // Publieke diensten
+        layerManager.register("Bibliotheken", "/api/cba/Bibliotheken");
+        layerManager.register(
+            "Educatieve centra",
+            "/api/cba/Educatieve centra",
+        );
+        layerManager.register("Informatiecentra", "/api/cba/Informatiecentra");
+        layerManager.register("Kerkgebouwen", "/api/cba/Kerkgebouwen");
+        layerManager.register(
+            "Onderwijsinstellingen en scholen",
+            "/api/cba/Onderwijsinstellingen en scholen",
+        );
+        layerManager.register(
+            "Openbare gebouwen",
+            "/api/cba/Openbare gebouwen",
+        );
+        layerManager.register(
+            "Openbare toiletten",
+            "/api/cba/Openbare toiletten",
+        );
+        layerManager.register("Politiebureaus", "/api/cba/Politiebureaus");
+        layerManager.register("Sociale Dienst", "/api/cba/Sociale Dienst");
+        layerManager.register(
+            "Stadhuizen en stadsdeelkantoren",
+            "/api/cba/Stadhuizen en stadsdeelkantoren",
+        );
+        layerManager.register(
+            "Wijkcentra en buurthuizen",
+            "/api/cba/Wijkcentra en buurthuizen",
+        );
+
+        // Zorg en gezondheid
+        layerManager.register("Apotheken", "/api/cba/Apotheken");
+        layerManager.register("Fysiotherapeuten", "/api/cba/Fysiotherapeuten");
+        layerManager.register(
+            "Gezondheidscentra",
+            "/api/cba/Gezondheidscentra",
+        );
+        layerManager.register("Huisartsen", "/api/cba/Huisartsen");
+        layerManager.register("Klinieken", "/api/cba/Klinieken");
+        layerManager.register(
+            "Revalidatiecentra",
+            "/api/cba/Revalidatiecentra",
+        );
+        layerManager.register("Tandartsen", "/api/cba/Tandartsen");
+        layerManager.register(
+            "Verpleeg- en verzorgingshuizen",
+            "/api/cba/Verpleeg- en verzorgingshuizen",
+        );
+        layerManager.register("Ziekenhuizen", "/api/cba/Ziekenhuizen");
+
+        // Winkelen
+        layerManager.register("Galeries", "/api/cba/Galeries");
+        layerManager.register("Supermarkten", "/api/cba/Supermarkten");
+        layerManager.register(
+            "Uiterlijke verzorging",
+            "/api/cba/Uiterlijke verzorging",
+        );
+        layerManager.register("Warenhuizen", "/api/cba/Warenhuizen");
+        layerManager.register("Winkelcentra", "/api/cba/Winkelcentra");
+        layerManager.register("Winkels", "/api/cba/Winkels");
+
+        // Vervoer
+        layerManager.register("Parkeergarages", "/api/cba/Parkeergarages");
+        layerManager.register("Stations", "/api/cba/Stations");
+
+        // Sport en Spel
+        layerManager.register(
+            "Sportaccommodaties",
+            "/api/cba/Sportaccommodaties",
+        );
+        layerManager.register("Zwembaden", "/api/cba/Zwembaden");
+
+        // Luister naar generieke filter events van de sidebar
+        window.addEventListener("filter:show", (e) => {
+            const name = e.detail?.name;
+            if (name) layerManager.show(name);
+        });
+
+        window.addEventListener("filter:hide", (e) => {
+            const name = e.detail?.name;
+            if (name) layerManager.hide(name);
+        });
+
+        window.addEventListener("filter:hideAll", () => {
+            layerManager.hideAll();
+        });
+
+        // Set up the close button listener
+        const closeBtn = document.getElementById("popover-close-btn");
+        if (closeBtn) {
+            closeBtn.addEventListener("click", closePopover);
         }
 
-        // Verberg alle lagen
-        hideAll() {
-            for (const name in this.layers) {
-                this.hide(name);
-            }
-        }
-    }
+        // Close popover when clicking map background
+        map.on("click", function () {
+            closePopover();
+        });
 
-    // Maak de LayerManager aan
-    const layerManager = new LayerManager(map);
+        // Exposed to window as general close callback if needed
+        window.amClosePopup = closePopover;
 
-    // Registreer alle subcategorieën met hun CBA dataset API URLs
-    // Cultuur en attracties
-    layerManager.register("Bioscopen en filmhuizen", "/api/cba/Bioscopen en filmhuizen");
-    layerManager.register("Musea", "/api/cba/Musea");
-    layerManager.register("Rondvaartboten", "/api/cba/Rondvaartboten");
-    layerManager.register("Theaters en concertgebouwen", "/api/cba/Theaters en concertgebouwen");
-    layerManager.register("Toeristische attracties", "/api/cba/Toeristische attracties");
-    layerManager.register("Educatieve tuinen", "/api/cba/Educatieve tuinen");
+        window.addEventListener("locatieGekozen", function (event) {
+            const lat = event.detail.lat;
+            const lng = event.detail.lng;
 
-    // Hospitality
-    layerManager.register("Cafés", "/api/cba/Cafés");
-    layerManager.register("Congres- en partyaccommodaties", "/api/cba/Congres- en partyaccommodaties");
-    layerManager.register("Hotels", "/api/cba/Hotels");
-    layerManager.register("Restaurants / eetgelegenheden", "/api/cba/Restaurants / eetgelegenheden");
-
-    // Publieke diensten
-    layerManager.register("Bibliotheken", "/api/cba/Bibliotheken");
-    layerManager.register("Educatieve centra", "/api/cba/Educatieve centra");
-    layerManager.register("Informatiecentra", "/api/cba/Informatiecentra");
-    layerManager.register("Kerkgebouwen", "/api/cba/Kerkgebouwen");
-    layerManager.register("Onderwijsinstellingen en scholen", "/api/cba/Onderwijsinstellingen en scholen");
-    layerManager.register("Openbare gebouwen", "/api/cba/Openbare gebouwen");
-    layerManager.register("Openbare toiletten", "/api/cba/Openbare toiletten");
-    layerManager.register("Politiebureaus", "/api/cba/Politiebureaus");
-    layerManager.register("Sociale Dienst", "/api/cba/Sociale Dienst");
-    layerManager.register("Stadhuizen en stadsdeelkantoren", "/api/cba/Stadhuizen en stadsdeelkantoren");
-    layerManager.register("Wijkcentra en buurthuizen", "/api/cba/Wijkcentra en buurthuizen");
-
-    // Zorg en gezondheid
-    layerManager.register("Apotheken", "/api/cba/Apotheken");
-    layerManager.register("Fysiotherapeuten", "/api/cba/Fysiotherapeuten");
-    layerManager.register("Gezondheidscentra", "/api/cba/Gezondheidscentra");
-    layerManager.register("Huisartsen", "/api/cba/Huisartsen");
-    layerManager.register("Klinieken", "/api/cba/Klinieken");
-    layerManager.register("Revalidatiecentra", "/api/cba/Revalidatiecentra");
-    layerManager.register("Tandartsen", "/api/cba/Tandartsen");
-    layerManager.register("Verpleeg- en verzorgingshuizen", "/api/cba/Verpleeg- en verzorgingshuizen");
-    layerManager.register("Ziekenhuizen", "/api/cba/Ziekenhuizen");
-
-    // Winkelen
-    layerManager.register("Galeries", "/api/cba/Galeries");
-    layerManager.register("Supermarkten", "/api/cba/Supermarkten");
-    layerManager.register("Uiterlijke verzorging", "/api/cba/Uiterlijke verzorging");
-    layerManager.register("Warenhuizen", "/api/cba/Warenhuizen");
-    layerManager.register("Winkelcentra", "/api/cba/Winkelcentra");
-    layerManager.register("Winkels", "/api/cba/Winkels");
-
-    // Vervoer
-    layerManager.register("Parkeergarages", "/api/cba/Parkeergarages");
-    layerManager.register("Stations", "/api/cba/Stations");
-
-    // Sport en Spel
-    layerManager.register("Sportaccommodaties", "/api/cba/Sportaccommodaties");
-    layerManager.register("Zwembaden", "/api/cba/Zwembaden");
-
-    // Luister naar generieke filter events van de sidebar
-    window.addEventListener("filter:show", (e) => {
-        const name = e.detail?.name;
-        if (name) layerManager.show(name);
+            map.setView([lat, lng], 16);
+        });
     });
-
-    window.addEventListener("filter:hide", (e) => {
-        const name = e.detail?.name;
-        if (name) layerManager.hide(name);
-    });
-
-    window.addEventListener("filter:hideAll", () => {
-        layerManager.hideAll();
-    });
-
-    // Set up the close button listener
-    const closeBtn = document.getElementById("popover-close-btn");
-    if (closeBtn) {
-        closeBtn.addEventListener("click", closePopover);
-    }
-
-    // Close popover when clicking map background
-    map.on("click", function () {
-        closePopover();
-    });
-
-    // Exposed to window as general close callback if needed
-    window.amClosePopup = closePopover;
-
-    window.addEventListener('locatieGekozen', function(event) {
-    const lat = event.detail.lat;
-    const lng = event.detail.lng;
-
-    map.setView([lat, lng], 16);
-});
-});
-
 </script>
-
-
 
 <style>
     .mapSection {
@@ -676,7 +969,7 @@ window.addEventListener("load", function () {
     }
 
     :global(.am-marker:not(.am-marker--active) > *) {
-    animation: marker-pop-in 0.28s ease-out both;
+        animation: marker-pop-in 0.28s ease-out both;
     }
 
     @keyframes marker-pop-in {
