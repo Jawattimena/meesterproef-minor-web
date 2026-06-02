@@ -43,7 +43,12 @@ window.addEventListener("load", function () {
         maxBounds: amsterdamBounds,
         maxBoundsViscosity: 1.0,
         minZoom: 12,
+        zoomControl: false,
     }).setView([52.3676, 4.9041], 13);
+
+    L.control.zoom({
+        position: "topright",
+    }).addTo(map);
 
     const toggle = document.getElementById("contrast-toggle");
 

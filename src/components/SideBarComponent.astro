@@ -8,7 +8,7 @@ event.preventDefault()
 ">
     <div class="sidebar-header">
         <div class="title-container">
-            <h1>Filters</h1>
+            <h1 id="filter-paneel" tabindex="-1" aria-label="Filters voor kaartlocaties. U bent nu in het filterpaneel.">Filters</h1>
             <p>Pas uw weergave aan</p>
         </div>
     </div>
@@ -19,7 +19,7 @@ event.preventDefault()
             <div class="select-wrapper">
                 <select id="hoofdcategorie" name="hoofdcategorie">
                     <option value="" disabled selected
-                        >Kies een categorie...</option
+                        >Kies een hoofdcategorie...</option
                     >
                     <option value="cultuur_attracties">Cultuur en attracties</option>
                     <option value="hospitality">Hospitality</option>
