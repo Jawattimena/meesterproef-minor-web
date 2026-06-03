@@ -1,49 +1,38 @@
-# Astro Starter Kit: Basics
 
-```sh
-npm create astro@latest -- --template basics
-```
+# Project Atlas(Gemeente Amsterdam)
+![Cover image](./public/images/Scherm­afbeelding%202026-06-03%20om%2014.04.38.png)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Voorwoord
 
-## 🚀 Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
+## Project voortgang
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+### Week 1
+In week 1 hebben we eerst gekeken hoe Astro werkt en welke projectstructuur het beste past bij ons kaartproject. We hebben een nieuw Astro-project aangemaakt en de mappen logisch ingedeeld, met aparte directories voor pagina’s, componenten, assets en API-logica. Daarna hebben we de eerste basislayout opgebouwd: een header, een kaartgedeelte en een sidebar, zodat de kaart en filters later gemakkelijk met elkaar kunnen communiceren. Tegelijk hebben we bepaald welke componenten we nodig hebben en hoe ze data gaan ontvangen en doorgeven, zodat we later een duidelijke scheiding houden tussen UI, datafetching en kaartlogica.
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+- Opzet van de Astro-website en projectstructuur.
+- Onderzoek gedaan naar de Amsterdam API, PDOK-locatieserver en Leaflet.
+- Eerste componenten en layout voor kaart, sidebar en zoekveld gemaakt.
 
-## 🧞 Commands
+### Week 2
+In week 2 hebben we de eerste functionaliteit van de kaart gebouwd. We zijn begonnen met het koppelen van Leaflet aan onze data, zodat GeoJSON-locaties als markers op de kaart verschijnen. Vervolgens hebben we server-side fetch-logica opgezet zodat de app automatisch de juiste data kan ophalen en verwerken voordat die op de kaart wordt getoond. Daarna hebben we een dropdown en filters toegevoegd zodat gebruikers categorieën kunnen selecteren en de kaart alleen de relevante locaties laat zien. Tot slot hebben we map popovers toegevoegd: als je op een locatie klikt, verschijnt er een paneel met extra details, toegankelijkheidsinformatie en knoppen om te printen of te delen. We begrepen van niels dat we de amsterdam api toch niet gaan gebruiken en dat we alleen gaan werken met de cba_dataset. Dat willen we volgende week weghalen zodat we niet onnodige data tonen op de kaart.
 
-All commands are run from the root of the project, from a terminal:
+- Leaflet-kaart geïntegreerd en GeoJSON-markers toegevoegd.
+- Server-side fetch-logica voor data opgezet.
+- Dropdown/filterfunctionaliteit ontwikkeld en getest.
+- Map popovers toegevoegd voor locaties met details, toegankelijkheidskenmerken en acties voor printen/de delen.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### Week 3
+In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. eerst hebben we de zoekfunctie gekoppeld aan de Algolia‑gestuurde JSON-data, zodat het hele zoekproces veel sneller en gebruiksvriendelijker werd. Daarna hebben we de kaart interactiever gemaakt door markers niet alleen te laten klikken, maar ook visueel te markeren met tooltips en een slimme controle op overlap zodat popovers en labels elkaar niet meer blokkeren. Tegelijk hebben we de sidebar, het zoekveld en de kaart met elkaar laten praten via CustomEvents, waardoor een gekozen locatie of filteractie netjes door het hele systeem gestuurd wordt. Voor de inhoud van de kaart lagen hebben we de dropdown-categorieën dynamisch verbonden met de API-data, zodat alleen de juiste categorieën en subcategorieën geladen worden. Tot slot hebben we extra informatie in de markertooltips gezet (zoals het aantal ja, nee en onbekend) en een legenda gemaakt.
 
-## 👀 Want to learn more?
+- Zoekfunctionaliteit laten zoeken in de json bestand met angolia
+- Markeractivering, tooltip-styling en clustering verbeterd zodat labels en popovers netter op de kaart verschijnen.
+- Communicatie tussen sidebar, zoekveld en kaart afgerond met CustomEvents voor geselecteerde locaties en filter-acties.
+- Filters/subfilters dynamisch gekoppeld aan CBA API-data en kaartlagen per categorie beheerd.
+- Tooltips toegevoegd om de aantal ja, nee en onbekent te tonen bij de markers.
+- legenda gemaakt voor de tooltip
+- Toegankelijkheid verbeterd met ARIA-attributen, focusvriendelijke elementen en een toegankelijkheidsknop in de sidebar.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
 
 # Bron
 **pdok**
