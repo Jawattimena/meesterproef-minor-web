@@ -71,6 +71,7 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
 - MDN Web Docs - `CustomEvent`  
   Gebruikt om communicatie tussen de sidebar en de kaartcomponent mogelijk te maken.  
   https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+  https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
 
 - MDN Web Docs - `dispatchEvent()`  
   Gebruikt voor het versturen van custom events zoals `filter:restaurants`.  
