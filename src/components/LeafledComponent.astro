@@ -44,7 +44,12 @@
         maxBoundsViscosity: 1.0,
         minZoom: 12,
         maxZoom: 21, // Verhoog maxZoom zodat je veel verder kunt inzoomen
+        zoomControl: false, 
     }).setView([52.3676, 4.9041], 13);
+
+    L.control.zoom({
+        position: "topright",
+    }).addTo(map);
 
     // Track zoom level op de map container voor CSS visibility
     map.on("zoomend", function () {
