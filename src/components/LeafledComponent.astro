@@ -66,6 +66,8 @@
     const lightLayer = L.tileLayer(
         "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
         {
+            maxZoom: 21,
+            maxNativeZoom: 19, // Vraag maximaal zoom 19 op bij de server, en schaal deze op voor zoom 20 & 21
             attribution:
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         },
@@ -75,7 +77,8 @@
         "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}",
         {
             minZoom: 0,
-            maxZoom: 20,
+            maxZoom: 21,
+            maxNativeZoom: 20, // Vraag maximaal zoom 20 op bij de server, en schaal deze op voor zoom 21
             attribution:
                 '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             ext: "png",
@@ -347,6 +350,16 @@
     function resetActiveMarker() {
         if (activeMarker) {
             activeMarker.setIcon(createCbaMarkerIcon(activeMarkerHoofdfilter || "", false, activeMarkerSubfilter || ""));
+            
+            // Verwijder active class van de tooltip van deze marker
+            if (activeMarker.getTooltip()) {
+                const tooltip = activeMarker.getTooltip();
+                tooltip.options.className = "am-marker-tooltip";
+                if (tooltip._container) {
+                    tooltip._container.classList.remove("am-marker-tooltip--active");
+                }
+            }
+
             activeMarker = null;
             activeMarkerType = null;
             activeMarkerHoofdfilter = null;
@@ -361,6 +374,15 @@
         activeMarkerHoofdfilter = hoofdfilter;
         activeMarkerSubfilter = subfilter;
         layer.setIcon(createCbaMarkerIcon(hoofdfilter || "", true, subfilter));
+
+        // Voeg active class toe aan de tooltip van deze marker
+        if (layer.getTooltip()) {
+            const tooltip = layer.getTooltip();
+            tooltip.options.className = "am-marker-tooltip am-marker-tooltip--active";
+            if (tooltip._container) {
+                tooltip._container.classList.add("am-marker-tooltip--active");
+            }
+        }
     }
 
         // Open side popover panel with CBA location details
@@ -735,10 +757,32 @@
                     return;
                 }
                 const data = await response.json();
-                entry.layer = L.geoJSON(data, {
+
+                // Maak een marker cluster group aan voor deze laag
+                const clusterGroup = L.markerClusterGroup({
+                    showCoverageOnHover: false,
+                    maxClusterRadius: 40, // Straal in pixels waarin markers gegroepeerd worden
+                    spiderfyOnMaxZoom: true, // Spiderfy bij maximale zoom (indien exact zelfde coordinaten)
+                    disableClusteringAtZoom: 16, // Deactiveer clusters op hoge zoomniveaus zodat alle labels getoond worden!
+                    chunkedLoading: true // Verbeterde performance bij veel markers
+                });
+
+                const geoJsonLayer = L.geoJSON(data, {
                     pointToLayer: (feature, latlng) => {
                         const visualHoofdfilter = getVisualHoofdfilter(feature.properties.Hoofdfilter, feature.properties.Subfilter);
-                        return L.marker(latlng, { icon: createCbaMarkerIcon(visualHoofdfilter, false, feature.properties.Subfilter) });
+                        const marker = L.marker(latlng, { 
+                            icon: createCbaMarkerIcon(visualHoofdfilter, false, feature.properties.Subfilter),
+                            riseOnHover: true // Markers naar de voorgrond bij hover
+                        });
+                        if (feature.properties.Naam_locatie) {
+                            marker.bindTooltip(feature.properties.Naam_locatie, {
+                                permanent: true, // Labels altijd tonen
+                                direction: "right", // Google Maps-stijl uitlijning rechts naast de marker
+                                className: "am-marker-tooltip",
+                                offset: [12, -16] // -16px om perfect verticaal in het midden van de 32px marker uit te lijnen
+                            });
+                        }
+                        return marker;
                     },
                     onEachFeature: (feature, layer) => {
                         layer.on("click", (e) => {
@@ -749,7 +793,13 @@
                             this.map.panTo(layer.getLatLng());
                         });
                     },
-                }).addTo(this.map);
+                });
+
+                // Voeg de GeoJSON-laag recursief toe aan de clustergroep
+                geoJsonLayer.addTo(clusterGroup);
+                this.map.addLayer(clusterGroup);
+
+                entry.layer = clusterGroup;
                 entry.loaded = true;
             } catch (err) {
                 console.error(`Fout bij laden ${name}:`, err);
@@ -908,6 +958,53 @@
 
         // Exposed to window as general close callback if needed
         window.amClosePopup = closePopover;
+
+    // Botsingsdetectie voor labels om overlap te voorkomen
+    function resolveLabelCollisions() {
+        const tooltips = Array.from(document.querySelectorAll('.am-marker-tooltip'));
+        const visibleRects = [];
+        
+        tooltips.forEach((tooltip) => {
+            // Tijdelijk resetten om de echte bounding box te kunnen berekenen
+            tooltip.style.opacity = '';
+            tooltip.style.visibility = '';
+            
+            const rect = tooltip.getBoundingClientRect();
+            
+            // Controleer overlap met al succesvol geplaatste labels
+            let overlaps = false;
+            const buffer = 6; // 6px marge voor extra ademruimte rondom labels
+            
+            for (const r of visibleRects) {
+                if (!(rect.right + buffer < r.left || 
+                      rect.left - buffer > r.right || 
+                      rect.bottom + buffer < r.top || 
+                      rect.top - buffer > r.bottom)) {
+                    overlaps = true;
+                    break;
+                }
+            }
+            
+            if (overlaps) {
+                tooltip.style.setProperty('opacity', '0', 'important');
+                tooltip.style.setProperty('visibility', 'hidden', 'important');
+            } else {
+                visibleRects.push(rect);
+            }
+        });
+    }
+
+    // Debounced trigger om performance hoog te houden tijdens zoomen/pannen
+    let collisionTimeout;
+    function triggerCollisionResolve() {
+        clearTimeout(collisionTimeout);
+        collisionTimeout = setTimeout(resolveLabelCollisions, 100);
+    }
+
+    // Koppel aan alle relevante Leaflet en kaart events
+    map.on("zoomend moveend layeradd", triggerCollisionResolve);
+    // Luister ook naar algemene interacties op de kaart
+    map.on("viewreset", triggerCollisionResolve);
 
         window.addEventListener("locatieGekozen", function (event) {
             const lat = event.detail.lat;
