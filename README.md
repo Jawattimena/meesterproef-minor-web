@@ -55,12 +55,12 @@ In week 2 hebben we de eerste functionaliteit van de kaart gebouwd. We zijn bego
 - Local storage die onthoudt welke beperkingen je hebt
 
 ### Week 3
-<div style="display:flex;gap:1rem;align-items:flex-start;">
+<div style="display:flex;gap:1rem;align-items:flex-start; flex-direction:row;">
   <div style="flex:1;min-width:260px;">
     In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. Eerst hebben we de zoekfunctie gekoppeld aan de Algolia‑gestuurde JSON-data, zodat het hele zoekproces veel sneller en gebruiksvriendelijker werd. Dit is iets wat een must have was voor de gemeente Amsterdam, dus hebben we de zoekfunctie gekoppeld aan de kaart zodat je direct naar de marker wordt gebracht wanneer je een selectie maakt in de zoekbalk.
   </div>
   <div style="width:300px;min-width:200px;">
-    <img src="./public/images/" alt="Voorbeeld screenshot" style="width:100%;height:auto;border-radius:4px;display:block;" />
+    <img src="./public/images/Search.jpg" alt="search" style="width:100%;height:auto;border-radius:4px;display:block;" />
   </div>
 </div>
 
