@@ -133,5 +133,13 @@ Tot slot hebben we voor de de kaart een list view gemaakt voor de kaart omdat ee
   Gebruikt voor het versturen van custom events zoals `filter:restaurants`.  
   https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent
 
+- `includes()` gebruikt om te controleren of een waarde al in een array staat:  
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes
+
+- `push()` gebruikt om een nieuwe waarde aan het einde van een array toe te voegen:  
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
+
+
+
 # AI Bronnen
 Ik werk aan een Astro/Leaflet kaart met data uit de Amsterdam API. Sommige schoolgebouwen hebben geen bruikbare GeoJSON Point-coördinaten. Ik wil daarom met de PDOK Locatieserver zoeken op adres, huisnummer en postcode. De PDOK response geeft een veld `centroide_ll` terug als tekst in de vorm `POINT(lon lat)`. Hoe kan ik deze string met JavaScript omzetten naar een GeoJSON Point object met numerieke coordinates? Leg vooral uit waarom `.replace('POINT(', '').replace(')', '').split(' ')` wordt gebruikt.
