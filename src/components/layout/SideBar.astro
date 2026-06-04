@@ -1,6 +1,6 @@
 ---
 // @ts-nocheck
-import ToegangkelijkButtonComponent from "./ToegangkelijkButtonComponent.astro";
+import ToegankelijkheidButton from "../ui/ToegankelijkheidButton.astro";
 ---
 
 <form class="sidebar" onsubmit="
@@ -246,7 +246,7 @@ event.preventDefault()
         <div class="filter-group">
             <span class="group-label">Toegankelijkheidseisen</span>
             <div class="accessibility-grid">
-                <ToegangkelijkButtonComponent
+                <ToegankelijkheidButton
                     title="Mobiliteit"
                     name="accessibility"
                     value="mobility"
@@ -270,8 +270,8 @@ event.preventDefault()
                                 fill="currentColor"></path>
                         </g>
                     </svg>
-                </ToegangkelijkButtonComponent>
-                <ToegangkelijkButtonComponent
+                </ToegankelijkheidButton>
+                <ToegankelijkheidButton
                     title="Visueel"
                     name="accessibility"
                     value="visual"
@@ -294,8 +294,8 @@ event.preventDefault()
                                 fill="currentColor"></path>
                         </g>
                     </svg>
-                </ToegangkelijkButtonComponent>
-                <ToegangkelijkButtonComponent
+                </ToegankelijkheidButton>
+                <ToegankelijkheidButton
                     title="Auditief"
                     name="accessibility"
                     value="auditory"
@@ -313,8 +313,8 @@ event.preventDefault()
                             d="M5.14093 12H2V6.99996H5.14093L9.49999 3.88636V15.1136L5.14093 12ZM4.5 4.99995L11.5 0V19L4.5 14H0V4.99995H4.5ZM15.4692 16.2448C17.2757 14.5583 18.4016 12.1774 18.4016 9.53865C18.4016 7.06409 17.4114 4.81623 15.7984 3.15523L17.2826 1.70001C19.2752 3.73364 20.5 6.49592 20.5 9.53865C20.5 12.7456 19.1394 15.6409 16.9534 17.7L15.4692 16.2448ZM13.9848 14.7894C15.4118 13.4757 16.3032 11.6092 16.3032 9.53865C16.3032 7.6322 15.5476 5.89883 14.314 4.61063L12.8292 6.06648C13.6835 6.98146 14.2047 8.20037 14.2047 9.53865C14.2047 11.0411 13.5477 12.3931 12.5 13.3335L13.9848 14.7894Z"
                             fill="currentColor"></path>
                     </svg>
-                </ToegangkelijkButtonComponent>
-                <ToegangkelijkButtonComponent
+                </ToegankelijkheidButton>
+                <ToegankelijkheidButton
                     title="Prikkel gevoelig"
                     name="accessibility"
                     value="hidden"
@@ -332,7 +332,7 @@ event.preventDefault()
                             ></path>
                         </g>
                     </svg>
-                </ToegangkelijkButtonComponent>
+                </ToegankelijkheidButton>
             </div>
         </div>
     </div>
