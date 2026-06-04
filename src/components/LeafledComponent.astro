@@ -2,9 +2,9 @@
 // Geen server-side fetches meer — alles wordt client-side lazy geladen via API routes
 ---
 
-<section class="mapSection">
+<!-- <section class="mapSection">
     <div id="map"></div>
-</section>
+</section> -->
 
 <script>
     //@ts-nocheck
@@ -934,6 +934,17 @@
                         return;
                     }
                     const data = await response.json();
+                    
+
+                    // doorsturen van data naar listviewcomponent zodat deze ook de lijst kan tonen (en filteren)
+                    window.dispatchEvent(
+                        new CustomEvent("locations:loaded", {
+                            detail: {
+                                name,
+                                features: data.features,
+                            },
+                        })
+                    );
 
                     // Maak een marker cluster group aan voor deze laag
                     const clusterGroup = L.markerClusterGroup({

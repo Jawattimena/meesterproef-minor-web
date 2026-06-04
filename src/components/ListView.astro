@@ -1,0 +1,68 @@
+---
+// @ts-nocheck
+
+
+---
+
+
+<section id="listView">
+    <div class="locationList">
+        <ul>
+        
+        </ul>
+    </div>
+</section>
+
+<script>
+// @ts-nocheck
+const listElement = document.getElementById("listView");
+const locationList = listElement.querySelector("ul");
+
+let currentList = [];
+
+window.addEventListener("locations:loaded", (event) => {
+    currentList = event.detail.features;
+    renderList(currentList)
+});
+
+function renderList(feature) {
+    locationList.innerHTML = '';
+    
+    feature.forEach((feature) => {
+        const properties = feature.properties;
+        
+        const listItem = document.createElement("li");
+            listItem.classList.add("locationListItem");
+
+            const name = properties.Naam_locatie ?? "Onbekende locatie";
+            const street = properties.adres ?? "";
+            const houseNumber = properties.Huisnummer ?? "";
+            const place = properties.Plaats ?? "";
+            const category = properties.Subfilter ?? "";
+
+            listItem.innerHTML = `
+                <button class="locationListButton" type="button">
+                    <strong>${name}</strong>
+                    <span>${street} ${houseNumber}</span>
+                    <span>${place}</span>
+                    <span>${category}</span>
+                </button>
+            `;
+
+            listItem.addEventListener("click", () => {
+                window.dispatchEvent(
+                    new CustomEvent("location:selected", {
+                        detail: {
+                            properties,
+                            coordinates: feature.geometry.coordinates,
+                        },
+                    })
+                );
+            });
+
+            locationList.appendChild(listItem);
+        });
+    }
+
+
+</script>
