@@ -108,6 +108,18 @@ body {
   border-width: 0;
 }
 
+/* Accessibility Focus styles */
+*:focus-visible {
+  outline: 3px solid var(--color-accent-1) !important;
+  outline-offset: 3px !important;
+}
+
+#contrast-toggle:focus-visible + header .contrast-label {
+  outline: 3px solid var(--color-accent-1);
+  outline-offset: 3px;
+}
+
+
 @media print {
     body * {
         visibility: hidden !important;
