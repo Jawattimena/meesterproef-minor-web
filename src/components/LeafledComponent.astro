@@ -1157,11 +1157,81 @@
     // Luister ook naar algemene interacties op de kaart
     map.on("viewreset", triggerCollisionResolve);
 
-        window.addEventListener("locatieGekozen", function (event) {
+        window.addEventListener("locatieGekozen", async function (event) {
             const lat = event.detail.lat;
             const lng = event.detail.lng;
+            const naam = event.detail.naam;
+            const subcategorie = event.detail.subcategorie;
 
-            map.setView([lat, lng], 16);
+            let matchingLayerName = null;
+            if (subcategorie) {
+                const targetSub = subcategorie.trim().toLowerCase();
+                for (const key of Object.keys(layerManager.layers)) {
+                    if (key.trim().toLowerCase() === targetSub) {
+                        matchingLayerName = key;
+                        break;
+                    }
+                }
+            }
+
+            if (matchingLayerName) {
+                // Verberg alle andere lagen om de kaart schoon te houden
+                layerManager.hideAll();
+                // Toon de bijbehorende laag (lazy-load indien nodig)
+                await layerManager.show(matchingLayerName);
+            }
+
+            let foundMarker = null;
+            if (matchingLayerName && layerManager.layers[matchingLayerName].layer) {
+                const clusterGroup = layerManager.layers[matchingLayerName].layer;
+                clusterGroup.eachLayer((layer) => {
+                    if (layer instanceof L.Marker && layer.feature && layer.feature.properties) {
+                        const nameProp = layer.feature.properties.Naam_locatie;
+                        if (nameProp && nameProp.trim() === naam.trim()) {
+                            foundMarker = layer;
+                        }
+                    }
+                });
+            }
+
+            // Fallback: zoek door alle geladen lagen als we de marker nog niet hebben gevonden
+            if (!foundMarker) {
+                for (const key of Object.keys(layerManager.layers)) {
+                    const entry = layerManager.layers[key];
+                    if (entry.loaded && entry.layer) {
+                        entry.layer.eachLayer((layer) => {
+                            if (layer instanceof L.Marker && layer.feature && layer.feature.properties) {
+                                const nameProp = layer.feature.properties.Naam_locatie;
+                                if (nameProp && nameProp.trim() === naam.trim()) {
+                                    foundMarker = layer;
+                                    matchingLayerName = key;
+                                }
+                            }
+                        });
+                    }
+                    if (foundMarker) break;
+                }
+            }
+
+            if (foundMarker) {
+                const featProps = foundMarker.feature.properties;
+                const visualHoofdfilter = getVisualHoofdfilter(featProps.Hoofdfilter, featProps.Subfilter);
+                const clusterGroup = layerManager.layers[matchingLayerName]?.layer;
+                
+                if (clusterGroup && typeof clusterGroup.zoomToShowLayer === "function") {
+                    clusterGroup.zoomToShowLayer(foundMarker, function() {
+                        setActiveMarker(foundMarker, "cba", visualHoofdfilter, featProps.Subfilter);
+                        openPopoverWithDetails(featProps);
+                    });
+                } else {
+                    map.setView(foundMarker.getLatLng(), 16);
+                    setActiveMarker(foundMarker, "cba", visualHoofdfilter, featProps.Subfilter);
+                    openPopoverWithDetails(featProps);
+                }
+            } else {
+                // Fallback als marker niet op de kaart staat
+                map.setView([lat, lng], 16);
+            }
         });
     });
 </script>

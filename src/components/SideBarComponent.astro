@@ -645,5 +645,52 @@ event.preventDefault()
         });
     }
 
+    const categoryMapping = {
+        "cultuur_en_attracties": "cultuur_attracties",
+        "cultuur_attracties": "cultuur_attracties",
+        "hospitality": "hospitality",
+        "publieke_diensten": "publieke_diensten",
+        "zorg_en_gezondheid": "zorg_gezondheid",
+        "zorg_gezondheid": "zorg_gezondheid",
+        "winkelen": "winkelen",
+        "vervoer": "vervoer",
+        "sport_en_spel": "sport_spel",
+        "sport_spel": "sport_spel"
+    };
+
+    window.addEventListener("locatieGekozen", function (e) {
+        const cat = e.detail.categorie;
+        const subcat = e.detail.subcategorie;
+        if (!cat || !subcat) return;
+
+        const targetCatValue = categoryMapping[cat] || cat;
+
+        // Vind de subcategorie optie door case-insensitive matching
+        let targetSubValue = null;
+        for (const option of subOptions) {
+            if (option.value.toLowerCase() === subcat.toLowerCase()) {
+                targetSubValue = option.value;
+                break;
+            }
+        }
+
+        if (targetSubValue) {
+            // Update hoofdcategorie select
+            hoofdSelect.value = targetCatValue;
+            
+            // Toon de juiste opties in de subcategorie dropdown
+            subSelect.disabled = false;
+            subOptions.forEach((option) => {
+                const isActiveOption = option.dataset.parent === targetCatValue;
+                option.hidden = !isActiveOption;
+                option.disabled = !isActiveOption;
+            });
+
+            // Update subcategorie select
+            subSelect.value = targetSubValue;
+            activeFilter = targetSubValue;
+        }
+    });
+
     updateAccessibilitySelection();
 </script>
