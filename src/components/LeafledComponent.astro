@@ -36,54 +36,59 @@
     window.addEventListener("load", function () {
         const amsterdamBounds = L.latLngBounds(
             [52.278, 4.55], // Shifted further left (west) to allow panning western areas into view
-            [52.431, 5.079],
+            [52.431, 5.079]
         );
 
-    var map = L.map("map", {
-        maxBounds: amsterdamBounds,
-        maxBoundsViscosity: 1.0,
-        minZoom: 12,
-        maxZoom: 21, // Verhoog maxZoom zodat je veel verder kunt inzoomen
-        zoomControl: false, 
-    }).setView([52.3676, 4.9041], 13);
+        var map = L.map("map", {
+            maxBounds: amsterdamBounds,
+            maxBoundsViscosity: 1.0,
+            minZoom: 12,
+            maxZoom: 21, // Verhoog maxZoom zodat je veel verder kunt inzoomen
+            zoomControl: false,
+        }).setView([52.3676, 4.9041], 13);
 
-    L.control.zoom({
-        position: "topright",
-    }).addTo(map);
+        L.control
+            .zoom({
+                position: "topright",
+            })
+            .addTo(map);
 
-    // Track zoom level op de map container voor CSS visibility
-    map.on("zoomend", function () {
-        const zoom = map.getZoom();
-        const mapContainer = map.getContainer();
-        mapContainer.className = mapContainer.className.replace(/\bmap-zoom-\d+\b/g, "");
-        mapContainer.classList.add(`map-zoom-${zoom}`);
-    });
-    // Initieer met huidige zoom
-    map.getContainer().classList.add(`map-zoom-${map.getZoom()}`);
+        // Track zoom level op de map container voor CSS visibility
+        map.on("zoomend", function () {
+            const zoom = map.getZoom();
+            const mapContainer = map.getContainer();
+            mapContainer.className = mapContainer.className.replace(
+                /\bmap-zoom-\d+\b/g,
+                ""
+            );
+            mapContainer.classList.add(`map-zoom-${zoom}`);
+        });
+        // Initieer met huidige zoom
+        map.getContainer().classList.add(`map-zoom-${map.getZoom()}`);
 
         const toggle = document.getElementById("contrast-toggle");
 
-    const lightLayer = L.tileLayer(
-        "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
-        {
-            maxZoom: 21,
-            maxNativeZoom: 19, // Vraag maximaal zoom 19 op bij de server, en schaal deze op voor zoom 20 & 21
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        },
-    );
+        const lightLayer = L.tileLayer(
+            "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
+            {
+                maxZoom: 21,
+                maxNativeZoom: 19, // Vraag maximaal zoom 19 op bij de server, en schaal deze op voor zoom 20 & 21
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            }
+        );
 
-    const darkLayer = L.tileLayer(
-        "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}",
-        {
-            minZoom: 0,
-            maxZoom: 21,
-            maxNativeZoom: 20, // Vraag maximaal zoom 20 op bij de server, en schaal deze op voor zoom 21
-            attribution:
-                '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            ext: "png",
-        },
-    );
+        const darkLayer = L.tileLayer(
+            "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}",
+            {
+                minZoom: 0,
+                maxZoom: 21,
+                maxNativeZoom: 20, // Vraag maximaal zoom 20 op bij de server, en schaal deze op voor zoom 21
+                attribution:
+                    '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                ext: "png",
+            }
+        );
 
         // Initialiseer met de juiste laag op basis van de toggle status
         if (toggle && toggle.checked) {
@@ -126,7 +131,9 @@
         function getCbaMarkerSvg(hoofdfilter, isActive, subfilter = "") {
             const size = isActive ? "17" : "13";
             const viewBox = "0 0 16 22";
-            const style = `color: ${isActive ? "var(--color-on-primary)" : "var(--color-primary)"}; display: block;`;
+            const style = `color: ${
+                isActive ? "var(--color-on-primary)" : "var(--color-primary)"
+            }; display: block;`;
 
             const s = (subfilter || "").trim();
 
@@ -223,7 +230,9 @@
 
             // Hospitality — Vork & Mes
             if (hoofdfilter === "Hospitality") {
-                return `<svg width="${size}" height="${isActive ? "20" : "18"}" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+                return `<svg width="${size}" height="${
+                    isActive ? "20" : "18"
+                }" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.09998C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
             </svg>`;
             }
@@ -310,7 +319,7 @@
             const markerHtml = getCbaMarkerSvg(
                 hoofdfilter,
                 isActive,
-                subfilter,
+                subfilter
             );
             const size = isActive ? 40 : 32;
             const anchor = size / 2;
@@ -332,14 +341,126 @@
         let activeMarkerHoofdfilter = null;
         let activeMarkerSubfilter = null;
         let currentPopoverProperties = null;
+        // Koppeling van toegankelijkheidseisen aan de bijbehorende kolomnamen (keys) uit de dataset
+        const ACCESSIBILITY_GROUPS = {
+            mobility: [
+                "Gehandicaptenparkeerplaatsen_binnen_100_m_",
+                "Voorrijden_toegestaan",
+                "Toegankelijk_gebouw",
+                "Persoonlijke_assistent",
+                "Rustplekken",
+                "Trappen_met_leuning_entree",
+                "Aantal_traptreden",
+                "Toegankelijke_lift",
+                "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak",
+                "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed",
+                "Rolstoelvriendelijk_toilet",
+                "Speciale_toeschouwersplaatsen_rolstoelgebruikers",
+                "Restaurant_tafels_onderrijdbaar",
+                "Toegankelijke_hotelkamers",
+                "Toegankelijke_kleedkamer",
+                "Toegankelijke_douche",
+                "Mobiele_pin",
+            ],
+            visual: [
+                "Gehandicaptenparkeerplaatsen_binnen_100_m_",
+                "Persoonlijke_assistent",
+                "Rustplekken",
+                "Trappen_met_leuning_entree",
+                "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak",
+                "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed",
+                "Assistentiehond_toegestaan",
+                "Geleidelijnen_en_vloermarkeringen",
+                "Audiodescriptie_of_beeldbeschrijving",
+                "Materiaal_in_braille",
+                "Toegankelijke_afdruk",
+                "Toegankelijke_lift",
+                "Mobiele_pin",
+            ],
+            auditory: [
+                "Open_ondertiteling",
+                "Gesloten_ondertiteling",
+                "Ringleiding_voor_slechthorenden",
+                "Tolk_gebarentaal",
+                "Audiodescriptie_of_beeldbeschrijving",
+                "Persoonlijke_assistent",
+            ],
+            hidden: [
+                "Rustplekken",
+                "Persoonlijke_assistent",
+                "Zintuigelijke_beleving",
+                "Prikkelarme_ruimte",
+                "Prikkelarme_uren",
+                "Herkenning_Sunflower_Keycord",
+                "Toegankelijk_gebouw",
+                "Voorrijden_toegestaan",
+                "Mobiele_pin",
+            ],
+        };
 
-        function escapeHtml(value) {
-            return String(value ?? "")
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+        // Genereert de HTML voor de marker-tooltip (locatienaam + eventueel de gekleurde bolletjes)
+        function getTooltipHtml(properties, selectedCategories) {
+            const name = properties.Naam_locatie || "Onbekende locatie";
+
+            // Als er geen categorieën zijn geselecteerd, tonen we alleen de naam (geen bolletjes)
+            if (!selectedCategories || selectedCategories.length === 0) {
+                return `
+                    <div class="am-tooltip-container">
+                        <div class="am-tooltip-name">${name}</div>
+                    </div>
+                `;
+            }
+
+            let yes = 0;
+            let no = 0;
+            let unknown = 0;
+
+            // Verzamel alle kolommen die we moeten tellen in een simpele array
+            const fieldsToCount = [];
+            for (let index = 0; index < selectedCategories.length; index++) {
+                const cat = selectedCategories[index];
+                const fields = ACCESSIBILITY_GROUPS[cat];
+                if (fields) {
+                    for (let j = 0; j < fields.length; j++) {
+                        const f = fields[j];
+                        // Alleen toevoegen als het er nog niet in zit, om dubbel tellen te voorkomen
+                        if (!fieldsToCount.includes(f)) {
+                            fieldsToCount.push(f);
+                        }
+                    }
+                }
+            }
+
+            // Doorloop de verzamelde kolommen en bepaal het aantal Ja's, Nee's en Onbekenden
+            for (let i = 0; i < fieldsToCount.length; i++) {
+                const field = fieldsToCount[i];
+                let value = properties[field];
+                // Zorg ervoor dat we geen foutmeldingen krijgen als de waarde leeg of undefined is
+                if (value === undefined || value === null) {
+                    value = "";
+                }
+                const val = String(value).trim().toLowerCase();
+
+                if (val === "ja") {
+                    yes = yes + 1;
+                } else if (val === "nee") {
+                    no = no + 1;
+                } else {
+                    unknown = unknown + 1;
+                }
+            }
+
+            // Geef de HTML terug inclusief de groene, rode en grijze tellertjes
+            return `
+                <div class="am-tooltip-container">
+                    <div class="am-tooltip-name">${name}</div>
+                    <div class="am-tooltip-badges">
+                        <span class="am-tooltip-badge am-tooltip-badge--yes">${yes}</span>
+                        <span class="am-tooltip-badge am-tooltip-badge--no">${no}</span>
+                        <span class="am-tooltip-badge am-tooltip-badge--unknown">${unknown}</span>
+                    </div>
+                </div>
+            `;
         }
 
         function normalizeAccessibilityValue(value) {
@@ -347,43 +468,61 @@
             return normalized || "Onbekend";
         }
 
-    function resetActiveMarker() {
-        if (activeMarker) {
-            activeMarker.setIcon(createCbaMarkerIcon(activeMarkerHoofdfilter || "", false, activeMarkerSubfilter || ""));
-            
-            // Verwijder active class van de tooltip van deze marker
-            if (activeMarker.getTooltip()) {
-                const tooltip = activeMarker.getTooltip();
-                tooltip.options.className = "am-marker-tooltip";
+        function resetActiveMarker() {
+            if (activeMarker) {
+                activeMarker.setIcon(
+                    createCbaMarkerIcon(
+                        activeMarkerHoofdfilter || "",
+                        false,
+                        activeMarkerSubfilter || ""
+                    )
+                );
+
+                // Verwijder active class van de tooltip van deze marker
+                if (activeMarker.getTooltip()) {
+                    const tooltip = activeMarker.getTooltip();
+                    tooltip.options.className = "am-marker-tooltip";
+                    if (tooltip._container) {
+                        tooltip._container.classList.remove(
+                            "am-marker-tooltip--active"
+                        );
+                    }
+                }
+
+                activeMarker = null;
+                activeMarkerType = null;
+                activeMarkerHoofdfilter = null;
+                activeMarkerSubfilter = null;
+            }
+        }
+
+        function setActiveMarker(
+            layer,
+            type,
+            hoofdfilter = null,
+            subfilter = ""
+        ) {
+            resetActiveMarker();
+            activeMarker = layer;
+            activeMarkerType = type;
+            activeMarkerHoofdfilter = hoofdfilter;
+            activeMarkerSubfilter = subfilter;
+            layer.setIcon(
+                createCbaMarkerIcon(hoofdfilter || "", true, subfilter)
+            );
+
+            // Voeg active class toe aan de tooltip van deze marker
+            if (layer.getTooltip()) {
+                const tooltip = layer.getTooltip();
+                tooltip.options.className =
+                    "am-marker-tooltip am-marker-tooltip--active";
                 if (tooltip._container) {
-                    tooltip._container.classList.remove("am-marker-tooltip--active");
+                    tooltip._container.classList.add(
+                        "am-marker-tooltip--active"
+                    );
                 }
             }
-
-            activeMarker = null;
-            activeMarkerType = null;
-            activeMarkerHoofdfilter = null;
-            activeMarkerSubfilter = null;
         }
-    }
-
-    function setActiveMarker(layer, type, hoofdfilter = null, subfilter = "") {
-        resetActiveMarker();
-        activeMarker = layer;
-        activeMarkerType = type;
-        activeMarkerHoofdfilter = hoofdfilter;
-        activeMarkerSubfilter = subfilter;
-        layer.setIcon(createCbaMarkerIcon(hoofdfilter || "", true, subfilter));
-
-        // Voeg active class toe aan de tooltip van deze marker
-        if (layer.getTooltip()) {
-            const tooltip = layer.getTooltip();
-            tooltip.options.className = "am-marker-tooltip am-marker-tooltip--active";
-            if (tooltip._container) {
-                tooltip._container.classList.add("am-marker-tooltip--active");
-            }
-        }
-    }
 
         // Open side popover panel with CBA location details
         function openPopoverWithDetails(p) {
@@ -393,8 +532,9 @@
 
             const naam = p.Naam_locatie ?? "Onbekende locatie";
             const toevoeging = p.Toevoeging ? ` ${p.Toevoeging}` : "";
-            const adres =
-                `${p.adres ?? ""} ${p.Huisnummer ?? ""}${toevoeging}`.trim();
+            const adres = `${p.adres ?? ""} ${
+                p.Huisnummer ?? ""
+            }${toevoeging}`.trim();
             const postcode = p.Postcode ?? "";
             const plaats = p.Plaats ?? "";
             const adresVolledig = [adres, postcode, plaats]
@@ -403,7 +543,7 @@
 
             const visualHoofd = getVisualHoofdfilter(
                 p.Hoofdfilter,
-                p.Subfilter,
+                p.Subfilter
             );
             const soort = `${visualHoofd} — ${(p.Subfilter ?? "").trim()}`;
 
@@ -625,16 +765,16 @@
                         status === "ja"
                             ? "yes"
                             : status === "nee"
-                              ? "no"
-                              : "unknown";
+                            ? "no"
+                            : "unknown";
 
                     accessibilityRows.push(`
                         <div class="am-popup__accessibility-row">
                             <span>
-                                <span class="am-popup__category">${escapeHtml(group.label)}</span>
-                                <span class="am-popup__accessibility-label">${escapeHtml(field.label)}</span>
+                                <span class="am-popup__category">${group.label}</span>
+                                <span class="am-popup__accessibility-label">${field.label}</span>
                             </span>
-                            <span class="am-popup__value am-popup__value--${modifier}">${escapeHtml(value)}</span>
+                            <span class="am-popup__value am-popup__value--${modifier}">${value}</span>
                         </div>
                     `);
                 });
@@ -643,7 +783,9 @@
             items.push({
                 label: "Toegankelijkheidskenmerken",
                 desc: selectedAccessibilityCategories.length
-                    ? `<div class="am-popup__accessibility-list">${accessibilityRows.join("")}</div>`
+                    ? `<div class="am-popup__accessibility-list">${accessibilityRows.join(
+                          ""
+                      )}</div>`
                     : `<p class="am-popup__empty-accessibility">Selecteer een toegankelijkheidsoptie.</p>`,
                 isHtml: true,
             });
@@ -654,11 +796,11 @@
                 <div class="am-popup__item">
                     <div class="am-popup__check">${checkIconSvg}</div>
                     <div class="am-popup__item-body">
-                        <p class="am-popup__item-label">${escapeHtml(item.label)}</p>
-                        <div class="am-popup__item-desc">${item.isHtml ? item.desc : escapeHtml(item.desc)}</div>
+                        <p class="am-popup__item-label">${item.label}</p>
+                        <div class="am-popup__item-desc">${item.desc}</div>
                     </div>
                 </div>
-            `,
+            `
                 )
                 .join("");
 
@@ -709,14 +851,49 @@
             popover.setAttribute("aria-hidden", "false");
         }
 
+        // Update alle markers op de kaart met de nieuwe toegankelijkheidsteller HTML
+        function updateAllTooltips() {
+            const selectedCategories = window.amAccessibilityCategories || [];
+
+            // Loop door alle geregistreerde kaartlagen van de LayerManager met een simpele index-loop
+            const keys = Object.keys(layerManager.layers);
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i];
+                const entry = layerManager.layers[key];
+                if (entry.layer) {
+                    // Loop door alle markers binnen de clustergroep
+                    entry.layer.eachLayer((layer) => {
+                        // Controleer of de laag een Leaflet Marker is en een tooltip heeft gebonden
+                        if (layer instanceof L.Marker && layer.getTooltip()) {
+                            const properties = layer.feature
+                                ? layer.feature.properties
+                                : null;
+                            if (properties) {
+                                // Genereer de nieuwe tooltip HTML en update de marker
+                                const html = getTooltipHtml(
+                                    properties,
+                                    selectedCategories
+                                );
+                                layer.getTooltip().setContent(html);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // Luister naar wijzigingen in geselecteerde toegankelijkheidseisen (vanuit de sidebar geselecteerd)
         window.addEventListener("accessibility:change", () => {
             const popover = document.getElementById("map-popover");
             if (
                 currentPopoverProperties &&
                 popover?.classList.contains("is-open")
             ) {
+                // Update details in het popover paneel
                 openPopoverWithDetails(currentPopoverProperties);
             }
+            // Update live alle markers op de kaart met de nieuwe ja/nee/onbekend tellers
+            updateAllTooltips();
         });
 
         function closePopover() {
@@ -741,70 +918,98 @@
                 this.layers[name] = { layer: null, loaded: false, apiUrl };
             }
 
-        // Toon een laag (lazy-load als eerste keer)
-        async show(name) {
-            const entry = this.layers[name];
-            if (!entry) return;
-            if (entry.loaded && entry.layer) {
-                entry.layer.addTo(this.map);
-                return;
-            }
-
-            try {
-                const response = await fetch(entry.apiUrl);
-                if (!response.ok) {
-                    console.error(`Kon ${name} niet ophalen`);
+            // Toon een laag (lazy-load als eerste keer)
+            async show(name) {
+                const entry = this.layers[name];
+                if (!entry) return;
+                if (entry.loaded && entry.layer) {
+                    entry.layer.addTo(this.map);
                     return;
                 }
-                const data = await response.json();
 
-                // Maak een marker cluster group aan voor deze laag
-                const clusterGroup = L.markerClusterGroup({
-                    showCoverageOnHover: false,
-                    maxClusterRadius: 40, // Straal in pixels waarin markers gegroepeerd worden
-                    spiderfyOnMaxZoom: true, // Spiderfy bij maximale zoom (indien exact zelfde coordinaten)
-                    disableClusteringAtZoom: 16, // Deactiveer clusters op hoge zoomniveaus zodat alle labels getoond worden!
-                    chunkedLoading: true // Verbeterde performance bij veel markers
-                });
+                try {
+                    const response = await fetch(entry.apiUrl);
+                    if (!response.ok) {
+                        console.error(`Kon ${name} niet ophalen`);
+                        return;
+                    }
+                    const data = await response.json();
 
-                const geoJsonLayer = L.geoJSON(data, {
-                    pointToLayer: (feature, latlng) => {
-                        const visualHoofdfilter = getVisualHoofdfilter(feature.properties.Hoofdfilter, feature.properties.Subfilter);
-                        const marker = L.marker(latlng, { 
-                            icon: createCbaMarkerIcon(visualHoofdfilter, false, feature.properties.Subfilter),
-                            riseOnHover: true // Markers naar de voorgrond bij hover
-                        });
-                        if (feature.properties.Naam_locatie) {
-                            marker.bindTooltip(feature.properties.Naam_locatie, {
-                                permanent: true, // Labels altijd tonen
-                                direction: "right", // Google Maps-stijl uitlijning rechts naast de marker
-                                className: "am-marker-tooltip",
-                                offset: [12, -16] // -16px om perfect verticaal in het midden van de 32px marker uit te lijnen
+                    // Maak een marker cluster group aan voor deze laag
+                    const clusterGroup = L.markerClusterGroup({
+                        showCoverageOnHover: false,
+                        maxClusterRadius: 40, // Straal in pixels waarin markers gegroepeerd worden
+                        spiderfyOnMaxZoom: true, // Spiderfy bij maximale zoom (indien exact zelfde coordinaten)
+                        disableClusteringAtZoom: 16, // Deactiveer clusters op hoge zoomniveaus zodat alle labels getoond worden!
+                        chunkedLoading: true, // Verbeterde performance bij veel markers
+                    });
+
+                    const geoJsonLayer = L.geoJSON(data, {
+                        // Zet GeoJSON features om in markers op de kaart
+                        pointToLayer: (feature, latlng) => {
+                            const visualHoofdfilter = getVisualHoofdfilter(
+                                feature.properties.Hoofdfilter,
+                                feature.properties.Subfilter
+                            );
+                            const marker = L.marker(latlng, {
+                                icon: createCbaMarkerIcon(
+                                    visualHoofdfilter,
+                                    false,
+                                    feature.properties.Subfilter
+                                ),
+                                riseOnHover: true, // Markers naar de voorgrond bij hover
                             });
-                        }
-                        return marker;
-                    },
-                    onEachFeature: (feature, layer) => {
-                        layer.on("click", (e) => {
-                            L.DomEvent.stopPropagation(e);
-                            const visualHoofdfilter = getVisualHoofdfilter(feature.properties.Hoofdfilter, feature.properties.Subfilter);
-                            setActiveMarker(layer, "cba", visualHoofdfilter, feature.properties.Subfilter);
-                            openPopoverWithDetails(feature.properties);
-                            this.map.panTo(layer.getLatLng());
-                        });
-                    },
-                });
 
-                // Voeg de GeoJSON-laag recursief toe aan de clustergroep
-                geoJsonLayer.addTo(clusterGroup);
-                this.map.addLayer(clusterGroup);
+                            // Koppel de originele feature aan de marker zodat we er later bij kunnen in updateAllTooltips()
+                            marker.feature = feature;
 
-                entry.layer = clusterGroup;
-                entry.loaded = true;
-            } catch (err) {
-                console.error(`Fout bij laden ${name}:`, err);
+                            if (feature.properties.Naam_locatie) {
+                                // Bereken de initiële tooltip HTML op basis van eventueel geselecteerde filters
+                                const selectedCategories =
+                                    window.amAccessibilityCategories || [];
+                                const tooltipHtml = getTooltipHtml(
+                                    feature.properties,
+                                    selectedCategories
+                                );
+
+                                marker.bindTooltip(tooltipHtml, {
+                                    permanent: true, // Labels altijd tonen
+                                    direction: "right", // Google Maps-stijl uitlijning rechts naast de marker
+                                    className: "am-marker-tooltip",
+                                    offset: [12, -16], // -16px om de tooltip (naam + bolletjes) verticaal te centreren t.o.v. de marker
+                                });
+                            }
+                            return marker;
+                        },
+                        onEachFeature: (feature, layer) => {
+                            layer.on("click", (e) => {
+                                L.DomEvent.stopPropagation(e);
+                                const visualHoofdfilter = getVisualHoofdfilter(
+                                    feature.properties.Hoofdfilter,
+                                    feature.properties.Subfilter
+                                );
+                                setActiveMarker(
+                                    layer,
+                                    "cba",
+                                    visualHoofdfilter,
+                                    feature.properties.Subfilter
+                                );
+                                openPopoverWithDetails(feature.properties);
+                                this.map.panTo(layer.getLatLng());
+                            });
+                        },
+                    });
+
+                    // Voeg de GeoJSON-laag recursief toe aan de clustergroep
+                    geoJsonLayer.addTo(clusterGroup);
+                    this.map.addLayer(clusterGroup);
+
+                    entry.layer = clusterGroup;
+                    entry.loaded = true;
+                } catch (err) {
+                    console.error(`Fout bij laden ${name}:`, err);
+                }
             }
-        }
 
             // Verberg een laag (verwijder van kaart, maar bewaar data)
             hide(name) {
@@ -828,64 +1033,64 @@
         // Cultuur en attracties
         layerManager.register(
             "Bioscopen en filmhuizen",
-            "/api/cba/Bioscopen en filmhuizen",
+            "/api/cba/Bioscopen en filmhuizen"
         );
         layerManager.register("Musea", "/api/cba/Musea");
         layerManager.register("Rondvaartboten", "/api/cba/Rondvaartboten");
         layerManager.register(
             "Theaters en concertgebouwen",
-            "/api/cba/Theaters en concertgebouwen",
+            "/api/cba/Theaters en concertgebouwen"
         );
         layerManager.register(
             "Toeristische attracties",
-            "/api/cba/Toeristische attracties",
+            "/api/cba/Toeristische attracties"
         );
         layerManager.register(
             "Educatieve tuinen",
-            "/api/cba/Educatieve tuinen",
+            "/api/cba/Educatieve tuinen"
         );
 
         // Hospitality
         layerManager.register("Cafés", "/api/cba/Cafés");
         layerManager.register(
             "Congres- en partyaccommodaties",
-            "/api/cba/Congres- en partyaccommodaties",
+            "/api/cba/Congres- en partyaccommodaties"
         );
         layerManager.register("Hotels", "/api/cba/Hotels");
         layerManager.register(
             "Restaurants / eetgelegenheden",
-            "/api/cba/Restaurants / eetgelegenheden",
+            "/api/cba/Restaurants / eetgelegenheden"
         );
 
         // Publieke diensten
         layerManager.register("Bibliotheken", "/api/cba/Bibliotheken");
         layerManager.register(
             "Educatieve centra",
-            "/api/cba/Educatieve centra",
+            "/api/cba/Educatieve centra"
         );
         layerManager.register("Informatiecentra", "/api/cba/Informatiecentra");
         layerManager.register("Kerkgebouwen", "/api/cba/Kerkgebouwen");
         layerManager.register(
             "Onderwijsinstellingen en scholen",
-            "/api/cba/Onderwijsinstellingen en scholen",
+            "/api/cba/Onderwijsinstellingen en scholen"
         );
         layerManager.register(
             "Openbare gebouwen",
-            "/api/cba/Openbare gebouwen",
+            "/api/cba/Openbare gebouwen"
         );
         layerManager.register(
             "Openbare toiletten",
-            "/api/cba/Openbare toiletten",
+            "/api/cba/Openbare toiletten"
         );
         layerManager.register("Politiebureaus", "/api/cba/Politiebureaus");
         layerManager.register("Sociale Dienst", "/api/cba/Sociale Dienst");
         layerManager.register(
             "Stadhuizen en stadsdeelkantoren",
-            "/api/cba/Stadhuizen en stadsdeelkantoren",
+            "/api/cba/Stadhuizen en stadsdeelkantoren"
         );
         layerManager.register(
             "Wijkcentra en buurthuizen",
-            "/api/cba/Wijkcentra en buurthuizen",
+            "/api/cba/Wijkcentra en buurthuizen"
         );
 
         // Zorg en gezondheid
@@ -893,18 +1098,18 @@
         layerManager.register("Fysiotherapeuten", "/api/cba/Fysiotherapeuten");
         layerManager.register(
             "Gezondheidscentra",
-            "/api/cba/Gezondheidscentra",
+            "/api/cba/Gezondheidscentra"
         );
         layerManager.register("Huisartsen", "/api/cba/Huisartsen");
         layerManager.register("Klinieken", "/api/cba/Klinieken");
         layerManager.register(
             "Revalidatiecentra",
-            "/api/cba/Revalidatiecentra",
+            "/api/cba/Revalidatiecentra"
         );
         layerManager.register("Tandartsen", "/api/cba/Tandartsen");
         layerManager.register(
             "Verpleeg- en verzorgingshuizen",
-            "/api/cba/Verpleeg- en verzorgingshuizen",
+            "/api/cba/Verpleeg- en verzorgingshuizen"
         );
         layerManager.register("Ziekenhuizen", "/api/cba/Ziekenhuizen");
 
@@ -913,7 +1118,7 @@
         layerManager.register("Supermarkten", "/api/cba/Supermarkten");
         layerManager.register(
             "Uiterlijke verzorging",
-            "/api/cba/Uiterlijke verzorging",
+            "/api/cba/Uiterlijke verzorging"
         );
         layerManager.register("Warenhuizen", "/api/cba/Warenhuizen");
         layerManager.register("Winkelcentra", "/api/cba/Winkelcentra");
@@ -926,7 +1131,7 @@
         // Sport en Spel
         layerManager.register(
             "Sportaccommodaties",
-            "/api/cba/Sportaccommodaties",
+            "/api/cba/Sportaccommodaties"
         );
         layerManager.register("Zwembaden", "/api/cba/Zwembaden");
 
@@ -951,66 +1156,154 @@
             closeBtn.addEventListener("click", closePopover);
         }
 
-    // Close popover when clicking map background
-    map.on("click", function () {
-        closePopover();
-    });
+        // Close popover when clicking map background
+        map.on("click", function () {
+            closePopover();
+        });
 
         // Exposed to window as general close callback if needed
         window.amClosePopup = closePopover;
 
-    // Botsingsdetectie voor labels om overlap te voorkomen
-    function resolveLabelCollisions() {
-        const tooltips = Array.from(document.querySelectorAll('.am-marker-tooltip'));
-        const visibleRects = [];
-        
-        tooltips.forEach((tooltip) => {
-            // Tijdelijk resetten om de echte bounding box te kunnen berekenen
-            tooltip.style.opacity = '';
-            tooltip.style.visibility = '';
-            
-            const rect = tooltip.getBoundingClientRect();
-            
-            // Controleer overlap met al succesvol geplaatste labels
-            let overlaps = false;
-            const buffer = 6; // 6px marge voor extra ademruimte rondom labels
-            
-            for (const r of visibleRects) {
-                if (!(rect.right + buffer < r.left || 
-                      rect.left - buffer > r.right || 
-                      rect.bottom + buffer < r.top || 
-                      rect.top - buffer > r.bottom)) {
-                    overlaps = true;
-                    break;
+        // Botsingsdetectie voor labels om overlap te voorkomen
+        function resolveLabelCollisions() {
+            const tooltips = Array.from(
+                document.querySelectorAll(".am-marker-tooltip")
+            );
+            const visibleRects = [];
+
+            tooltips.forEach((tooltip) => {
+                // Tijdelijk resetten om de echte bounding box te kunnen berekenen
+                tooltip.style.opacity = "";
+                tooltip.style.visibility = "";
+
+                const rect = tooltip.getBoundingClientRect();
+
+                // Controleer overlap met al succesvol geplaatste labels
+                let overlaps = false;
+                const buffer = 6; // 6px marge voor extra ademruimte rondom labels
+
+                for (const r of visibleRects) {
+                    if (
+                        !(
+                            rect.right + buffer < r.left ||
+                            rect.left - buffer > r.right ||
+                            rect.bottom + buffer < r.top ||
+                            rect.top - buffer > r.bottom
+                        )
+                    ) {
+                        overlaps = true;
+                        break;
+                    }
                 }
-            }
-            
-            if (overlaps) {
-                tooltip.style.setProperty('opacity', '0', 'important');
-                tooltip.style.setProperty('visibility', 'hidden', 'important');
-            } else {
-                visibleRects.push(rect);
-            }
-        });
-    }
 
-    // Debounced trigger om performance hoog te houden tijdens zoomen/pannen
-    let collisionTimeout;
-    function triggerCollisionResolve() {
-        clearTimeout(collisionTimeout);
-        collisionTimeout = setTimeout(resolveLabelCollisions, 100);
-    }
+                if (overlaps) {
+                    tooltip.style.setProperty("opacity", "0", "important");
+                    tooltip.style.setProperty(
+                        "visibility",
+                        "hidden",
+                        "important"
+                    );
+                } else {
+                    visibleRects.push(rect);
+                }
+            });
+        }
 
-    // Koppel aan alle relevante Leaflet en kaart events
-    map.on("zoomend moveend layeradd", triggerCollisionResolve);
-    // Luister ook naar algemene interacties op de kaart
-    map.on("viewreset", triggerCollisionResolve);
+        // Debounced trigger om performance hoog te houden tijdens zoomen/pannen
+        let collisionTimeout;
+        function triggerCollisionResolve() {
+            clearTimeout(collisionTimeout);
+            collisionTimeout = setTimeout(resolveLabelCollisions, 100);
+        }
 
-        window.addEventListener("locatieGekozen", function (event) {
+        // Koppel aan alle relevante Leaflet en kaart events
+        map.on("zoomend moveend layeradd", triggerCollisionResolve);
+        // Luister ook naar algemene interacties op de kaart
+        map.on("viewreset", triggerCollisionResolve);
+
+        window.addEventListener("locatieGekozen", async function (event) {
             const lat = event.detail.lat;
             const lng = event.detail.lng;
+            const naam = event.detail.naam;
+            const subcategorie = event.detail.subcategorie;
 
-            map.setView([lat, lng], 16);
+            let matchingLayerName = null;
+            if (subcategorie) {
+                const targetSub = subcategorie.trim().toLowerCase();
+                for (const key of Object.keys(layerManager.layers)) {
+                    if (key.trim().toLowerCase() === targetSub) {
+                        matchingLayerName = key;
+                        break;
+                    }
+                }
+            }
+
+            if (matchingLayerName) {
+                // Verberg alle andere lagen om de kaart schoon te houden
+                layerManager.hideAll();
+                // Toon de bijbehorende laag (lazy-load indien nodig)
+                await layerManager.show(matchingLayerName);
+            }
+
+            let foundMarker = null;
+            if (matchingLayerName && layerManager.layers[matchingLayerName].layer) {
+                const clusterGroup = layerManager.layers[matchingLayerName].layer;
+                clusterGroup.eachLayer((layer) => {
+                    if (layer instanceof L.Marker && layer.feature && layer.feature.properties) {
+                        const nameProp = layer.feature.properties.Naam_locatie;
+                        if (nameProp && nameProp.trim() === naam.trim()) {
+                            foundMarker = layer;
+                        }
+                    }
+                });
+            }
+
+            // Fallback: zoek door alle geladen lagen als we de marker nog niet hebben gevonden
+            if (!foundMarker) {
+                for (const key of Object.keys(layerManager.layers)) {
+                    const entry = layerManager.layers[key];
+                    if (entry.loaded && entry.layer) {
+                        entry.layer.eachLayer((layer) => {
+                            if (layer instanceof L.Marker && layer.feature && layer.feature.properties) {
+                                const nameProp = layer.feature.properties.Naam_locatie;
+                                if (nameProp && nameProp.trim() === naam.trim()) {
+                                    foundMarker = layer;
+                                    matchingLayerName = key;
+                                }
+                            }
+                        });
+                    }
+                    if (foundMarker) break;
+                }
+            }
+
+            if (foundMarker) {
+                const featProps = foundMarker.feature.properties;
+                const visualHoofdfilter = getVisualHoofdfilter(featProps.Hoofdfilter, featProps.Subfilter);
+                const clusterGroup = layerManager.layers[matchingLayerName]?.layer;
+
+                // Sync de zijbalk filters met de werkelijke categorieën van de marker
+                window.dispatchEvent(new CustomEvent("sidebar:sync", {
+                    detail: {
+                        hoofdcategorie: visualHoofdfilter,
+                        subcategorie: featProps.Subfilter
+                    }
+                }));
+                
+                if (clusterGroup && typeof clusterGroup.zoomToShowLayer === "function") {
+                    clusterGroup.zoomToShowLayer(foundMarker, function() {
+                        setActiveMarker(foundMarker, "cba", visualHoofdfilter, featProps.Subfilter);
+                        openPopoverWithDetails(featProps);
+                    });
+                } else {
+                    map.setView(foundMarker.getLatLng(), 16);
+                    setActiveMarker(foundMarker, "cba", visualHoofdfilter, featProps.Subfilter);
+                    openPopoverWithDetails(featProps);
+                }
+            } else {
+                // Fallback als marker niet op de kaart staat
+                map.setView([lat, lng], 16);
+            }
         });
     });
 </script>
@@ -1023,7 +1316,6 @@
         flex-direction: column;
     }
 
-
     /* ── Google Maps-stijl Clean Tooltips (zonder achtergrond en met witte gloed/halo) ── */
     :global(.leaflet-tooltip.am-marker-tooltip) {
         background: transparent !important;
@@ -1032,21 +1324,13 @@
         padding: 0 !important;
         font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
         font-size: 11px !important;
-        font-weight: 800 !important; /* Bold voor sterke leesbaarheid */
-        color: #1c1c1c !important; /* Donkergrijs/zwart conform Google Maps labels */
+        font-weight: 800 !important;
+        color: #1c1c1c !important;
         box-shadow: none !important;
         white-space: nowrap !important;
         pointer-events: none !important;
         letter-spacing: 0.3px !important;
-        text-transform: none !important; /* Google Maps-look: geen hoofdletters */
-        text-shadow: 
-            -1.5px -1.5px 0 #ffffff,  
-             1.5px -1.5px 0 #ffffff,
-            -1.5px  1.5px 0 #ffffff,
-             1.5px  1.5px 0 #ffffff,
-             0px 0px 4px #ffffff,
-             0px 0px 8px #ffffff !important;
-        transition: font-size 0.15s ease, color 0.15s ease !important;
+        margin-left: 12px !important;
     }
 
     /* Actieve marker tooltip styling voor optimale contrast en focus */
@@ -1054,43 +1338,141 @@
         font-size: 12px !important;
         font-weight: 900 !important;
         color: #000000 !important;
-        margin-left: 8px !important; /* Verschuif iets naar rechts om overlap met de grotere actieve marker te voorkomen */
-        text-shadow: 
-            -2px -2px 0 #ffffff,  
-             2px -2px 0 #ffffff,
-            -2px  2px 0 #ffffff,
-             2px  2px 0 #ffffff,
-             0px 0px 6px #ffffff,
-             0px 0px 10px #ffffff !important;
+        margin-left: 18px !important;
+        margin-top: -4px !important;
         z-index: 99999 !important;
     }
 
     /* In High Contrast modus kleurt de tekst wit voor optimale leesbaarheid op donkere kaart */
-    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-tooltip.am-marker-tooltip) {
+    :global(html:has(#contrast-toggle:checked))
+        :global(.leaflet-tooltip.am-marker-tooltip) {
         color: #ffffff !important;
-        text-shadow: 
-            -1.5px -1.5px 0 #000000,  
-             1.5px -1.5px 0 #000000,
-            -1.5px  1.5px 0 #000000,
-             1.5px  1.5px 0 #000000,
-             0px 0px 4px #000000,
-             0px 0px 8px #000000 !important;
     }
 
-    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active) {
+    :global(html:has(#contrast-toggle:checked))
+        :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active) {
         color: var(--color-accent-1, #ec0000) !important;
-        text-shadow: 
-            -2px -2px 0 #000000,  
-             2px -2px 0 #000000,
-            -2px  2px 0 #000000,
-             2px  2px 0 #000000,
-             0px 0px 6px #000000,
-             0px 0px 10px #000000 !important;
     }
 
     /* Verberg het driehoekige pijltje */
     :global(.leaflet-tooltip.am-marker-tooltip::before) {
         display: none !important;
+    }
+
+    /* Container voor de gehele marker tooltip (naam + bolletjes) */
+    :global(.am-tooltip-container) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+
+    /* Standaard weergave van de locatienaam */
+    :global(.am-tooltip-name) {
+        white-space: nowrap;
+        font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        color: #1c1c1c !important;
+    }
+
+    /* Weergave van de locatienaam wanneer de marker actief is */
+    :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active
+            .am-tooltip-name) {
+        font-size: 12px !important;
+        font-weight: 900 !important;
+        color: #000000 !important;
+    }
+
+    /* Locatienaam kleur in High Contrast Modus */
+    :global(html:has(#contrast-toggle:checked)) :global(.am-tooltip-name) {
+        color: #ffffff !important;
+    }
+
+    /* Actieve locatienaam kleur in High Contrast Modus (Amsterdamse rode accentkleur) */
+    :global(html:has(#contrast-toggle:checked))
+        :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active
+            .am-tooltip-name) {
+        color: var(--color-accent-1, #ec0000) !important;
+    }
+
+    /* Flex-rij voor de ja/nee/onbekend tellerbolletjes */
+    :global(.am-tooltip-badges) {
+        display: flex;
+        gap: 6px;
+        margin-top: 2px;
+        margin-left: 3px; /* Zorgt dat de bolletjes netjes uitlijnen onder de eerste letter van de locatienaam */
+        text-shadow: none !important; /* Verwijder de witte gloed om de tekst in de bolletjes leesbaar te maken */
+    }
+
+    /* Basis vormgeving voor een individueel tellerbolletje */
+    :global(.am-tooltip-badge) {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 8px;
+        font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
+        font-size: 9px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        text-shadow: none !important;
+
+        /* Micro-animation: pop in met een elastische bounce */
+        animation: badge-pop-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    /* Groene achtergrond voor toegankelijke items (Ja) */
+    :global(.am-tooltip-badge--yes) {
+        background-color: #007a3d !important;
+        animation-delay: 0ms;
+    }
+
+    /* Rode achtergrond voor niet-toegankelijke items (Nee) */
+    :global(.am-tooltip-badge--no) {
+        background-color: #ec0000 !important;
+        animation-delay: 60ms;
+    }
+
+    /* Grijze achtergrond voor onbekende items */
+    :global(.am-tooltip-badge--unknown) {
+        background-color: #888888 !important;
+        animation-delay: 120ms;
+    }
+
+    @keyframes badge-pop-in {
+        from {
+            opacity: 0;
+            scale: 0.65;
+        }
+        to {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    /* High Contrast Modus aanpassingen: voeg witte borders toe om de bolletjes goed zichtbaar te maken op de donkere kaart */
+    :global(html:has(#contrast-toggle:checked)) :global(.am-tooltip-badge) {
+        border: 1.5px solid #ffffff !important;
+        box-shadow: none !important;
+    }
+
+    :global(html:has(#contrast-toggle:checked))
+        :global(.am-tooltip-badge--yes) {
+        background-color: #007a3d !important;
+    }
+
+    :global(html:has(#contrast-toggle:checked)) :global(.am-tooltip-badge--no) {
+        background-color: #ec0000 !important;
+    }
+
+    :global(html:has(#contrast-toggle:checked))
+        :global(.am-tooltip-badge--unknown) {
+        background-color: #888888 !important;
     }
 
     #map {
@@ -1111,7 +1493,8 @@
         font-size: 13px !important;
         border-radius: 50% !important;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
-        transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease !important;
+        transition: transform 0.15s ease, background-color 0.15s ease,
+            color 0.15s ease !important;
     }
     :global(.marker-cluster:hover div) {
         transform: scale(1.1);
