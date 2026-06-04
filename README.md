@@ -51,14 +51,14 @@ In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. eerst hebben we 
 ### Week 3
 In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. eerst hebben we de zoekfunctie gekoppeld aan de Algolia‑gestuurde JSON-data, zodat het hele zoekproces veel sneller en gebruiksvriendelijker werd. Daarna hebben we de kaart interactiever gemaakt door markers niet alleen te laten klikken, maar ook visueel te markeren met tooltips en een slimme controle op overlap zodat popovers en labels elkaar niet meer blokkeren. Tegelijk hebben we de sidebar, het zoekveld en de kaart met elkaar laten praten via CustomEvents, waardoor een gekozen locatie of filteractie netjes door het hele systeem gestuurd wordt. Voor de inhoud van de kaart lagen hebben we de dropdown-categorieën dynamisch verbonden met de API-data, zodat alleen de juiste categorieën en subcategorieën geladen worden. Ook hebben we extra informatie in de markertooltips gezet (zoals het aantal ja, nee en onbekend) en een legenda gemaakt.
 Tot slot hebben we voor de de kaart een list view gemaakt voor de kaart omdat een kaart niet toegankelijk is voor screenreader gebruikers.
-```HTML
+
 <table>
   <tr>
     <td><img src="./public/images/listview-design.png" alt="List view design" width="300" /></td>
     <td><img src="./public/images/leafletclustering.png" alt="Leaflet clustering afbeelding" width="300" /></td>
   </tr>
 </table> 
-```
+
 
 - Zoekfunctionaliteit laten zoeken in de json bestand met angolia
 - Markeractivering, tooltip-styling en clustering verbeterd zodat labels en popovers netter op de kaart verschijnen.
