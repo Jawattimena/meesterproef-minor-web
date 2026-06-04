@@ -1,3 +1,7 @@
+// -----------------------------------------------------------------------------
+// MARK: Bestand uploaden naar Algolia zodat we het kunnen gebruiken in onze app
+// -----------------------------------------------------------------------------
+
 import { algoliasearch } from 'algoliasearch';
 // fs = file system, hiermee kan je bestanden lezen van je computer
 import fs from "fs";
