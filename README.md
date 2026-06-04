@@ -58,7 +58,7 @@ In week 2 hebben we de eerste functionaliteit van de kaart gebouwd. We zijn bego
 <table>
   <tr>
     <td>In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. Eerst hebben we de zoekfunctie gekoppeld aan de Algolia‑gestuurde JSON-data, zodat het hele zoekproces veel sneller en gebruiksvriendelijker werd. Dit is iets wat een must have was voor de gemeente Amsterdam, dus hebben we de zoekfunctie gekoppeld aan de kaart zodat je direct naar de marker wordt gebracht wanneer je een selectie maakt in de zoekbalk.</td>
-    <td><img src="./public/images/Search.jpg" alt="Leaflet clustering afbeelding" width="50vw" /></td>
+    <td><img src="./public/images/Search.jpg" alt="Leaflet clustering afbeelding" width="500" /></td>
   </tr>
 </table> 
 
