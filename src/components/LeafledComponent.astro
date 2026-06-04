@@ -468,6 +468,32 @@
             return normalized || "Onbekend";
         }
 
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function getAccessibilityBadgeLabel(value) {
+            const normalized = normalizeAccessibilityValue(value);
+            return normalized.toLowerCase() === "onbekend"
+                ? "Onb"
+                : normalized;
+        }
+
+        function getWebsiteHref(value) {
+            const website = String(value ?? "").trim();
+            if (!website) return "";
+            return /^https?:\/\//i.test(website) ? website : `https://${website}`;
+        }
+
+        function getTelephoneHref(value) {
+            return `tel:${String(value ?? "").replace(/[^\d+]/g, "")}`;
+        }
+
         function resetActiveMarker() {
             if (activeMarker) {
                 activeMarker.setIcon(
@@ -540,12 +566,6 @@
             const adresVolledig = [adres, postcode, plaats]
                 .filter(Boolean)
                 .join(", ");
-
-            const visualHoofd = getVisualHoofdfilter(
-                p.Hoofdfilter,
-                p.Subfilter
-            );
-            const soort = `${visualHoofd} — ${(p.Subfilter ?? "").trim()}`;
 
             const accessibilityFieldGroups = {
                 mobility: {
@@ -732,20 +752,6 @@
                 },
             };
 
-            // Bouw items: toon "Ja" als groene check, "Nee" als rood kruis
-            const items = [];
-
-            // Contactinfo als eerste items
-            if (p.Telefoonnummer && p.Telefoonnummer !== "Onbekend") {
-                items.push({ label: "Telefoon", desc: p.Telefoonnummer });
-            }
-            if (p.Website && p.Website !== "Onbekend") {
-                items.push({ label: "Website", desc: p.Website });
-            }
-
-            // Categorie
-            items.push({ label: "Categorie", desc: soort });
-
             const selectedAccessibilityCategories =
                 window.amAccessibilityCategories || [];
             const renderedFields = new Set();
@@ -759,8 +765,10 @@
                     if (renderedFields.has(field.key)) return;
                     renderedFields.add(field.key);
 
-                    const value = normalizeAccessibilityValue(p[field.key]);
-                    const status = value.toLowerCase();
+                    const value = getAccessibilityBadgeLabel(p[field.key]);
+                    const status = normalizeAccessibilityValue(
+                        p[field.key]
+                    ).toLowerCase();
                     const modifier =
                         status === "ja"
                             ? "yes"
@@ -770,80 +778,78 @@
 
                     accessibilityRows.push(`
                         <div class="am-popup__accessibility-row">
-                            <span>
-                                <span class="am-popup__category">${group.label}</span>
-                                <span class="am-popup__accessibility-label">${field.label}</span>
-                            </span>
-                            <span class="am-popup__value am-popup__value--${modifier}">${value}</span>
+                            <span class="am-popup__accessibility-label">${escapeHtml(
+                                field.label
+                            )}</span>
+                            <span class="am-popup__value am-popup__value--${modifier}" aria-label="${escapeHtml(
+                                normalizeAccessibilityValue(p[field.key])
+                            )}">${escapeHtml(value)}</span>
                         </div>
                     `);
                 });
             });
 
-            items.push({
-                label: "Toegankelijkheidskenmerken",
-                desc: selectedAccessibilityCategories.length
+            const contactItems = [];
+
+            if (p.Telefoonnummer && p.Telefoonnummer !== "Onbekend") {
+                contactItems.push(`
+                    <div class="am-popup__contact-item">
+                        <p class="am-popup__label">Telefoon</p>
+                        <a class="am-popup__text am-popup__contact-link" href="${escapeHtml(
+                            getTelephoneHref(p.Telefoonnummer)
+                        )}">${escapeHtml(p.Telefoonnummer)}</a>
+                    </div>
+                `);
+            }
+
+            if (p.Website && p.Website !== "Onbekend") {
+                contactItems.push(`
+                    <div class="am-popup__contact-item">
+                        <p class="am-popup__label">Website</p>
+                        <a class="am-popup__text am-popup__contact-link" href="${escapeHtml(
+                            getWebsiteHref(p.Website)
+                        )}" target="_blank" rel="noreferrer">${escapeHtml(
+                            p.Website
+                        )}</a>
+                    </div>
+                `);
+            }
+
+            const accessibilityHtml =
+                selectedAccessibilityCategories.length && accessibilityRows.length
                     ? `<div class="am-popup__accessibility-list">${accessibilityRows.join(
                           ""
                       )}</div>`
-                    : `<p class="am-popup__empty-accessibility">Selecteer een toegankelijkheidsoptie.</p>`,
-                isHtml: true,
-            });
+                    : `<p class="am-popup__empty-accessibility">Selecteer een toegankelijkheidsoptie.</p>`;
 
-            const itemsHtml = items
-                .map(
-                    (item) => `
-                <div class="am-popup__item">
-                    <div class="am-popup__check">${checkIconSvg}</div>
-                    <div class="am-popup__item-body">
-                        <p class="am-popup__item-label">${item.label}</p>
-                        <div class="am-popup__item-desc">${item.desc}</div>
-                    </div>
-                </div>
-            `
-                )
-                .join("");
+            const bodyHtml = `
+                <section class="am-popup__accessibility">
+                    <h3 class="am-popup__section-title">Toegankelijkheid</h3>
+                    ${accessibilityHtml}
+                </section>
+            `;
 
             const titleEl = document.getElementById("popover-title");
             const addressEl = document.getElementById("popover-address");
+            const contactEl = document.getElementById(
+                "popover-contact-content"
+            );
             const bodyEl = document.getElementById("popover-body-content");
             const footerEl = document.getElementById("popover-footer-actions");
 
             if (titleEl) titleEl.textContent = naam;
             if (addressEl) addressEl.textContent = adresVolledig;
-            if (bodyEl) bodyEl.innerHTML = itemsHtml;
+            if (contactEl) {
+                contactEl.innerHTML = contactItems.length
+                    ? `<section class="am-popup__contact">${contactItems.join(
+                          ""
+                      )}</section>`
+                    : "";
+            }
+            if (bodyEl) bodyEl.innerHTML = bodyHtml;
 
             if (footerEl) {
-                footerEl.innerHTML = `
-                <button class="am-popup__btn" id="popover-btn-print">
-                    ${printIconSvg}
-                    <span>Print</span>
-                </button>
-                <button class="am-popup__btn" id="popover-btn-share">
-                    ${shareIconSvg}
-                    <span>Deel</span>
-                </button>
-            `;
-
-                // Attach listeners to actions inside the popover
-                document
-                    .getElementById("popover-btn-print")
-                    ?.addEventListener("click", () => {
-                        window.print();
-                    });
-
-                document
-                    .getElementById("popover-btn-share")
-                    ?.addEventListener("click", () => {
-                        if (navigator.share) {
-                            navigator.share({
-                                title: naam,
-                                text: adresVolledig,
-                            });
-                        } else {
-                            alert(adresVolledig);
-                        }
-                    });
+                footerEl.innerHTML = "";
             }
 
             // Show popover
