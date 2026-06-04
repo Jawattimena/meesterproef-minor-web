@@ -332,14 +332,126 @@
         let activeMarkerHoofdfilter = null;
         let activeMarkerSubfilter = null;
         let currentPopoverProperties = null;
+        // Koppeling van toegankelijkheidseisen aan de bijbehorende kolomnamen (keys) uit de dataset
+        const ACCESSIBILITY_GROUPS = {
+            mobility: [
+                "Gehandicaptenparkeerplaatsen_binnen_100_m_",
+                "Voorrijden_toegestaan",
+                "Toegankelijk_gebouw",
+                "Persoonlijke_assistent",
+                "Rustplekken",
+                "Trappen_met_leuning_entree",
+                "Aantal_traptreden",
+                "Toegankelijke_lift",
+                "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak",
+                "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed",
+                "Rolstoelvriendelijk_toilet",
+                "Speciale_toeschouwersplaatsen_rolstoelgebruikers",
+                "Restaurant_tafels_onderrijdbaar",
+                "Toegankelijke_hotelkamers",
+                "Toegankelijke_kleedkamer",
+                "Toegankelijke_douche",
+                "Mobiele_pin"
+            ],
+            visual: [
+                "Gehandicaptenparkeerplaatsen_binnen_100_m_",
+                "Persoonlijke_assistent",
+                "Rustplekken",
+                "Trappen_met_leuning_entree",
+                "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak",
+                "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed",
+                "Assistentiehond_toegestaan",
+                "Geleidelijnen_en_vloermarkeringen",
+                "Audiodescriptie_of_beeldbeschrijving",
+                "Materiaal_in_braille",
+                "Toegankelijke_afdruk",
+                "Toegankelijke_lift",
+                "Mobiele_pin"
+            ],
+            auditory: [
+                "Open_ondertiteling",
+                "Gesloten_ondertiteling",
+                "Ringleiding_voor_slechthorenden",
+                "Tolk_gebarentaal",
+                "Audiodescriptie_of_beeldbeschrijving",
+                "Persoonlijke_assistent"
+            ],
+            hidden: [
+                "Rustplekken",
+                "Persoonlijke_assistent",
+                "Zintuigelijke_beleving",
+                "Prikkelarme_ruimte",
+                "Prikkelarme_uren",
+                "Herkenning_Sunflower_Keycord",
+                "Toegankelijk_gebouw",
+                "Voorrijden_toegestaan",
+                "Mobiele_pin"
+            ]
+        };
 
-        function escapeHtml(value) {
-            return String(value ?? "")
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+        // Genereert de HTML voor de marker-tooltip (locatienaam + eventueel de gekleurde bolletjes)
+        function getTooltipHtml(properties, selectedCategories) {
+            const name = properties.Naam_locatie || "Onbekende locatie";
+
+            // Als er geen categorieën zijn geselecteerd, tonen we alleen de naam (geen bolletjes)
+            if (!selectedCategories || selectedCategories.length === 0) {
+                return `
+                    <div class="am-tooltip-container">
+                        <div class="am-tooltip-name">${name}</div>
+                    </div>
+                `;
+            }
+
+            let yes = 0;
+            let no = 0;
+            let unknown = 0;
+
+            // Verzamel alle kolommen die we moeten tellen in een simpele array 
+            const fieldsToCount = [];
+            for (let index = 0; index < selectedCategories.length; index++) {
+                const cat = selectedCategories[index];
+                const fields = ACCESSIBILITY_GROUPS[cat];
+                if (fields) {
+                    for (let j = 0; j < fields.length; j++) {
+                        const f = fields[j];
+                        // Alleen toevoegen als het er nog niet in zit, om dubbel tellen te voorkomen
+                        if (!fieldsToCount.includes(f)) {
+                            fieldsToCount.push(f);
+                        }
+                    }
+                }
+            }
+
+            // Doorloop de verzamelde kolommen en bepaal het aantal Ja's, Nee's en Onbekenden
+            for (let i = 0; i < fieldsToCount.length; i++) {
+                const field = fieldsToCount[i];
+                let value = properties[field];
+                // Zorg ervoor dat we geen foutmeldingen krijgen als de waarde leeg of undefined is
+                if (value === undefined || value === null) {
+                    value = "";
+                }
+                const val = String(value).trim().toLowerCase();
+
+                if (val === "ja") {
+                    yes = yes + 1;
+                } else if (val === "nee") {
+                    no = no + 1;
+                } else {
+                    unknown = unknown + 1;
+                }
+            }
+
+            // Geef de HTML terug inclusief de groene, rode en grijze tellertjes
+            return `
+                <div class="am-tooltip-container">
+                    <div class="am-tooltip-name">${name}</div>
+                    <div class="am-tooltip-badges">
+                        <span class="am-tooltip-badge am-tooltip-badge--yes">${yes}</span>
+                        <span class="am-tooltip-badge am-tooltip-badge--no">${no}</span>
+                        <span class="am-tooltip-badge am-tooltip-badge--unknown">${unknown}</span>
+                    </div>
+                </div>
+            `;
         }
 
         function normalizeAccessibilityValue(value) {
@@ -631,10 +743,10 @@
                     accessibilityRows.push(`
                         <div class="am-popup__accessibility-row">
                             <span>
-                                <span class="am-popup__category">${escapeHtml(group.label)}</span>
-                                <span class="am-popup__accessibility-label">${escapeHtml(field.label)}</span>
+                                <span class="am-popup__category">${group.label}</span>
+                                <span class="am-popup__accessibility-label">${field.label}</span>
                             </span>
-                            <span class="am-popup__value am-popup__value--${modifier}">${escapeHtml(value)}</span>
+                            <span class="am-popup__value am-popup__value--${modifier}">${value}</span>
                         </div>
                     `);
                 });
@@ -654,8 +766,8 @@
                 <div class="am-popup__item">
                     <div class="am-popup__check">${checkIconSvg}</div>
                     <div class="am-popup__item-body">
-                        <p class="am-popup__item-label">${escapeHtml(item.label)}</p>
-                        <div class="am-popup__item-desc">${item.isHtml ? item.desc : escapeHtml(item.desc)}</div>
+                        <p class="am-popup__item-label">${item.label}</p>
+                        <div class="am-popup__item-desc">${item.desc}</div>
                     </div>
                 </div>
             `,
@@ -709,14 +821,44 @@
             popover.setAttribute("aria-hidden", "false");
         }
 
+        // Update alle markers op de kaart met de nieuwe toegankelijkheidsteller HTML
+        function updateAllTooltips() {
+            const selectedCategories = window.amAccessibilityCategories || [];
+            
+            // Loop door alle geregistreerde kaartlagen van de LayerManager met een simpele index-loop
+            const keys = Object.keys(layerManager.layers);
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i];
+                const entry = layerManager.layers[key];
+                if (entry.layer) {
+                    // Loop door alle markers binnen de clustergroep
+                    entry.layer.eachLayer((layer) => {
+                        // Controleer of de laag een Leaflet Marker is en een tooltip heeft gebonden
+                        if (layer instanceof L.Marker && layer.getTooltip()) {
+                            const properties = layer.feature ? layer.feature.properties : null;
+                            if (properties) {
+                                // Genereer de nieuwe tooltip HTML en update de marker
+                                const html = getTooltipHtml(properties, selectedCategories);
+                                layer.getTooltip().setContent(html);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // Luister naar wijzigingen in geselecteerde toegankelijkheidseisen (vanuit de sidebar geselecteerd)
         window.addEventListener("accessibility:change", () => {
             const popover = document.getElementById("map-popover");
             if (
                 currentPopoverProperties &&
                 popover?.classList.contains("is-open")
             ) {
+                // Update details in het popover paneel
                 openPopoverWithDetails(currentPopoverProperties);
             }
+            // Update live alle markers op de kaart met de nieuwe ja/nee/onbekend tellers
+            updateAllTooltips();
         });
 
         function closePopover() {
@@ -768,18 +910,27 @@
                 });
 
                 const geoJsonLayer = L.geoJSON(data, {
+                    // Zet GeoJSON features om in markers op de kaart
                     pointToLayer: (feature, latlng) => {
                         const visualHoofdfilter = getVisualHoofdfilter(feature.properties.Hoofdfilter, feature.properties.Subfilter);
                         const marker = L.marker(latlng, { 
                             icon: createCbaMarkerIcon(visualHoofdfilter, false, feature.properties.Subfilter),
                             riseOnHover: true // Markers naar de voorgrond bij hover
                         });
+                        
+                        // Koppel de originele feature aan de marker zodat we er later bij kunnen in updateAllTooltips()
+                        marker.feature = feature;
+
                         if (feature.properties.Naam_locatie) {
-                            marker.bindTooltip(feature.properties.Naam_locatie, {
+                            // Bereken de initiële tooltip HTML op basis van eventueel geselecteerde filters
+                            const selectedCategories = window.amAccessibilityCategories || [];
+                            const tooltipHtml = getTooltipHtml(feature.properties, selectedCategories);
+                            
+                            marker.bindTooltip(tooltipHtml, {
                                 permanent: true, // Labels altijd tonen
                                 direction: "right", // Google Maps-stijl uitlijning rechts naast de marker
                                 className: "am-marker-tooltip",
-                                offset: [12, -16] // -16px om perfect verticaal in het midden van de 32px marker uit te lijnen
+                                offset: [12, -16] // -16px om de tooltip (naam + bolletjes) verticaal te centreren t.o.v. de marker
                             });
                         }
                         return marker;
@@ -1032,21 +1183,13 @@
         padding: 0 !important;
         font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
         font-size: 11px !important;
-        font-weight: 800 !important; /* Bold voor sterke leesbaarheid */
-        color: #1c1c1c !important; /* Donkergrijs/zwart conform Google Maps labels */
+        font-weight: 800 !important; 
+        color: #1c1c1c !important; 
         box-shadow: none !important;
         white-space: nowrap !important;
         pointer-events: none !important;
         letter-spacing: 0.3px !important;
-        text-transform: none !important; /* Google Maps-look: geen hoofdletters */
-        text-shadow: 
-            -1.5px -1.5px 0 #ffffff,  
-             1.5px -1.5px 0 #ffffff,
-            -1.5px  1.5px 0 #ffffff,
-             1.5px  1.5px 0 #ffffff,
-             0px 0px 4px #ffffff,
-             0px 0px 8px #ffffff !important;
-        transition: font-size 0.15s ease, color 0.15s ease !important;
+        margin-left: 12px !important; 
     }
 
     /* Actieve marker tooltip styling voor optimale contrast en focus */
@@ -1054,43 +1197,135 @@
         font-size: 12px !important;
         font-weight: 900 !important;
         color: #000000 !important;
-        margin-left: 8px !important; /* Verschuif iets naar rechts om overlap met de grotere actieve marker te voorkomen */
-        text-shadow: 
-            -2px -2px 0 #ffffff,  
-             2px -2px 0 #ffffff,
-            -2px  2px 0 #ffffff,
-             2px  2px 0 #ffffff,
-             0px 0px 6px #ffffff,
-             0px 0px 10px #ffffff !important;
+        margin-left: 18px !important; 
+        margin-top: -4px !important; 
         z-index: 99999 !important;
     }
 
     /* In High Contrast modus kleurt de tekst wit voor optimale leesbaarheid op donkere kaart */
     :global(html:has(#contrast-toggle:checked)) :global(.leaflet-tooltip.am-marker-tooltip) {
         color: #ffffff !important;
-        text-shadow: 
-            -1.5px -1.5px 0 #000000,  
-             1.5px -1.5px 0 #000000,
-            -1.5px  1.5px 0 #000000,
-             1.5px  1.5px 0 #000000,
-             0px 0px 4px #000000,
-             0px 0px 8px #000000 !important;
     }
 
     :global(html:has(#contrast-toggle:checked)) :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active) {
         color: var(--color-accent-1, #ec0000) !important;
-        text-shadow: 
-            -2px -2px 0 #000000,  
-             2px -2px 0 #000000,
-            -2px  2px 0 #000000,
-             2px  2px 0 #000000,
-             0px 0px 6px #000000,
-             0px 0px 10px #000000 !important;
+
     }
 
     /* Verberg het driehoekige pijltje */
     :global(.leaflet-tooltip.am-marker-tooltip::before) {
         display: none !important;
+    }
+
+    /* Container voor de gehele marker tooltip (naam + bolletjes) */
+    :global(.am-tooltip-container) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+
+    /* Standaard weergave van de locatienaam */
+    :global(.am-tooltip-name) {
+        white-space: nowrap;
+        font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        color: #1c1c1c !important;
+    }
+
+    /* Weergave van de locatienaam wanneer de marker actief is */
+    :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active .am-tooltip-name) {
+        font-size: 12px !important;
+        font-weight: 900 !important;
+        color: #000000 !important;
+    }
+
+    /* Locatienaam kleur in High Contrast Modus */
+    :global(html:has(#contrast-toggle:checked)) :global(.am-tooltip-name) {
+        color: #ffffff !important;
+    }
+
+    /* Actieve locatienaam kleur in High Contrast Modus (Amsterdamse rode accentkleur) */
+    :global(html:has(#contrast-toggle:checked)) :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active .am-tooltip-name) {
+        color: var(--color-accent-1, #ec0000) !important;
+    }
+
+    /* Flex-rij voor de ja/nee/onbekend tellerbolletjes */
+    :global(.am-tooltip-badges) {
+        display: flex;
+        gap: 6px;
+        margin-top: 2px;
+        margin-left: 3px; /* Zorgt dat de bolletjes netjes uitlijnen onder de eerste letter van de locatienaam */
+        text-shadow: none !important; /* Verwijder de witte gloed om de tekst in de bolletjes leesbaar te maken */
+    }
+
+    /* Basis vormgeving voor een individueel tellerbolletje */
+    :global(.am-tooltip-badge) {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 8px;
+        font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
+        font-size: 9px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        border: 1px solid rgba(0,0,0,0.1);
+        text-shadow: none !important;
+        
+        /* Micro-animation: pop in met een elastische bounce */
+        animation: badge-pop-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    /* Groene achtergrond voor toegankelijke items (Ja) */
+    :global(.am-tooltip-badge--yes) {
+        background-color: #007a3d !important;
+        animation-delay: 0ms;
+    }
+
+    /* Rode achtergrond voor niet-toegankelijke items (Nee) */
+    :global(.am-tooltip-badge--no) {
+        background-color: #ec0000 !important;
+        animation-delay: 60ms;
+    }
+
+    /* Grijze achtergrond voor onbekende items */
+    :global(.am-tooltip-badge--unknown) {
+        background-color: #888888 !important;
+        animation-delay: 120ms;
+    }
+
+    @keyframes badge-pop-in {
+        from {
+            opacity: 0;
+            scale: 0.65;
+        }
+        to {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    /* High Contrast Modus aanpassingen: voeg witte borders toe om de bolletjes goed zichtbaar te maken op de donkere kaart */
+    :global(html:has(#contrast-toggle:checked)) :global(.am-tooltip-badge) {
+        border: 1.5px solid #ffffff !important;
+        box-shadow: none !important;
+    }
+
+    :global(html:has(#contrast-toggle:checked)) :global(.am-tooltip-badge--yes) {
+        background-color: #007a3d !important;
+    }
+
+    :global(html:has(#contrast-toggle:checked)) :global(.am-tooltip-badge--no) {
+        background-color: #ec0000 !important;
+    }
+
+    :global(html:has(#contrast-toggle:checked)) :global(.am-tooltip-badge--unknown) {
+        background-color: #888888 !important;
     }
 
     #map {
