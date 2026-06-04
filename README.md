@@ -1,8 +1,22 @@
 
 # Project Atlas(Gemeente Amsterdam)
-![Cover image](./public/images/Scherm­afbeelding%202026-06-03%20om%2014.04.38.png)
+![Cover image](./public/images/cover.png)
 
 ## Voorwoord
+
+## Debrief Gemeente Amsterdam Atlas
+De Gemeente Amsterdam wil de stad toegankelijker maken voor mensen met een lichamelijke beperking door bestaande data in te zetten voor een online kaartplatform. Dit document trekt de harde kaders tussen wat we gaan onderzoeken, ontwerpen en opleveren, en wat buiten de scope valt.
+
+**De Kern (The Why)**
+De Gemeente Amsterdam heeft bakken met data over de stad, maar deze data is momenteel onbruikbaar voor de burger die er daadwerkelijk baat bij heeft. Inwoners met een lichamelijke beperking missen een centraal, betrouwbaar startpunt om te controleren of een locatie of route voor hen begaanbaar is. Dit leidt tot onzekerheid en uitsluiting.
+
+**De doelstelling**
+Het bouwen van een online platform (Atlas) waarmee burgers met een fysieke beperking direct kunnen filteren en zoeken op de toegankelijkheid van locaties in Amsterdam.
+
+**Succes-indicatoren:**
+De interface voldoet aantoonbaar aan de WCAG 2.1 AA-richtlijnen (getest met screenreaders en keyboard-only navigatie).
+Informatie is binnen 3 kliks vindbaar via een logische filter-cascade.
+De teksten en foutmeldingen scoren 100% op B1-taalbereik.
 
 
 ## Project voortgang
@@ -23,7 +37,7 @@ In week 2 hebben we de eerste functionaliteit van de kaart gebouwd. We zijn bego
 - Map popovers toegevoegd voor locaties met details, toegankelijkheidskenmerken en acties voor printen/de delen.
 
 ### Week 3
-In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. eerst hebben we de zoekfunctie gekoppeld aan de Algolia‑gestuurde JSON-data, zodat het hele zoekproces veel sneller en gebruiksvriendelijker werd. Daarna hebben we de kaart interactiever gemaakt door markers niet alleen te laten klikken, maar ook visueel te markeren met tooltips en een slimme controle op overlap zodat popovers en labels elkaar niet meer blokkeren. Tegelijk hebben we de sidebar, het zoekveld en de kaart met elkaar laten praten via CustomEvents, waardoor een gekozen locatie of filteractie netjes door het hele systeem gestuurd wordt. Voor de inhoud van de kaart lagen hebben we de dropdown-categorieën dynamisch verbonden met de API-data, zodat alleen de juiste categorieën en subcategorieën geladen worden. Tot slot hebben we extra informatie in de markertooltips gezet (zoals het aantal ja, nee en onbekend) en een legenda gemaakt.
+In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. eerst hebben we de zoekfunctie gekoppeld aan de Algolia‑gestuurde JSON-data, zodat het hele zoekproces veel sneller en gebruiksvriendelijker werd. Daarna hebben we de kaart interactiever gemaakt door markers niet alleen te laten klikken, maar ook visueel te markeren met tooltips en een slimme controle op overlap zodat popovers en labels elkaar niet meer blokkeren. Tegelijk hebben we de sidebar, het zoekveld en de kaart met elkaar laten praten via CustomEvents, waardoor een gekozen locatie of filteractie netjes door het hele systeem gestuurd wordt. Voor de inhoud van de kaart lagen hebben we de dropdown-categorieën dynamisch verbonden met de API-data, zodat alleen de juiste categorieën en subcategorieën geladen worden. Ook hebben we extra informatie in de markertooltips gezet (zoals het aantal ja, nee en onbekend) en een legenda gemaakt. Tot slot hebben we voor de de kaart een list view gemaakt voor de kaart omdat een kaart niet toegankelijk is voor screenreader gebruikers.
 
 - Zoekfunctionaliteit laten zoeken in de json bestand met angolia
 - Markeractivering, tooltip-styling en clustering verbeterd zodat labels en popovers netter op de kaart verschijnen.
@@ -32,6 +46,28 @@ In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. eerst hebben we 
 - Tooltips toegevoegd om de aantal ja, nee en onbekent te tonen bij de markers.
 - legenda gemaakt voor de tooltip
 - Toegankelijkheid verbeterd met ARIA-attributen, focusvriendelijke elementen en een toegankelijkheidsknop in de sidebar.
+- List view 
+
+### Week 3
+In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. eerst hebben we de zoekfunctie gekoppeld aan de Algolia‑gestuurde JSON-data, zodat het hele zoekproces veel sneller en gebruiksvriendelijker werd. Daarna hebben we de kaart interactiever gemaakt door markers niet alleen te laten klikken, maar ook visueel te markeren met tooltips en een slimme controle op overlap zodat popovers en labels elkaar niet meer blokkeren. Tegelijk hebben we de sidebar, het zoekveld en de kaart met elkaar laten praten via CustomEvents, waardoor een gekozen locatie of filteractie netjes door het hele systeem gestuurd wordt. Voor de inhoud van de kaart lagen hebben we de dropdown-categorieën dynamisch verbonden met de API-data, zodat alleen de juiste categorieën en subcategorieën geladen worden. Ook hebben we extra informatie in de markertooltips gezet (zoals het aantal ja, nee en onbekend) en een legenda gemaakt.
+Tot slot hebben we voor de de kaart een list view gemaakt voor de kaart omdat een kaart niet toegankelijk is voor screenreader gebruikers.
+```HTML
+<table>
+  <tr>
+    <td><img src="./public/images/listview-design.png" alt="List view design" width="300" /></td>
+    <td><img src="./public/images/leafletclustering.png" alt="Leaflet clustering afbeelding" width="300" /></td>
+  </tr>
+</table> 
+```
+
+- Zoekfunctionaliteit laten zoeken in de json bestand met angolia
+- Markeractivering, tooltip-styling en clustering verbeterd zodat labels en popovers netter op de kaart verschijnen.
+- Communicatie tussen sidebar, zoekveld en kaart afgerond met CustomEvents voor geselecteerde locaties en filter-acties.
+- Filters/subfilters dynamisch gekoppeld aan CBA API-data en kaartlagen per categorie beheerd.
+- Tooltips toegevoegd om de aantal ja, nee en onbekent te tonen bij de markers.
+- legenda gemaakt voor de tooltip
+- Toegankelijkheid verbeterd met ARIA-attributen, focusvriendelijke elementen en een toegankelijkheidsknop in de sidebar.
+- List view 
 
 
 # Bron
