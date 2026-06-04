@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <aside
@@ -37,10 +38,7 @@
                 <p id="popover-address" class="popover-address">
                     Klik op een marker op de kaart om de details te bekijken.
                 </p>
-                <div
-                    class="popover-contact"
-                    id="popover-contact-content"
-                ></div>
+                <div class="popover-contact" id="popover-contact-content"></div>
             </div>
         </header>
 
@@ -83,7 +81,8 @@
         flex-direction: column;
 
         transform: translateX(-100%);
-        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        transition:
+            transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
             visibility 0.35s;
         visibility: hidden;
     }
@@ -133,7 +132,9 @@
         cursor: pointer;
         color: #000000;
         z-index: 2;
-        transition: background-color 0.15s ease, color 0.15s ease;
+        transition:
+            background-color 0.15s ease,
+            color 0.15s ease;
     }
 
     .btn-close:hover {
@@ -278,6 +279,7 @@
     :global(.am-popup__accessibility-list) {
         display: flex;
         flex-direction: column;
+        fontsize: 1rem;
         gap: 14px;
     }
 
