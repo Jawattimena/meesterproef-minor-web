@@ -849,6 +849,9 @@
             // Show popover
             popover.classList.add("is-open");
             popover.setAttribute("aria-hidden", "false");
+            setTimeout(() => {
+                popover.focus();
+            }, 100);
         }
 
         // Update alle markers op de kaart met de nieuwe toegankelijkheidsteller HTML
@@ -901,6 +904,12 @@
             if (popover) {
                 popover.classList.remove("is-open");
                 popover.setAttribute("aria-hidden", "true");
+            }
+            if (activeMarker) {
+                const markerEl = activeMarker.getElement();
+                if (markerEl) {
+                    markerEl.focus();
+                }
             }
             resetActiveMarker();
         }
@@ -958,6 +967,7 @@
                                     feature.properties.Subfilter
                                 ),
                                 riseOnHover: true, // Markers naar de voorgrond bij hover
+                                title: feature.properties.Naam_locatie || "Locatiemarker",
                             });
 
                             // Koppel de originele feature aan de marker zodat we er later bij kunnen in updateAllTooltips()
@@ -1159,6 +1169,16 @@
         // Close popover when clicking map background
         map.on("click", function () {
             closePopover();
+        });
+
+        // Close popover on Escape press
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                const popover = document.getElementById("map-popover");
+                if (popover && popover.classList.contains("is-open")) {
+                    closePopover();
+                }
+            }
         });
 
         // Exposed to window as general close callback if needed
@@ -1560,6 +1580,11 @@
         border-color: var(--color-border) !important;
         box-shadow: 0 0 0 4px var(--color-background-main) !important;
         color: var(--color-background-main) !important;
+    }
+
+    :global(.am-marker:focus-visible) {
+        outline: 3px solid var(--color-accent-1) !important;
+        outline-offset: 3px !important;
     }
 
     @keyframes marker-fade-in {

@@ -6,6 +6,7 @@
     id="map-popover"
     aria-label="Locatiedetails"
     aria-hidden="true"
+    tabindex="-1"
 >
     <div class="popover-inner">
         <!-- HEADER: Hero visual / Title & Close Button -->
@@ -163,11 +164,8 @@
     }
 
     .btn-close:hover {
-        transform: translateY(-1px);
-        background-color: var(
-            --color-accent-1
-        ); /* Red/Accent background on hover */
-        color: var(--color-background-main); /* White cross on hover */
+        background-color: var(--color-accent-1);
+        color: var(--color-background-main);
     }
 
     .btn-close:active {
@@ -379,8 +377,15 @@
         fill: currentColor;
     }
 
+    :global(.am-popup__btn:hover) {
+        background-color: var(--color-accent-1);
+        color: var(--color-background-main);
+        border-color: var(--color-accent-1);
+    }
+
     :global(.am-popup__btn:active) {
-        transform: translateY(0);
+        background-color: #b80000;
+        border-color: #b80000;
     }
 
     /* HIGH CONTRAST ACCESSIBILITY MODE SUPPORT */
