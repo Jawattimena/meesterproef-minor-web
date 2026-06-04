@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <aside
@@ -8,11 +9,8 @@
     aria-hidden="true"
 >
     <div class="popover-inner">
-        <!-- HEADER: Hero visual / Title & Close Button -->
         <header class="popover-header">
             <div class="hero-image-placeholder">
-                <!-- Fallback elegant gradient background -->
-                <div class="gradient-overlay"></div>
                 <button
                     type="button"
                     class="btn-close"
@@ -20,14 +18,14 @@
                     aria-label="Sluit detailvenster"
                 >
                     <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
+                        width="19"
+                        height="19"
+                        viewBox="387 291 18 18"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         <path
-                            d="M18 1.58663L16.5704 0L9.00522 7.49544L1.42957 0L0 1.58663L7.48174 9.00547L0 16.4134L1.42957 18L9.00522 10.5046L16.5704 18L18 16.4134L10.5183 9.00547L18 1.58663Z"
+                            d="M405 292.587L403.57 291L396.005 298.495L388.43 291L387 292.587L394.482 300.005L387 307.413L388.43 309L396.005 301.505L403.57 309L405 307.413L397.518 300.005L405 292.587Z"
                             fill="currentColor"></path>
                     </svg>
                 </button>
@@ -40,12 +38,11 @@
                 <p id="popover-address" class="popover-address">
                     Klik op een marker op de kaart om de details te bekijken.
                 </p>
+                <div class="popover-contact" id="popover-contact-content"></div>
             </div>
         </header>
 
-        <!-- ARTICLE: Primary Details (Accessibility criteria & metadata) -->
         <article class="popover-body" id="popover-body-content">
-            <!-- Content will be dynamically inserted here -->
             <div class="popover-placeholder-message">
                 <svg
                     width="40"
@@ -65,10 +62,31 @@
             </div>
         </article>
 
-        <!-- FOOTER: Interactive actions (Print, Share, etc.) -->
         <footer class="popover-footer" id="popover-footer-actions">
-            <!-- Footer actions will be dynamically updated here -->
+            <button type="button" class="footer-btn" id="popover-print-btn" aria-label="Pagina afdrukken">
+
+                <svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g>
+                        <path d="M6.175 2.46753H12.825V3.94805H6.175V2.46753Z" fill="currentColor"/>
+                        <path d="M15.2 9.49506C15.7247 9.49506 16.15 9.05316 16.15 8.50805C16.15 7.96293 15.7247 7.52103 15.2 7.52103C14.6753 7.52103 14.25 7.96293 14.25 8.50805C14.25 9.05316 14.6753 9.49506 15.2 9.49506Z" fill="currentColor"/>
+                        <path d="M10.7754 13.0779H6.65V14.5584H10.7754V13.0779Z" fill="currentColor"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.675 0V4.93506H19V15.2987H14.9502L13.3689 19H3.8L3.89896 15.2987H0V4.93506H3.325V0H15.675ZM14.25 4.93506H4.75V1.48052H14.25V4.93506ZM17.1 6.90909H1.9V13.3247H3.95174L4.0375 10.1169H14.9625L15.1282 13.3247H17.1V6.90909ZM5.4625 11.5974H13.5375L13.775 14.2845L11.0532 16.3795L12.0365 17.5269H5.225L5.4625 11.5974Z" fill="currentColor"/>
+                    </g>
+                </svg>
+                Printen
+            </button>
+            <button type="button" class="footer-btn" id="popover-share-btn" aria-label="Locatie delen">
+
+                <svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g>
+                        <path d="M13.2929 6.62132L10.5 3.82841V13.4143H8.5V3.82844L5.70712 6.62132L4.29291 5.20711L9.50001 0L14.7071 5.20711L13.2929 6.62132Z" fill="currentColor"/>
+                        <path d="M19 11V17C19 18.1046 18.1046 19 17 19H2C0.89543 19 0 18.1046 0 17V11H2V17H17V11H19Z" fill="currentColor"/>
+                    </g>
+                </svg>
+                Delen
+            </button>
         </footer>
+
     </div>
 </aside>
 
@@ -77,22 +95,22 @@
         position: absolute;
         top: 0;
         left: 320px;
-        width: 360px;
+        width: 400px;
         height: 100%;
         z-index: 999;
-        background-color: var(--color-background-main);
-        border-right: 1px solid var(--color-border);
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+        background-color: #ffffff;
+        border-right: 0;
+        box-shadow: 4px 0 22px rgba(0, 0, 0, 0.14);
         display: flex;
         flex-direction: column;
 
         transform: translateX(-100%);
-        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        transition:
+            transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
             visibility 0.35s;
         visibility: hidden;
     }
 
-    /* Open state */
     .map-popover.is-open {
         transform: translateX(0);
         visibility: visible;
@@ -106,68 +124,46 @@
         overflow: hidden;
     }
 
-    /* Header & Hero Area */
     .popover-header {
-        border-bottom: 1px solid var(--color-border);
-        background-color: var(--color-background-secondairy);
+        border-bottom: 0;
+        background-color: #fff8f6;
         display: flex;
         flex-direction: column;
         position: relative;
     }
 
     .hero-image-placeholder {
-        height: 140px;
-        background: linear-gradient(
-            135deg,
-            var(--color-background-secondairy) 0%,
-            #ffdcd7 100%
-        );
+        height: 220px;
+        background: #d9d9d9;
         position: relative;
         width: 100%;
         display: flex;
         align-items: flex-start;
         justify-content: flex-end;
-        padding: 12px;
+        padding: 10px;
         box-sizing: border-box;
-        transition: background 0.3s ease;
-    }
-
-    .gradient-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.1) 0%,
-            rgba(0, 0, 0, 0) 100%
-        );
-        pointer-events: none;
     }
 
     .btn-close {
-        background-color: var(--color-background-main);
-        border: 2px solid var(--color-border);
-        border-radius: 0; /* Fully square in Amsterdam Design System style */
-        width: 40px;
-        height: 40px;
+        background-color: rgba(255, 255, 255, 0.92);
+        border: 0;
+        border-radius: 0;
+        width: 34px;
+        height: 34px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        color: var(--color-text-main);
+        color: #000000;
         z-index: 2;
-        transition: transform 0.15s ease, background-color 0.15s ease,
+        transition:
+            background-color 0.15s ease,
             color 0.15s ease;
     }
 
     .btn-close:hover {
-        transform: translateY(-1px);
-        background-color: var(
-            --color-accent-1
-        ); /* Red/Accent background on hover */
-        color: var(--color-background-main); /* White cross on hover */
+        background-color: #ec0000;
+        color: #ffffff;
     }
 
     .btn-close:active {
@@ -175,40 +171,49 @@
     }
 
     .header-text-container {
-        padding: 20px 24px;
+        min-height: 222px;
+        padding: 20px 17px 24px;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 9px;
+        box-sizing: border-box;
     }
 
     .popover-title {
-        color: var(--color-text-main);
+        color: #000000;
         font-family: var(--font-family-base);
-        font-size: 1.5rem;
-        font-weight: 800;
-        line-height: 1.3;
+        font-size: var(--font-size-h2);
+        font-weight: var(--font-weight-h1);
+        line-height: var(--heading-other-line-height);
         margin: 0;
-        letter-spacing: 0.01em;
+        letter-spacing: 0;
     }
 
     .popover-address {
-        color: var(--color-text-muted);
+        color: #242424;
         font-family: var(--font-family-base);
-        font-size: 0.95rem;
+        font-size: var(--font-size-small);
         font-weight: var(--font-weight-body-text);
-        line-height: 1.4;
+        line-height: var(--heading-text-line-height);
         margin: 0;
     }
 
-    /* Body Area (Scrollable detail list) */
+    .popover-contact {
+        margin-top: 23px;
+    }
+
+    .popover-contact:empty {
+        display: none;
+    }
+
     .popover-body {
         flex: 1;
-        padding: 24px;
+        padding: 39px 16px 30px;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        background-color: var(--color-background-main);
+        gap: 28px;
+        background-color: #ffffff;
     }
 
     .popover-placeholder-message {
@@ -229,158 +234,187 @@
     }
 
     .popover-placeholder-message p {
-        font-size: 0.95rem;
-        line-height: 1.5;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-body-text);
+        line-height: var(--heading-text-line-height);
     }
 
-    /* Dynamic Popup Items inside Popover */
-    :global(.am-popup__item) {
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-        padding: 12px 14px;
-        border: 1px solid var(--color-border);
-        background-color: var(--color-background-main);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    :global(.am-popup__check) {
-        flex-shrink: 0;
-        width: 20px;
-        height: 20px;
-        color: var(--color-accent-1);
-    }
-
-    :global(.am-popup__item-body) {
+    :global(.am-popup__contact) {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 25px;
+        width: 100%;
     }
 
-    :global(.am-popup__item-label) {
-        font-size: 0.85rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--color-text-muted);
-        margin: 0;
+    :global(.am-popup__contact-item) {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        align-items: flex-start;
     }
 
-    :global(.am-popup__item-desc) {
-        font-size: 1rem;
-        font-weight: 500;
-        color: var(--color-text-main);
-        margin: 0;
-        line-height: 1.4;
-    }
-
-    :global(.am-popup__category) {
+    :global(.am-popup__label) {
         display: block;
-        color: var(--color-text-muted);
-        font-size: 0.82rem;
-        font-weight: 700;
-        margin-bottom: 4px;
+        color: #000000;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-other-headings);
+        line-height: var(--heading-other-line-height);
+        margin: 0;
+        letter-spacing: 0;
+    }
+
+    :global(.am-popup__text) {
+        display: block;
+        color: #242424;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-body-text);
+        margin: 0;
+        line-height: var(--heading-text-line-height);
+        letter-spacing: 0;
+        overflow-wrap: anywhere;
+    }
+
+    :global(.am-popup__contact-link) {
+        color: #242424;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+    }
+
+    :global(.am-popup__contact-link:hover) {
+        color: #000000;
+    }
+
+    :global(.am-popup__contact-link:focus-visible) {
+        outline: 2px solid #000000;
+        outline-offset: 3px;
+    }
+
+    :global(.am-popup__section-title) {
+        color: #000000;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-other-headings);
+        line-height: var(--heading-other-line-height);
+        margin: 0 0 16px;
     }
 
     :global(.am-popup__accessibility-list) {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        fontsize: 1rem;
+        gap: 14px;
     }
 
     :global(.am-popup__accessibility-row) {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 49px;
         justify-content: space-between;
-        gap: 12px;
-        align-items: flex-start;
-        padding-bottom: 10px;
-        border-bottom: 1px solid var(--color-border);
-    }
-
-    :global(.am-popup__accessibility-row:last-child) {
-        border-bottom: 0;
-        padding-bottom: 0;
+        gap: 10px;
+        align-items: center;
     }
 
     :global(.am-popup__accessibility-label) {
         display: block;
-        color: var(--color-text-main);
-        font-size: 0.95rem;
-        font-weight: 700;
+        color: #242424;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-body-text);
+        line-height: var(--heading-other-line-height);
     }
 
     :global(.am-popup__empty-accessibility) {
         color: var(--color-text-muted);
-        font-size: 0.95rem;
-        line-height: 1.4;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-body-text);
+        line-height: var(--heading-text-line-height);
         margin: 0;
     }
 
     :global(.am-popup__value) {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         flex-shrink: 0;
-        min-height: 28px;
-        padding: 3px 8px;
-        border: 1px solid var(--color-border);
-        background-color: var(--color-background-secondairy);
-        font-weight: 800;
+        width: 28px;
+        min-width: 28px;
+        height: 28px;
+        padding: 0;
+        border: 0;
+        color: #5d5d5d;
+        background-color: transparent;
+        border-radius: 8px;
+        font-size: 0;
+        line-height: 0;
+        box-sizing: border-box;
+    }
+
+    :global(.am-popup__value svg) {
+        display: block;
+        width: 16px;
+        height: 16px;
     }
 
     :global(.am-popup__value--yes) {
-        border-color: #007a3d;
-        color: #007a3d;
-        background-color: #eef9f1;
+        color: #168a3a;
     }
 
     :global(.am-popup__value--no) {
-        border-color: var(--color-accent-1);
-        color: var(--color-accent-1);
-        background-color: #fff1ef;
+        color: #d12a2a;
     }
 
     :global(.am-popup__value--unknown) {
-        color: var(--color-text-muted);
+        color: #5d5d5d;
     }
 
-    /* Footer / Actions Area */
     .popover-footer {
-        border-top: 1px solid var(--color-border);
-        padding: 16px 24px;
-        background-color: var(--color-background-secondairy);
         display: flex;
-        gap: 12px;
-        box-sizing: border-box;
+        gap: 8px;
+        padding: 16px 16px;
         height: 80px;
+        border-top: 1px solid var(--color-border);
+        background-color: #ffffff;
+        flex-shrink: 0;
         align-items: center;
+        box-sizing: border-box;
     }
 
-    :global(.am-popup__btn) {
+    .footer-btn {
         flex: 1;
-        background-color: var(--color-btn-primary-bg);
-        border: 1px solid var(--color-border);
-        color: var(--color-btn-primary-content);
-        font-family: var(--font-family-base);
-        font-size: 0.9rem;
-        font-weight: 700;
-        height: 48px;
-        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        transition: transform 0.15s ease, background-color 0.15s ease,
-            color 0.15s ease;
+        gap: 7px;
+        height: 44px;
+        background: #ffffff;
+        border: 1px solid #000000;
+        color: #000000;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-other-headings);
+        cursor: pointer;
+        transition:
+            background-color 0.15s ease,
+            color 0.15s ease,
+            border-color 0.15s ease;
     }
 
-    :global(.am-popup__btn svg) {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
+    .footer-btn:hover {
+        background-color: #000000;
+        color: #ffffff;
     }
 
-    :global(.am-popup__btn:active) {
-        transform: translateY(0);
+    .footer-btn:active {
+        transform: scale(0.97);
+    }
+
+    .footer-btn:focus-visible {
+        outline: 2px solid #000000;
+        outline-offset: 2px;
     }
 
     /* HIGH CONTRAST ACCESSIBILITY MODE SUPPORT */
@@ -390,7 +424,7 @@
     }
 
     :global(html:has(#contrast-toggle:checked)) .hero-image-placeholder {
-        background: var(--color-background-secondairy);
+        background: #d9d9d9;
     }
 
     :global(html:has(#contrast-toggle:checked)) .btn-close {
@@ -398,21 +432,6 @@
         box-shadow: none;
     }
 
-    :global(html:has(#contrast-toggle:checked)) :global(.am-popup__item) {
-        border: 2px solid var(--color-border);
-    }
-
-    :global(html:has(#contrast-toggle:checked)) :global(.am-popup__btn) {
-        border: 2px solid var(--color-border);
-    }
-
-    :global(html:has(#contrast-toggle:checked)) :global(.am-popup__btn:hover) {
-        background-color: var(--color-accent-1);
-        color: var(--color-background-main);
-        outline: 2px solid var(--color-border);
-    }
-
-    /* RESPONSIVE ADAPTATIONS */
     @media (max-width: 768px) {
         .map-popover {
             width: 100%;
@@ -431,9 +450,67 @@
         }
 
         .hero-image-placeholder {
-            height: 100px;
+            height: 160px;
+        }
+
+        .header-text-container {
+            min-height: auto;
+        }
+
+        .popover-body {
+            padding-top: 28px;
         }
     }
 
 
 </style>
+
+<script>
+    // Print knop
+    const printBtn = document.getElementById("popover-print-btn");
+    if (printBtn) {
+        printBtn.addEventListener("click", () => {
+            window.print();
+        });
+    }
+
+    // Deel knop – Web Share API met clipboard-fallback
+    const shareBtn = document.getElementById("popover-share-btn");
+    if (shareBtn) {
+        shareBtn.addEventListener("click", async () => {
+            const titleEl = document.getElementById("popover-title");
+            const addressEl = document.getElementById("popover-address");
+            const naam = titleEl?.textContent?.trim() || "Locatie";
+            const adres = addressEl?.textContent?.trim() || "";
+
+            const shareData = {
+                title: naam,
+                text: adres ? `${naam} – ${adres}` : naam,
+                url: window.location.href,
+            };
+
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                } catch (err) {
+                    // Gebruiker annuleerde – geen actie nodig
+                }
+            } else {
+                // Fallback: kopieer naar klembord
+                try {
+                    const text = `${shareData.text}\n${shareData.url}`;
+                    await navigator.clipboard.writeText(text);
+
+                    // Korte bevestiging op de knop
+                    const original = shareBtn.innerHTML;
+                    shareBtn.textContent = "✓ Gekopieerd!";
+                    setTimeout(() => {
+                        shareBtn.innerHTML = original;
+                    }, 2000);
+                } catch {
+                    // Silent fail
+                }
+            }
+        });
+    }
+</script>

@@ -36,7 +36,7 @@
     window.addEventListener("load", function () {
         const amsterdamBounds = L.latLngBounds(
             [52.278, 4.55], // Shifted further left (west) to allow panning western areas into view
-            [52.431, 5.079]
+            [52.431, 5.079],
         );
 
         var map = L.map("map", {
@@ -59,7 +59,7 @@
             const mapContainer = map.getContainer();
             mapContainer.className = mapContainer.className.replace(
                 /\bmap-zoom-\d+\b/g,
-                ""
+                "",
             );
             mapContainer.classList.add(`map-zoom-${zoom}`);
         });
@@ -75,7 +75,7 @@
                 maxNativeZoom: 19, // Vraag maximaal zoom 19 op bij de server, en schaal deze op voor zoom 20 & 21
                 attribution:
                     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            }
+            },
         );
 
         const darkLayer = L.tileLayer(
@@ -87,7 +87,7 @@
                 attribution:
                     '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                 ext: "png",
-            }
+            },
         );
 
         // Initialiseer met de juiste laag op basis van de toggle status
@@ -319,7 +319,7 @@
             const markerHtml = getCbaMarkerSvg(
                 hoofdfilter,
                 isActive,
-                subfilter
+                subfilter,
             );
             const size = isActive ? 40 : 32;
             const anchor = size / 2;
@@ -468,14 +468,76 @@
             return normalized || "Onbekend";
         }
 
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function getAccessibilityBadgeLabel(value) {
+            const normalized = normalizeAccessibilityValue(value);
+            return normalized;
+        }
+
+        function getAccessibilityBadgeIcon(modifier) {
+            if (modifier === "yes") {
+                return `
+                    <svg
+                        viewBox="386 188 20 16"
+                        width="16"
+                        height="16"
+                        aria-hidden="true"
+                        focusable="false"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M392.642 201.032L404.014 188L405.5 189.304L392.677 204L386.5 197.243L387.956 195.905L392.642 201.032Z"
+                            fill="currentColor"
+                        />
+                    </svg>
+                `;
+            }
+
+            if (modifier === "no") {
+                return `
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M21 4.58663L19.5704 3L12.0052 10.4954L4.42957 3L3 4.58663L10.4817 12.0055L3 19.4134L4.42957 21L12.0052 13.5046L19.5704 21L21 19.4134L13.5183 12.0055L21 4.58663Z" fill="red"/>
+</svg>
+                `;
+            }
+
+            return `
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M9.59426 16.7782V17.0632H13.211V16.7782C13.2183 16.0035 13.3088 15.353 13.4825 14.8268C13.6636 14.2933 13.9387 13.8292 14.308 13.4346C14.6845 13.0399 15.166 12.6599 15.7525 12.2944C16.4187 11.8925 16.9943 11.4357 17.4794 10.9241C17.9646 10.4125 18.3375 9.82779 18.5981 9.17002C18.866 8.51225 19 7.76678 19 6.9336C19 5.69846 18.7031 4.63141 18.1094 3.73246C17.5229 2.8262 16.7011 2.12823 15.6439 1.63856C14.594 1.14889 13.3776 0.904053 11.9946 0.904053C10.7274 0.904053 9.56892 1.13793 8.51901 1.60567C7.47634 2.07342 6.63641 2.77504 5.99922 3.71054C5.36928 4.64603 5.0362 5.80809 5 7.19671H8.86656C8.90277 6.50971 9.0693 5.9433 9.36618 5.49747C9.67029 5.04434 10.0504 4.70815 10.5066 4.4889C10.97 4.26233 11.4588 4.14905 11.9728 4.14905C12.5304 4.14905 13.0336 4.26598 13.4825 4.49986C13.9387 4.73373 14.3008 5.06262 14.5687 5.48651C14.8366 5.91041 14.9705 6.41104 14.9705 6.98842C14.9705 7.50002 14.8691 7.96411 14.6664 8.3807C14.4637 8.78997 14.1849 9.16271 13.8301 9.49891C13.4825 9.82779 13.0879 10.1311 12.6462 10.4088C12.0018 10.8108 11.4551 11.253 11.0062 11.7353C10.5573 12.2104 10.2097 12.8389 9.96354 13.6209C9.72459 14.4029 9.6015 15.4554 9.59426 16.7782Z" fill="#181818"/>
+  <path d="M9.80062 23.2024C10.2713 23.6702 10.8324 23.9041 11.4841 23.9041C11.9185 23.9041 12.3132 23.7981 12.668 23.5861C13.03 23.3669 13.3196 23.0745 13.5368 22.7091C13.7613 22.3437 13.8735 21.9381 13.8735 21.4922C13.8735 20.8345 13.6346 20.2717 13.1567 19.804C12.6861 19.3362 12.1285 19.1023 11.4841 19.1023C10.8324 19.1023 10.2713 19.3362 9.80062 19.804C9.32997 20.2717 9.09465 20.8345 9.09465 21.4922C9.09465 22.1646 9.32997 22.7347 9.80062 23.2024Z" fill="#181818"/>
+</svg>
+            `;
+        }
+
+        function getWebsiteHref(value) {
+            const website = String(value ?? "").trim();
+            if (!website) return "";
+            return /^https?:\/\//i.test(website)
+                ? website
+                : `https://${website}`;
+        }
+
+        function getTelephoneHref(value) {
+            return `tel:${String(value ?? "").replace(/[^\d+]/g, "")}`;
+        }
+
         function resetActiveMarker() {
             if (activeMarker) {
                 activeMarker.setIcon(
                     createCbaMarkerIcon(
                         activeMarkerHoofdfilter || "",
                         false,
-                        activeMarkerSubfilter || ""
-                    )
+                        activeMarkerSubfilter || "",
+                    ),
                 );
 
                 // Verwijder active class van de tooltip van deze marker
@@ -484,7 +546,7 @@
                     tooltip.options.className = "am-marker-tooltip";
                     if (tooltip._container) {
                         tooltip._container.classList.remove(
-                            "am-marker-tooltip--active"
+                            "am-marker-tooltip--active",
                         );
                     }
                 }
@@ -500,7 +562,7 @@
             layer,
             type,
             hoofdfilter = null,
-            subfilter = ""
+            subfilter = "",
         ) {
             resetActiveMarker();
             activeMarker = layer;
@@ -508,7 +570,7 @@
             activeMarkerHoofdfilter = hoofdfilter;
             activeMarkerSubfilter = subfilter;
             layer.setIcon(
-                createCbaMarkerIcon(hoofdfilter || "", true, subfilter)
+                createCbaMarkerIcon(hoofdfilter || "", true, subfilter),
             );
 
             // Voeg active class toe aan de tooltip van deze marker
@@ -518,7 +580,7 @@
                     "am-marker-tooltip am-marker-tooltip--active";
                 if (tooltip._container) {
                     tooltip._container.classList.add(
-                        "am-marker-tooltip--active"
+                        "am-marker-tooltip--active",
                     );
                 }
             }
@@ -540,12 +602,6 @@
             const adresVolledig = [adres, postcode, plaats]
                 .filter(Boolean)
                 .join(", ");
-
-            const visualHoofd = getVisualHoofdfilter(
-                p.Hoofdfilter,
-                p.Subfilter
-            );
-            const soort = `${visualHoofd} — ${(p.Subfilter ?? "").trim()}`;
 
             const accessibilityFieldGroups = {
                 mobility: {
@@ -732,20 +788,6 @@
                 },
             };
 
-            // Bouw items: toon "Ja" als groene check, "Nee" als rood kruis
-            const items = [];
-
-            // Contactinfo als eerste items
-            if (p.Telefoonnummer && p.Telefoonnummer !== "Onbekend") {
-                items.push({ label: "Telefoon", desc: p.Telefoonnummer });
-            }
-            if (p.Website && p.Website !== "Onbekend") {
-                items.push({ label: "Website", desc: p.Website });
-            }
-
-            // Categorie
-            items.push({ label: "Categorie", desc: soort });
-
             const selectedAccessibilityCategories =
                 window.amAccessibilityCategories || [];
             const renderedFields = new Set();
@@ -759,91 +801,91 @@
                     if (renderedFields.has(field.key)) return;
                     renderedFields.add(field.key);
 
-                    const value = normalizeAccessibilityValue(p[field.key]);
-                    const status = value.toLowerCase();
+                    const status = normalizeAccessibilityValue(
+                        p[field.key],
+                    ).toLowerCase();
                     const modifier =
                         status === "ja"
                             ? "yes"
                             : status === "nee"
-                            ? "no"
-                            : "unknown";
+                              ? "no"
+                              : "unknown";
 
                     accessibilityRows.push(`
                         <div class="am-popup__accessibility-row">
-                            <span>
-                                <span class="am-popup__category">${group.label}</span>
-                                <span class="am-popup__accessibility-label">${field.label}</span>
-                            </span>
-                            <span class="am-popup__value am-popup__value--${modifier}">${value}</span>
+                            <span class="am-popup__accessibility-label">${escapeHtml(
+                                field.label,
+                            )}</span>
+                            <span class="am-popup__value am-popup__value--${modifier}" aria-label="${escapeHtml(
+                                getAccessibilityBadgeLabel(p[field.key]),
+                            )}">${getAccessibilityBadgeIcon(modifier)}</span>
+
                         </div>
                     `);
                 });
             });
 
-            items.push({
-                label: "Toegankelijkheidskenmerken",
-                desc: selectedAccessibilityCategories.length
-                    ? `<div class="am-popup__accessibility-list">${accessibilityRows.join(
-                          ""
-                      )}</div>`
-                    : `<p class="am-popup__empty-accessibility">Selecteer een toegankelijkheidsoptie.</p>`,
-                isHtml: true,
-            });
+            const contactItems = [];
 
-            const itemsHtml = items
-                .map(
-                    (item) => `
-                <div class="am-popup__item">
-                    <div class="am-popup__check">${checkIconSvg}</div>
-                    <div class="am-popup__item-body">
-                        <p class="am-popup__item-label">${item.label}</p>
-                        <div class="am-popup__item-desc">${item.desc}</div>
+            if (p.Telefoonnummer && p.Telefoonnummer !== "Onbekend") {
+                contactItems.push(`
+                    <div class="am-popup__contact-item">
+                        <p class="am-popup__label">Telefoon</p>
+                        <a class="am-popup__text am-popup__contact-link" href="${escapeHtml(
+                            getTelephoneHref(p.Telefoonnummer),
+                        )}">${escapeHtml(p.Telefoonnummer)}</a>
                     </div>
-                </div>
-            `
-                )
-                .join("");
+                `);
+            }
+
+            if (p.Website && p.Website !== "Onbekend") {
+                contactItems.push(`
+                    <div class="am-popup__contact-item">
+                        <p class="am-popup__label">Website</p>
+                        <a class="am-popup__text am-popup__contact-link" href="${escapeHtml(
+                            getWebsiteHref(p.Website),
+                        )}" target="_blank" rel="noreferrer">
+                        Bezoek de website</a>
+                    </div>
+                `);
+            }
+
+            const accessibilityHtml =
+                selectedAccessibilityCategories.length &&
+                accessibilityRows.length
+                    ? `<div class="am-popup__accessibility-list">${accessibilityRows.join(
+                          "",
+                      )}</div>`
+                    : `<p class="am-popup__empty-accessibility">Selecteer een toegankelijkheidsoptie.</p>`;
+
+            const bodyHtml = `
+                <section class="am-popup__accessibility">
+                    <h3 class="am-popup__section-title">Toegankelijkheid</h3>
+                    ${accessibilityHtml}
+                </section>
+            `;
 
             const titleEl = document.getElementById("popover-title");
             const addressEl = document.getElementById("popover-address");
+            const contactEl = document.getElementById(
+                "popover-contact-content",
+            );
             const bodyEl = document.getElementById("popover-body-content");
             const footerEl = document.getElementById("popover-footer-actions");
 
             if (titleEl) titleEl.textContent = naam;
             if (addressEl) addressEl.textContent = adresVolledig;
-            if (bodyEl) bodyEl.innerHTML = itemsHtml;
+            if (contactEl) {
+                contactEl.innerHTML = contactItems.length
+                    ? `<section class="am-popup__contact">${contactItems.join(
+                          "",
+                      )}</section>`
+                    : "";
+            }
+            if (bodyEl) bodyEl.innerHTML = bodyHtml;
 
             if (footerEl) {
-                footerEl.innerHTML = `
-                <button class="am-popup__btn" id="popover-btn-print">
-                    ${printIconSvg}
-                    <span>Print</span>
-                </button>
-                <button class="am-popup__btn" id="popover-btn-share">
-                    ${shareIconSvg}
-                    <span>Deel</span>
-                </button>
-            `;
-
-                // Attach listeners to actions inside the popover
-                document
-                    .getElementById("popover-btn-print")
-                    ?.addEventListener("click", () => {
-                        window.print();
-                    });
-
-                document
-                    .getElementById("popover-btn-share")
-                    ?.addEventListener("click", () => {
-                        if (navigator.share) {
-                            navigator.share({
-                                title: naam,
-                                text: adresVolledig,
-                            });
-                        } else {
-                            alert(adresVolledig);
-                        }
-                    });
+                // Footer bevat statische print/share knoppen — niet leegmaken
             }
 
             // Show popover
@@ -872,7 +914,7 @@
                                 // Genereer de nieuwe tooltip HTML en update de marker
                                 const html = getTooltipHtml(
                                     properties,
-                                    selectedCategories
+                                    selectedCategories,
                                 );
                                 layer.getTooltip().setContent(html);
                             }
@@ -949,13 +991,13 @@
                         pointToLayer: (feature, latlng) => {
                             const visualHoofdfilter = getVisualHoofdfilter(
                                 feature.properties.Hoofdfilter,
-                                feature.properties.Subfilter
+                                feature.properties.Subfilter,
                             );
                             const marker = L.marker(latlng, {
                                 icon: createCbaMarkerIcon(
                                     visualHoofdfilter,
                                     false,
-                                    feature.properties.Subfilter
+                                    feature.properties.Subfilter,
                                 ),
                                 riseOnHover: true, // Markers naar de voorgrond bij hover
                             });
@@ -969,7 +1011,7 @@
                                     window.amAccessibilityCategories || [];
                                 const tooltipHtml = getTooltipHtml(
                                     feature.properties,
-                                    selectedCategories
+                                    selectedCategories,
                                 );
 
                                 marker.bindTooltip(tooltipHtml, {
@@ -986,13 +1028,13 @@
                                 L.DomEvent.stopPropagation(e);
                                 const visualHoofdfilter = getVisualHoofdfilter(
                                     feature.properties.Hoofdfilter,
-                                    feature.properties.Subfilter
+                                    feature.properties.Subfilter,
                                 );
                                 setActiveMarker(
                                     layer,
                                     "cba",
                                     visualHoofdfilter,
-                                    feature.properties.Subfilter
+                                    feature.properties.Subfilter,
                                 );
                                 openPopoverWithDetails(feature.properties);
                                 this.map.panTo(layer.getLatLng());
@@ -1033,64 +1075,64 @@
         // Cultuur en attracties
         layerManager.register(
             "Bioscopen en filmhuizen",
-            "/api/cba/Bioscopen en filmhuizen"
+            "/api/cba/Bioscopen en filmhuizen",
         );
         layerManager.register("Musea", "/api/cba/Musea");
         layerManager.register("Rondvaartboten", "/api/cba/Rondvaartboten");
         layerManager.register(
             "Theaters en concertgebouwen",
-            "/api/cba/Theaters en concertgebouwen"
+            "/api/cba/Theaters en concertgebouwen",
         );
         layerManager.register(
             "Toeristische attracties",
-            "/api/cba/Toeristische attracties"
+            "/api/cba/Toeristische attracties",
         );
         layerManager.register(
             "Educatieve tuinen",
-            "/api/cba/Educatieve tuinen"
+            "/api/cba/Educatieve tuinen",
         );
 
         // Hospitality
         layerManager.register("Cafés", "/api/cba/Cafés");
         layerManager.register(
             "Congres- en partyaccommodaties",
-            "/api/cba/Congres- en partyaccommodaties"
+            "/api/cba/Congres- en partyaccommodaties",
         );
         layerManager.register("Hotels", "/api/cba/Hotels");
         layerManager.register(
             "Restaurants / eetgelegenheden",
-            "/api/cba/Restaurants / eetgelegenheden"
+            "/api/cba/Restaurants / eetgelegenheden",
         );
 
         // Publieke diensten
         layerManager.register("Bibliotheken", "/api/cba/Bibliotheken");
         layerManager.register(
             "Educatieve centra",
-            "/api/cba/Educatieve centra"
+            "/api/cba/Educatieve centra",
         );
         layerManager.register("Informatiecentra", "/api/cba/Informatiecentra");
         layerManager.register("Kerkgebouwen", "/api/cba/Kerkgebouwen");
         layerManager.register(
             "Onderwijsinstellingen en scholen",
-            "/api/cba/Onderwijsinstellingen en scholen"
+            "/api/cba/Onderwijsinstellingen en scholen",
         );
         layerManager.register(
             "Openbare gebouwen",
-            "/api/cba/Openbare gebouwen"
+            "/api/cba/Openbare gebouwen",
         );
         layerManager.register(
             "Openbare toiletten",
-            "/api/cba/Openbare toiletten"
+            "/api/cba/Openbare toiletten",
         );
         layerManager.register("Politiebureaus", "/api/cba/Politiebureaus");
         layerManager.register("Sociale Dienst", "/api/cba/Sociale Dienst");
         layerManager.register(
             "Stadhuizen en stadsdeelkantoren",
-            "/api/cba/Stadhuizen en stadsdeelkantoren"
+            "/api/cba/Stadhuizen en stadsdeelkantoren",
         );
         layerManager.register(
             "Wijkcentra en buurthuizen",
-            "/api/cba/Wijkcentra en buurthuizen"
+            "/api/cba/Wijkcentra en buurthuizen",
         );
 
         // Zorg en gezondheid
@@ -1098,18 +1140,18 @@
         layerManager.register("Fysiotherapeuten", "/api/cba/Fysiotherapeuten");
         layerManager.register(
             "Gezondheidscentra",
-            "/api/cba/Gezondheidscentra"
+            "/api/cba/Gezondheidscentra",
         );
         layerManager.register("Huisartsen", "/api/cba/Huisartsen");
         layerManager.register("Klinieken", "/api/cba/Klinieken");
         layerManager.register(
             "Revalidatiecentra",
-            "/api/cba/Revalidatiecentra"
+            "/api/cba/Revalidatiecentra",
         );
         layerManager.register("Tandartsen", "/api/cba/Tandartsen");
         layerManager.register(
             "Verpleeg- en verzorgingshuizen",
-            "/api/cba/Verpleeg- en verzorgingshuizen"
+            "/api/cba/Verpleeg- en verzorgingshuizen",
         );
         layerManager.register("Ziekenhuizen", "/api/cba/Ziekenhuizen");
 
@@ -1118,7 +1160,7 @@
         layerManager.register("Supermarkten", "/api/cba/Supermarkten");
         layerManager.register(
             "Uiterlijke verzorging",
-            "/api/cba/Uiterlijke verzorging"
+            "/api/cba/Uiterlijke verzorging",
         );
         layerManager.register("Warenhuizen", "/api/cba/Warenhuizen");
         layerManager.register("Winkelcentra", "/api/cba/Winkelcentra");
@@ -1131,7 +1173,7 @@
         // Sport en Spel
         layerManager.register(
             "Sportaccommodaties",
-            "/api/cba/Sportaccommodaties"
+            "/api/cba/Sportaccommodaties",
         );
         layerManager.register("Zwembaden", "/api/cba/Zwembaden");
 
@@ -1167,7 +1209,7 @@
         // Botsingsdetectie voor labels om overlap te voorkomen
         function resolveLabelCollisions() {
             const tooltips = Array.from(
-                document.querySelectorAll(".am-marker-tooltip")
+                document.querySelectorAll(".am-marker-tooltip"),
             );
             const visibleRects = [];
 
@@ -1201,7 +1243,7 @@
                     tooltip.style.setProperty(
                         "visibility",
                         "hidden",
-                        "important"
+                        "important",
                     );
                 } else {
                     visibleRects.push(rect);
@@ -1246,10 +1288,18 @@
             }
 
             let foundMarker = null;
-            if (matchingLayerName && layerManager.layers[matchingLayerName].layer) {
-                const clusterGroup = layerManager.layers[matchingLayerName].layer;
+            if (
+                matchingLayerName &&
+                layerManager.layers[matchingLayerName].layer
+            ) {
+                const clusterGroup =
+                    layerManager.layers[matchingLayerName].layer;
                 clusterGroup.eachLayer((layer) => {
-                    if (layer instanceof L.Marker && layer.feature && layer.feature.properties) {
+                    if (
+                        layer instanceof L.Marker &&
+                        layer.feature &&
+                        layer.feature.properties
+                    ) {
                         const nameProp = layer.feature.properties.Naam_locatie;
                         if (nameProp && nameProp.trim() === naam.trim()) {
                             foundMarker = layer;
@@ -1264,9 +1314,17 @@
                     const entry = layerManager.layers[key];
                     if (entry.loaded && entry.layer) {
                         entry.layer.eachLayer((layer) => {
-                            if (layer instanceof L.Marker && layer.feature && layer.feature.properties) {
-                                const nameProp = layer.feature.properties.Naam_locatie;
-                                if (nameProp && nameProp.trim() === naam.trim()) {
+                            if (
+                                layer instanceof L.Marker &&
+                                layer.feature &&
+                                layer.feature.properties
+                            ) {
+                                const nameProp =
+                                    layer.feature.properties.Naam_locatie;
+                                if (
+                                    nameProp &&
+                                    nameProp.trim() === naam.trim()
+                                ) {
                                     foundMarker = layer;
                                     matchingLayerName = key;
                                 }
@@ -1279,25 +1337,44 @@
 
             if (foundMarker) {
                 const featProps = foundMarker.feature.properties;
-                const visualHoofdfilter = getVisualHoofdfilter(featProps.Hoofdfilter, featProps.Subfilter);
-                const clusterGroup = layerManager.layers[matchingLayerName]?.layer;
+                const visualHoofdfilter = getVisualHoofdfilter(
+                    featProps.Hoofdfilter,
+                    featProps.Subfilter,
+                );
+                const clusterGroup =
+                    layerManager.layers[matchingLayerName]?.layer;
 
                 // Sync de zijbalk filters met de werkelijke categorieën van de marker
-                window.dispatchEvent(new CustomEvent("sidebar:sync", {
-                    detail: {
-                        hoofdcategorie: visualHoofdfilter,
-                        subcategorie: featProps.Subfilter
-                    }
-                }));
-                
-                if (clusterGroup && typeof clusterGroup.zoomToShowLayer === "function") {
-                    clusterGroup.zoomToShowLayer(foundMarker, function() {
-                        setActiveMarker(foundMarker, "cba", visualHoofdfilter, featProps.Subfilter);
+                window.dispatchEvent(
+                    new CustomEvent("sidebar:sync", {
+                        detail: {
+                            hoofdcategorie: visualHoofdfilter,
+                            subcategorie: featProps.Subfilter,
+                        },
+                    }),
+                );
+
+                if (
+                    clusterGroup &&
+                    typeof clusterGroup.zoomToShowLayer === "function"
+                ) {
+                    clusterGroup.zoomToShowLayer(foundMarker, function () {
+                        setActiveMarker(
+                            foundMarker,
+                            "cba",
+                            visualHoofdfilter,
+                            featProps.Subfilter,
+                        );
                         openPopoverWithDetails(featProps);
                     });
                 } else {
                     map.setView(foundMarker.getLatLng(), 16);
-                    setActiveMarker(foundMarker, "cba", visualHoofdfilter, featProps.Subfilter);
+                    setActiveMarker(
+                        foundMarker,
+                        "cba",
+                        visualHoofdfilter,
+                        featProps.Subfilter,
+                    );
                     openPopoverWithDetails(featProps);
                 }
             } else {
@@ -1322,7 +1399,8 @@
         border: none !important;
         border-radius: 0 !important;
         padding: 0 !important;
-        font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
+        font-family:
+            "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
         font-size: 11px !important;
         font-weight: 800 !important;
         color: #1c1c1c !important;
@@ -1370,15 +1448,18 @@
     /* Standaard weergave van de locatienaam */
     :global(.am-tooltip-name) {
         white-space: nowrap;
-        font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
+        font-family:
+            "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
         font-size: 11px !important;
         font-weight: 800 !important;
         color: #1c1c1c !important;
     }
 
     /* Weergave van de locatienaam wanneer de marker actief is */
-    :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active
-            .am-tooltip-name) {
+    :global(
+        .leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active
+            .am-tooltip-name
+    ) {
         font-size: 12px !important;
         font-weight: 900 !important;
         color: #000000 !important;
@@ -1391,8 +1472,10 @@
 
     /* Actieve locatienaam kleur in High Contrast Modus (Amsterdamse rode accentkleur) */
     :global(html:has(#contrast-toggle:checked))
-        :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active
-            .am-tooltip-name) {
+        :global(
+            .leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active
+                .am-tooltip-name
+        ) {
         color: var(--color-accent-1, #ec0000) !important;
     }
 
@@ -1414,7 +1497,8 @@
         height: 16px;
         padding: 0 4px;
         border-radius: 8px;
-        font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
+        font-family:
+            "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
         font-size: 9px !important;
         font-weight: 800 !important;
         color: #ffffff !important;
@@ -1493,7 +1577,9 @@
         font-size: 13px !important;
         border-radius: 50% !important;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
-        transition: transform 0.15s ease, background-color 0.15s ease,
+        transition:
+            transform 0.15s ease,
+            background-color 0.15s ease,
             color 0.15s ease !important;
     }
     :global(.marker-cluster:hover div) {
