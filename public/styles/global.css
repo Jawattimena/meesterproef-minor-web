@@ -107,3 +107,31 @@ body {
   white-space: nowrap;
   border-width: 0;
 }
+
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+
+    #map-popover,
+    #map-popover * {
+        visibility: visible !important;
+    }
+
+    #map-popover {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        transform: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: white !important;
+    }
+
+    #popover-close-btn,
+    #popover-footer-actions {
+        display: none !important;
+    }
+}
