@@ -8,7 +8,13 @@ event.preventDefault()
 ">
     <div class="sidebar-header">
         <div class="title-container">
-            <h1 id="filter-paneel" tabindex="-1" aria-label="Filters voor kaartlocaties. U bent nu in het filterpaneel.">Filters</h1>
+            <h1
+                id="filter-paneel"
+                tabindex="-1"
+                aria-label="Filters voor kaartlocaties. U bent nu in het filterpaneel."
+            >
+                Filters
+            </h1>
             <p>Pas uw weergave aan</p>
         </div>
     </div>
@@ -554,7 +560,7 @@ event.preventDefault()
         window.dispatchEvent(
             new CustomEvent("accessibility:change", {
                 detail: { categories: selectedCategories },
-            }),
+            })
         );
     }
 
@@ -574,7 +580,7 @@ event.preventDefault()
             window.dispatchEvent(
                 new CustomEvent("filter:hide", {
                     detail: { name: activeFilter },
-                }),
+                })
             );
             activeFilter = null;
         }
@@ -601,7 +607,7 @@ event.preventDefault()
             window.dispatchEvent(
                 new CustomEvent("filter:hide", {
                     detail: { name: activeFilter },
-                }),
+                })
             );
         }
 
@@ -610,7 +616,7 @@ event.preventDefault()
         if (newFilter) {
             // Toon de nieuwe filter
             window.dispatchEvent(
-                new CustomEvent("filter:show", { detail: { name: newFilter } }),
+                new CustomEvent("filter:show", { detail: { name: newFilter } })
             );
             activeFilter = newFilter;
         } else {
@@ -646,36 +652,23 @@ event.preventDefault()
     }
 
     const categoryMapping = {
-        "cultuur_en_attracties": "cultuur_attracties",
-        "cultuur_attracties": "cultuur_attracties",
-        "hospitality": "hospitality",
-        "publieke_diensten": "publieke_diensten",
-        "zorg_en_gezondheid": "zorg_gezondheid",
-        "zorg_gezondheid": "zorg_gezondheid",
-        "winkelen": "winkelen",
-        "vervoer": "vervoer",
-        "sport_en_spel": "sport_spel",
-        "sport_spel": "sport_spel"
+        "Cultuur en attracties": "cultuur_attracties",
+        "Hospitality": "hospitality",
+        "Publieke diensten": "publieke_diensten",
+        "Zorg en gezondheid": "zorg_gezondheid",
+        "Winkelen": "winkelen",
+        "Vervoer": "vervoer",
+        "Sport en Spel": "sport_spel"
     };
 
-    window.addEventListener("locatieGekozen", function (e) {
-        const cat = e.detail.categorie;
-        const subcat = e.detail.subcategorie;
-        if (!cat || !subcat) return;
+    window.addEventListener("sidebar:sync", function (e) {
+        const hoofdcategorie = e.detail.hoofdcategorie;
+        const subcategorie = e.detail.subcategorie;
 
-        const targetCatValue = categoryMapping[cat] || cat;
+        const targetCatValue = categoryMapping[hoofdcategorie];
 
-        // Vind de subcategorie optie door case-insensitive matching
-        let targetSubValue = null;
-        for (const option of subOptions) {
-            if (option.value.toLowerCase() === subcat.toLowerCase()) {
-                targetSubValue = option.value;
-                break;
-            }
-        }
-
-        if (targetSubValue) {
-            // Update hoofdcategorie select
+        if (targetCatValue) {
+            // Update de selectie van de hoofdcategorie
             hoofdSelect.value = targetCatValue;
             
             // Toon de juiste opties in de subcategorie dropdown
@@ -686,9 +679,9 @@ event.preventDefault()
                 option.disabled = !isActiveOption;
             });
 
-            // Update subcategorie select
-            subSelect.value = targetSubValue;
-            activeFilter = targetSubValue;
+            // Update de selectie van de subcategorie
+            subSelect.value = subcategorie;
+            activeFilter = subcategorie;
         }
     });
 
