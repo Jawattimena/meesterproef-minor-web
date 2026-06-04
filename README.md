@@ -55,15 +55,12 @@ In week 2 hebben we de eerste functionaliteit van de kaart gebouwd. We zijn bego
 - Local storage die onthoudt welke beperkingen je hebt
 
 ### Week 3
-<div style="display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;">
-  <div style="flex:1;min-width:260px;">
-    In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. Eerst hebben we de zoekfunctie gekoppeld aan de Algolia‑gestuurde JSON-data, zodat het hele zoekproces veel sneller en gebruiksvriendelijker werd. Dit is iets wat een must have was voor de gemeente Amsterdam, dus hebben we de zoekfunctie gekoppeld aan de kaart zodat je direct naar de marker wordt gebracht wanneer je een selectie maakt in de zoekbalk.
-  </div>
-  <div style="width:300px;min-width:200px;">
-    <img src="./public/images/Search.jpg" alt="Voorbeeld screenshot" style="width:100%;height:auto;border-radius:4px;display:block;" />
-  </div>
-</div>
-
+<table>
+  <tr>
+    <td>In week 3 zijn we stap voor stap verbeteringen gaan aanbrengen. Eerst hebben we de zoekfunctie gekoppeld aan de Algolia‑gestuurde JSON-data, zodat het hele zoekproces veel sneller en gebruiksvriendelijker werd. Dit is iets wat een must have was voor de gemeente Amsterdam, dus hebben we de zoekfunctie gekoppeld aan de kaart zodat je direct naar de marker wordt gebracht wanneer je een selectie maakt in de zoekbalk.</td>
+    <td><img src="./public/images/Search.jpg" alt="Leaflet clustering afbeelding" width="300" /></td>
+  </tr>
+</table> 
 
 Daarna hebben we de kaart interactiever gemaakt door markers niet alleen te laten klikken, maar ook visueel te markeren met tooltips en een slimme controle op overlap zodat popovers en labels elkaar niet meer blokkeren. Tegelijk hebben we de sidebar, het zoekveld en de kaart met elkaar laten praten via CustomEvents, waardoor een gekozen locatie of filteractie netjes door het hele systeem gestuurd wordt. Voor de inhoud van de kaart lagen hebben we de dropdown-categorieën dynamisch verbonden met de API-data, zodat alleen de juiste categorieën en subcategorieën geladen worden. Ook hebben we extra informatie in de markertooltips gezet (zoals het aantal ja, nee en onbekend) en een legenda gemaakt.
 Tot slot hebben we voor de de kaart een list view gemaakt voor de kaart omdat een kaart niet toegankelijk is voor screenreader gebruikers.
