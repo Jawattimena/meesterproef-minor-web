@@ -12,8 +12,10 @@
     "astro": "astro"
   },
   "dependencies": {
+    "algoliasearch": "^5.52.1",
     "@astrojs/node": "^10.1.1",
     "astro": "^6.3.5",
+    "dotenv": "^17.4.2",
     "tom-select": "^2.6.1"
   }
 }

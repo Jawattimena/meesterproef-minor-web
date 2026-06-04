@@ -27,11 +27,20 @@ const { title, name, value, checked } = Astro.props;
         /* border-radius: 6px; */
         transition: background 0.2s;
         font-size: 1.3rem;
+        min-height: 8rem;
     }
 
-    /* verberg checkbox */
+    /* verberg checkbox op een toegankelijke manier */
     .toegankelijk-button input {
-        display: none;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
     }
 
     /* standaard kleur (black by default) */
@@ -61,5 +70,19 @@ const { title, name, value, checked } = Astro.props;
         border: 2px solid var(--color-border);
         /* border-color: red; */
         color: var(--color-background-main);
+    }
+
+    .toegankelijk-button:has(input:focus-visible) {
+        outline: 3px solid var(--color-accent-1);
+        outline-offset: 3px;
+    }
+
+    .toegankelijk-button:hover {
+        background-color: var(--color-background-secondairy);
+    }
+
+    .toegankelijk-button:has(input:checked):hover {
+        background-color: var(--color-accent-1);
+        opacity: 0.9;
     }
 </style>

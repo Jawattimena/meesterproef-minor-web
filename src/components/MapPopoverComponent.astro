@@ -1,0 +1,510 @@
+---
+
+---
+
+<aside
+    class="map-popover"
+    id="map-popover"
+    aria-label="Locatiedetails"
+    aria-hidden="true"
+    tabindex="-1"
+>
+    <div class="popover-inner">
+        <header class="popover-header">
+            <div class="hero-image-placeholder">
+                <button
+                    type="button"
+                    class="btn-close"
+                    id="popover-close-btn"
+                    aria-label="Sluit detailvenster"
+                >
+                    <svg
+                        width="19"
+                        height="19"
+                        viewBox="387 291 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M405 292.587L403.57 291L396.005 298.495L388.43 291L387 292.587L394.482 300.005L387 307.413L388.43 309L396.005 301.505L403.57 309L405 307.413L397.518 300.005L405 292.587Z"
+                            fill="currentColor"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="header-text-container">
+                <h2 id="popover-title" class="popover-title">
+                    Selecteer een locatie
+                </h2>
+                <p id="popover-address" class="popover-address">
+                    Klik op een marker op de kaart om de details te bekijken.
+                </p>
+                <div class="popover-contact" id="popover-contact-content"></div>
+            </div>
+        </header>
+
+        <article class="popover-body" id="popover-body-content">
+            <div class="popover-placeholder-message">
+                <svg
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                        fill="currentColor"></path>
+                </svg>
+                <p>
+                    Kies een marker op de kaart om informatie over de
+                    toegankelijkheid te zien.
+                </p>
+            </div>
+        </article>
+
+        <footer class="popover-footer" id="popover-footer-actions">
+            <button type="button" class="footer-btn" id="popover-print-btn" aria-label="Pagina afdrukken">
+
+                <svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g>
+                        <path d="M6.175 2.46753H12.825V3.94805H6.175V2.46753Z" fill="currentColor"/>
+                        <path d="M15.2 9.49506C15.7247 9.49506 16.15 9.05316 16.15 8.50805C16.15 7.96293 15.7247 7.52103 15.2 7.52103C14.6753 7.52103 14.25 7.96293 14.25 8.50805C14.25 9.05316 14.6753 9.49506 15.2 9.49506Z" fill="currentColor"/>
+                        <path d="M10.7754 13.0779H6.65V14.5584H10.7754V13.0779Z" fill="currentColor"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.675 0V4.93506H19V15.2987H14.9502L13.3689 19H3.8L3.89896 15.2987H0V4.93506H3.325V0H15.675ZM14.25 4.93506H4.75V1.48052H14.25V4.93506ZM17.1 6.90909H1.9V13.3247H3.95174L4.0375 10.1169H14.9625L15.1282 13.3247H17.1V6.90909ZM5.4625 11.5974H13.5375L13.775 14.2845L11.0532 16.3795L12.0365 17.5269H5.225L5.4625 11.5974Z" fill="currentColor"/>
+                    </g>
+                </svg>
+                Printen
+            </button>
+            <button type="button" class="footer-btn" id="popover-share-btn" aria-label="Locatie delen">
+
+                <svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g>
+                        <path d="M13.2929 6.62132L10.5 3.82841V13.4143H8.5V3.82844L5.70712 6.62132L4.29291 5.20711L9.50001 0L14.7071 5.20711L13.2929 6.62132Z" fill="currentColor"/>
+                        <path d="M19 11V17C19 18.1046 18.1046 19 17 19H2C0.89543 19 0 18.1046 0 17V11H2V17H17V11H19Z" fill="currentColor"/>
+                    </g>
+                </svg>
+                Delen
+            </button>
+        </footer>
+
+    </div>
+</aside>
+
+<style is:global>
+    .map-popover {
+        position: absolute;
+        top: 0;
+        left: 320px;
+        width: 400px;
+        height: 100%;
+        z-index: 999;
+        background-color: #ffffff;
+        border-right: 0;
+        box-shadow: 4px 0 22px rgba(0, 0, 0, 0.14);
+        display: flex;
+        flex-direction: column;
+
+        transform: translateX(-100%);
+        transition:
+            transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0.35s;
+        visibility: hidden;
+    }
+
+    .map-popover.is-open {
+        transform: translateX(0);
+        visibility: visible;
+    }
+
+    .popover-inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .popover-header {
+        border-bottom: 0;
+        background-color: #fff8f6;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .hero-image-placeholder {
+        height: 220px;
+        background: #d9d9d9;
+        position: relative;
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .btn-close {
+        background-color: rgba(255, 255, 255, 0.92);
+        border: 0;
+        border-radius: 0;
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #000000;
+        z-index: 2;
+        transition:
+            background-color 0.15s ease,
+            color 0.15s ease;
+    }
+
+    .btn-close:hover {
+        background-color: var(--color-accent-1);
+        color: var(--color-background-main);
+    }
+
+    .btn-close:active {
+        transform: scale(0.95);
+    }
+
+    .header-text-container {
+        min-height: 222px;
+        padding: 20px 17px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        box-sizing: border-box;
+    }
+
+    .popover-title {
+        color: #000000;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-h2);
+        font-weight: var(--font-weight-h1);
+        line-height: var(--heading-other-line-height);
+        margin: 0;
+        letter-spacing: 0;
+    }
+
+    .popover-address {
+        color: #242424;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-body-text);
+        line-height: var(--heading-text-line-height);
+        margin: 0;
+    }
+
+    .popover-contact {
+        margin-top: 23px;
+    }
+
+    .popover-contact:empty {
+        display: none;
+    }
+
+    .popover-body {
+        flex: 1;
+        padding: 39px 16px 30px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        background-color: #ffffff;
+    }
+
+    .popover-placeholder-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 16px;
+        color: var(--color-text-muted);
+        height: 100%;
+        padding: 0 16px;
+    }
+
+    .popover-placeholder-message svg {
+        color: var(--color-accent-1);
+        opacity: 0.7;
+    }
+
+    .popover-placeholder-message p {
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-body-text);
+        line-height: var(--heading-text-line-height);
+    }
+
+    :global(.am-popup__contact) {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        width: 100%;
+    }
+
+    :global(.am-popup__contact-item) {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        align-items: flex-start;
+    }
+
+    :global(.am-popup__label) {
+        display: block;
+        color: #000000;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-other-headings);
+        line-height: var(--heading-other-line-height);
+        margin: 0;
+        letter-spacing: 0;
+    }
+
+    :global(.am-popup__text) {
+        display: block;
+        color: #242424;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-body-text);
+        margin: 0;
+        line-height: var(--heading-text-line-height);
+        letter-spacing: 0;
+        overflow-wrap: anywhere;
+    }
+
+    :global(.am-popup__contact-link) {
+        color: #242424;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+    }
+
+    :global(.am-popup__contact-link:hover) {
+        color: #000000;
+    }
+
+    :global(.am-popup__contact-link:focus-visible) {
+        outline: 2px solid #000000;
+        outline-offset: 3px;
+    }
+
+    :global(.am-popup__section-title) {
+        color: #000000;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-other-headings);
+        line-height: var(--heading-other-line-height);
+        margin: 0 0 16px;
+    }
+
+    :global(.am-popup__accessibility-list) {
+        display: flex;
+        flex-direction: column;
+        fontsize: 1rem;
+        gap: 14px;
+    }
+
+    :global(.am-popup__accessibility-row) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 49px;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+    }
+
+    :global(.am-popup__accessibility-label) {
+        display: block;
+        color: #242424;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-body-text);
+        line-height: var(--heading-other-line-height);
+    }
+
+    :global(.am-popup__empty-accessibility) {
+        color: var(--color-text-muted);
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-body-text);
+        line-height: var(--heading-text-line-height);
+        margin: 0;
+    }
+
+    :global(.am-popup__value) {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 28px;
+        min-width: 28px;
+        height: 28px;
+        padding: 0;
+        border: 0;
+        color: #5d5d5d;
+        background-color: transparent;
+        border-radius: 8px;
+        font-size: 0;
+        line-height: 0;
+        box-sizing: border-box;
+    }
+
+    :global(.am-popup__value svg) {
+        display: block;
+        width: 16px;
+        height: 16px;
+    }
+
+    :global(.am-popup__value--yes) {
+        color: #168a3a;
+    }
+
+    :global(.am-popup__value--no) {
+        color: #d12a2a;
+    }
+
+    :global(.am-popup__value--unknown) {
+        color: #5d5d5d;
+    }
+
+    .popover-footer {
+        display: flex;
+        gap: 8px;
+        padding: 16px 16px;
+        height: 80px;
+        border-top: 1px solid var(--color-border);
+        background-color: #ffffff;
+        flex-shrink: 0;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .footer-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: transform 0.15s ease, background-color 0.15s ease,
+            color 0.15s ease;
+    }
+
+    :global(.am-popup__btn svg) {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+    }
+
+    :global(.am-popup__btn:hover) {
+        background-color: var(--color-accent-1);
+        color: var(--color-background-main);
+        border-color: var(--color-accent-1);
+    }
+
+    :global(.am-popup__btn:active) {
+        background-color: #b80000;
+        border-color: #b80000;
+    }
+
+    /* HIGH CONTRAST ACCESSIBILITY MODE SUPPORT */
+    :global(html:has(#contrast-toggle:checked)) .map-popover {
+        border-right: 2px solid var(--color-border);
+        box-shadow: none;
+    }
+
+    :global(html:has(#contrast-toggle:checked)) .hero-image-placeholder {
+        background: #d9d9d9;
+    }
+
+    :global(html:has(#contrast-toggle:checked)) .btn-close {
+        border: 2px solid var(--color-border);
+        box-shadow: none;
+    }
+
+    @media (max-width: 768px) {
+        .map-popover {
+            width: 100%;
+            left: 0;
+            height: 50%;
+            bottom: 0;
+            top: auto;
+            border-right: none;
+            border-top: 1px solid var(--color-border);
+            transform: translateY(100%);
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .map-popover.is-open {
+            transform: translateY(0);
+        }
+
+        .hero-image-placeholder {
+            height: 160px;
+        }
+
+        .header-text-container {
+            min-height: auto;
+        }
+
+        .popover-body {
+            padding-top: 28px;
+        }
+    }
+
+
+</style>
+
+<script>
+    // Print knop
+    const printBtn = document.getElementById("popover-print-btn");
+    if (printBtn) {
+        printBtn.addEventListener("click", () => {
+            window.print();
+        });
+    }
+
+    // Deel knop – Web Share API met clipboard-fallback
+    const shareBtn = document.getElementById("popover-share-btn");
+    if (shareBtn) {
+        shareBtn.addEventListener("click", async () => {
+            const titleEl = document.getElementById("popover-title");
+            const addressEl = document.getElementById("popover-address");
+            const naam = titleEl?.textContent?.trim() || "Locatie";
+            const adres = addressEl?.textContent?.trim() || "";
+
+            const shareData = {
+                title: naam,
+                text: adres ? `${naam} – ${adres}` : naam,
+                url: window.location.href,
+            };
+
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                } catch (err) {
+                    // Gebruiker annuleerde – geen actie nodig
+                }
+            } else {
+                // Fallback: kopieer naar klembord
+                try {
+                    const text = `${shareData.text}\n${shareData.url}`;
+                    await navigator.clipboard.writeText(text);
+
+                    // Korte bevestiging op de knop
+                    const original = shareBtn.innerHTML;
+                    shareBtn.textContent = "✓ Gekopieerd!";
+                    setTimeout(() => {
+                        shareBtn.innerHTML = original;
+                    }, 2000);
+                } catch {
+                    // Silent fail
+                }
+            }
+        });
+    }
+</script>

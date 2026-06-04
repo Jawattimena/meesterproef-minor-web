@@ -5,11 +5,18 @@ import LeafledComponent from "../components/LeafledComponent.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SideBarComponent from "../components/SideBarComponent.astro";
 import ToegankelijkButtonComponent from "../components/ToegangkelijkButtonComponent.astro";
+import MapPopoverComponent from "../components/MapPopoverComponent.astro";
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <BaseLayout title="Amsterdam Atlas">
-	<LeafledComponent />
 	<SideBarComponent />
+	<LeafledComponent />
+	<MapPopoverComponent />
 </BaseLayout>
+
+<style>
+	
+</style>	
+

@@ -13,7 +13,6 @@
 
   --color-btn-primary-bg: #fffdff;
   --color-btn-primary-content: #000;
-
 }
 
 :root:has(#contrast-toggle:checked) {
@@ -107,4 +106,44 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Accessibility Focus styles */
+*:focus-visible {
+  outline: 3px solid var(--color-accent-1) !important;
+  outline-offset: 3px !important;
+}
+
+#contrast-toggle:focus-visible + header .contrast-label {
+  outline: 3px solid var(--color-accent-1);
+  outline-offset: 3px;
+}
+
+
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+
+    #map-popover,
+    #map-popover * {
+        visibility: visible !important;
+    }
+
+    #map-popover {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        transform: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: white !important;
+    }
+
+    #popover-close-btn,
+    #popover-footer-actions {
+        display: none !important;
+    }
 }
