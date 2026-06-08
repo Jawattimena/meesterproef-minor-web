@@ -40,6 +40,37 @@ import Header from '../components/layout/Header.astro';
 	<body>
 		<a class="skip-link" href="#filter-paneel">Naar Content</a>
 
+		<div class="toggle-group">
+
+			<input type="radio" name="weergave" id="lijst" value="lijst">
+			<label for="lijst">
+			<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+				stroke="currentColor" stroke-width="2"
+				stroke-linecap="round" stroke-linejoin="round">
+				<line x1="8" y1="6" x2="21" y2="6"/>
+				<line x1="8" y1="12" x2="21" y2="12"/>
+				<line x1="8" y1="18" x2="21" y2="18"/>
+				<circle cx="3" cy="6" r="1.5" fill="currentColor" stroke="none"/>
+				<circle cx="3" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+				<circle cx="3" cy="18" r="1.5" fill="currentColor" stroke="none"/>
+			</svg>
+			Lijst
+			</label>
+
+			<input type="radio" name="weergave" id="kaart" value="kaart" checked>
+			<label for="kaart">
+			<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+				stroke="currentColor" stroke-width="2"
+				stroke-linecap="round" stroke-linejoin="round">
+				<polygon points="3,6 9,3 15,6 21,3 21,18 15,21 9,18 3,21"/>
+				<line x1="9" y1="3" x2="9" y2="18"/>
+				<line x1="15" y1="6" x2="15" y2="21"/>
+			</svg>
+			Kaart
+			</label>
+
+		</div>
+
 		<input type="checkbox" id="contrast-toggle" class="sr-only" />
 		<Header />
 		<main>
@@ -97,6 +128,46 @@ import Header from '../components/layout/Header.astro';
 		display: flex;
 		flex-direction: column;
 	}
+
+	.toggle-group {
+      display: inline-flex;
+      border: 1px solid #ccc;
+      overflow: hidden;
+	  position: absolute;
+	  top: 5.3em;
+	  right: 4em;
+	  z-index: 1000;
+    }
+
+    .toggle-group input[type="radio"] {
+      display: none;
+    }
+
+    .toggle-group label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #fff;
+      color: #666;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .toggle-group label:not(:last-child) {
+      border-right: 1px solid #ccc;
+    }
+
+    .toggle-group input[type="radio"]:checked + label {
+      background: #cc2222;
+      color: #fff;
+    }
+
+    .toggle-group input[type="radio"]:checked + label svg {
+      stroke: #fff;
+    }
 </style>
 
 <script>
