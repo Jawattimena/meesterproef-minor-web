@@ -1,59 +1,3 @@
-export const ACCESSIBILITY_GROUPS = {
-    mobility: [
-        "Gehandicaptenparkeerplaatsen_binnen_100_m_",
-        "Voorrijden_toegestaan",
-        "Toegankelijk_gebouw",
-        "Persoonlijke_assistent",
-        "Rustplekken",
-        "Trappen_met_leuning_entree",
-        "Aantal_traptreden",
-        "Toegankelijke_lift",
-        "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak",
-        "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed",
-        "Rolstoelvriendelijk_toilet",
-        "Speciale_toeschouwersplaatsen_rolstoelgebruikers",
-        "Restaurant_tafels_onderrijdbaar",
-        "Toegankelijke_hotelkamers",
-        "Toegankelijke_kleedkamer",
-        "Toegankelijke_douche",
-        "Mobiele_pin",
-    ],
-    visual: [
-        "Gehandicaptenparkeerplaatsen_binnen_100_m_",
-        "Persoonlijke_assistent",
-        "Rustplekken",
-        "Trappen_met_leuning_entree",
-        "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak",
-        "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed",
-        "Assistentiehond_toegestaan",
-        "Geleidelijnen_en_vloermarkeringen",
-        "Audiodescriptie_of_beeldbeschrijving",
-        "Materiaal_in_braille",
-        "Toegankelijke_afdruk",
-        "Toegankelijke_lift",
-        "Mobiele_pin",
-    ],
-    auditory: [
-        "Open_ondertiteling",
-        "Gesloten_ondertiteling",
-        "Ringleiding_voor_slechthorenden",
-        "Tolk_gebarentaal",
-        "Audiodescriptie_of_beeldbeschrijving",
-        "Persoonlijke_assistent",
-    ],
-    hidden: [
-        "Rustplekken",
-        "Persoonlijke_assistent",
-        "Zintuigelijke_beleving",
-        "Prikkelarme_ruimte",
-        "Prikkelarme_uren",
-        "Herkenning_Sunflower_Keycord",
-        "Toegankelijk_gebouw",
-        "Voorrijden_toegestaan",
-        "Mobiele_pin",
-    ],
-};
-
 export const accessibilityFieldGroups = {
     mobility: {
         label: "Mobiliteit",
@@ -121,3 +65,10 @@ export const accessibilityFieldGroups = {
         ],
     },
 };
+
+export const ACCESSIBILITY_GROUPS = Object.fromEntries(
+    Object.entries(accessibilityFieldGroups).map(([groupKey, groupData]) => [
+        groupKey,
+        groupData.fields.map(f => f.key)
+    ])
+);
