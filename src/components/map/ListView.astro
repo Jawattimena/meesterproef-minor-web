@@ -1,0 +1,53 @@
+---
+//@ts-nocheck
+---
+
+<section class="list-view" aria-label="Lijstweergave">
+    <ul id="list-view-list">
+
+    </ul>
+</section>
+
+<script>
+    //@ts-nocheck
+    const listView = document.getElementById("list-view-list");
+
+    window.addEventListener("listview:update", (event) => {
+        const features = event.detail.features;
+
+        listView.innerHTML = features
+            .map((feature) => {
+                const p = feature.properties;
+
+                return `
+                    <li>
+                        <h2>${p.Naam_locatie ?? "Onbekende locatie"}</h2>
+                        <p>${p.adres ?? ""} ${p.Huisnummer ?? ""}</p>
+                        <p>${p.Subfilter ?? ""}</p>
+                    </li>
+                `;
+            })
+            .join("");
+        
+    });
+
+
+
+
+
+
+
+</script>
+
+<style>
+    .list-view {
+        position: absolute;
+        top: 0;
+        left: 320px;
+        z-index: 900;
+        width: calc(100% - 320px);
+        height: 100%;
+        overflow: auto;
+        background: var(--color-background-main);
+    }
+</style>

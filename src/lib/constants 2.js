@@ -1,0 +1,74 @@
+export const accessibilityFieldGroups = {
+    mobility: {
+        label: "Mobiliteit",
+        fields: [
+            { key: "Gehandicaptenparkeerplaatsen_binnen_100_m_", label: "Gehandicaptenparkeerplaats (< 100m)" },
+            { key: "Voorrijden_toegestaan", label: "Voorrijden toegestaan" },
+            { key: "Toegankelijk_gebouw", label: "Toegankelijk gebouw" },
+            { key: "Persoonlijke_assistent", label: "Persoonlijke assistent" },
+            { key: "Rustplekken", label: "Rustplekken" },
+            { key: "Trappen_met_leuning_entree", label: "Trappen met leuning" },
+            { key: "Aantal_traptreden", label: "Aantal traptreden" },
+            { key: "Toegankelijke_lift", label: "Toegankelijke lift" },
+            { key: "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak", label: "Toegang zonder drempels" },
+            { key: "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed", label: "Drempelloos & brede doorgangen" },
+            { key: "Rolstoelvriendelijk_toilet", label: "Rolstoelvriendelijk toilet" },
+            { key: "Speciale_toeschouwersplaatsen_rolstoelgebruikers", label: "Rolstoelplaatsen" },
+            { key: "Restaurant_tafels_onderrijdbaar", label: "Onderrijdbare tafels" },
+            { key: "Toegankelijke_hotelkamers", label: "Toegankelijke hotelkamers" },
+            { key: "Toegankelijke_kleedkamer", label: "Toegankelijke kleedkamer" },
+            { key: "Toegankelijke_douche", label: "Toegankelijke douche" },
+            { key: "Mobiele_pin", label: "Mobiele pin" },
+        ],
+    },
+    visual: {
+        label: "Visueel",
+        fields: [
+            { key: "Gehandicaptenparkeerplaatsen_binnen_100_m_", label: "Gehandicaptenparkeerplaats (< 100m)" },
+            { key: "Persoonlijke_assistent", label: "Persoonlijke assistent" },
+            { key: "Rustplekken", label: "Rustplekken" },
+            { key: "Trappen_met_leuning_entree", label: "Trappen met leuning" },
+            { key: "Toegang_zonder_drempels_en_treden_worden_overbrugd_door_een_hellend_vlak", label: "Toegang zonder drempels" },
+            { key: "Drempelloos_gebouw_en_doorgangen_zijn_voldoende_breed", label: "Drempelloos & brede doorgangen" },
+            { key: "Assistentiehond_toegestaan", label: "Assistentiehond toegestaan" },
+            { key: "Geleidelijnen_en_vloermarkeringen", label: "Geleidelijnen & vloermarkeringen" },
+            { key: "Audiodescriptie_of_beeldbeschrijving", label: "Audiodescriptie" },
+            { key: "Materiaal_in_braille", label: "Materiaal in braille" },
+            { key: "Toegankelijke_afdruk", label: "Toegankelijke afdruk" },
+            { key: "Toegankelijke_lift", label: "Toegankelijke lift" },
+            { key: "Mobiele_pin", label: "Mobiele pin" },
+        ],
+    },
+    auditory: {
+        label: "Auditief",
+        fields: [
+            { key: "Open_ondertiteling", label: "Open ondertiteling" },
+            { key: "Gesloten_ondertiteling", label: "Gesloten ondertiteling" },
+            { key: "Ringleiding_voor_slechthorenden", label: "Ringleiding" },
+            { key: "Tolk_gebarentaal", label: "Tolk gebarentaal" },
+            { key: "Audiodescriptie_of_beeldbeschrijving", label: "Audiodescriptie" },
+            { key: "Persoonlijke_assistent", label: "Persoonlijke assistent" },
+        ],
+    },
+    hidden: {
+        label: "Prikkelgevoelig",
+        fields: [
+            { key: "Rustplekken", label: "Rustplekken" },
+            { key: "Persoonlijke_assistent", label: "Persoonlijke assistent" },
+            { key: "Zintuigelijke_beleving", label: "Zintuigelijke beleving" },
+            { key: "Prikkelarme_ruimte", label: "Prikkelarme ruimte" },
+            { key: "Prikkelarme_uren", label: "Prikkelarme uren" },
+            { key: "Herkenning_Sunflower_Keycord", label: "Sunflower Keycord" },
+            { key: "Toegankelijk_gebouw", label: "Toegankelijk gebouw" },
+            { key: "Voorrijden_toegestaan", label: "Voorrijden toegestaan" },
+            { key: "Mobiele_pin", label: "Mobiele pin" },
+        ],
+    },
+};
+
+export const ACCESSIBILITY_GROUPS = Object.fromEntries(
+    Object.entries(accessibilityFieldGroups).map(([groupKey, groupData]) => [
+        groupKey,
+        groupData.fields.map(f => f.key)
+    ])
+);

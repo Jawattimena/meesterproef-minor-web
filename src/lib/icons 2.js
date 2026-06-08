@@ -1,0 +1,193 @@
+// SVG voor de rode cirkel-checkmark (uit Figma)
+export const checkIconSvg = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="10" r="10" fill="#EC0000"/>
+    <path d="M5 10.5L8.5 14L15 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+// SVG print-icoon (from Figma 121:1225)
+export const printIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Shape">
+<path d="M6.175 2.46753H12.825V3.94805H6.175V2.46753Z" fill="currentColor"/>
+<path d="M15.2 9.49506C15.7247 9.49506 16.15 9.05316 16.15 8.50805C16.15 7.96293 15.7247 7.52103 15.2 7.52103C14.6753 7.52103 14.25 7.96293 14.25 8.50805C14.25 9.05316 14.6753 9.49506 15.2 9.49506Z" fill="currentColor"/>
+<path d="M10.7754 13.0779H6.65V14.5584H10.7754V13.0779Z" fill="currentColor"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15.675 0V4.93506H19V15.2987H14.9502L13.3689 19H3.8L3.89896 15.2987H0V4.93506H3.325V0H15.675ZM14.25 4.93506H4.75V1.48052H14.25V4.93506ZM17.1 6.90909H1.9V13.3247H3.95174L4.0375 10.1169H14.9625L15.1282 13.3247H17.1V6.90909ZM5.4625 11.5974H13.5375L13.775 14.2845L11.0532 16.3795L12.0365 17.5269H5.225L5.4625 11.5974Z" fill="currentColor"/>
+</g>
+</svg>`;
+
+// SVG deel-icoon (from Figma 121:1274)
+export const shareIconSvg = `<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Shape">
+<path d="M13.2929 6.62132L10.5 3.82841V13.4143H8.5V3.82844L5.70712 6.62132L4.29291 5.20711L9.50001 0L14.7071 5.20711L13.2929 6.62132Z" fill="currentColor"/>
+<path d="M19 11V17C19 18.1046 18.1046 19 17 19H2C0.89543 19 0 18.1046 0 17V11H2V17H17V11H19Z" fill="currentColor"/>
+</g>
+</svg>`;
+
+export function getCbaMarkerSvg(hoofdfilter, isActive, subfilter = "") {
+    const size = isActive ? "17" : "13";
+    const viewBox = "0 0 16 22";
+    const style = `color: ${isActive ? "var(--color-on-primary)" : "var(--color-primary)"}; display: block;`;
+
+    const s = (subfilter || "").trim();
+
+    if (s === "Onderwijsinstellingen en scholen") {
+        const w = isActive ? "22" : "18";
+        const h = isActive ? "18" : "15";
+        if (isActive) {
+            return `<svg width="${w}" height="${h}" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M2.25001 7.74171V10.388L2.96059 13.2303H0.0394287L0.750011 10.388V6.8718L0 6.43684L10.9149 0L21.7739 6.29759L10.859 12.7344L2.25001 7.74171ZM18 10.845V13.2902L16.6989 14.8323C15.2821 16.5114 13.197 17.4803 11 17.4803C8.80302 17.4803 6.71786 16.5114 5.3011 14.8323L4 13.2902V11.0686L10.8675 15.0513L18 10.845Z" fill="currentColor"/>
+        </svg>`;
+        }
+        return `<svg width="${w}" height="${h}" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.75 6.8718L0 6.43684L10.9149 0L21.7739 6.2976L18 8.52317V13.2903L16.6989 14.8323C15.2821 16.5114 13.197 17.4803 11 17.4803C8.80302 17.4803 6.71786 16.5114 5.3011 14.8323L4 13.2903V8.75661L2.25 7.74171V10.3879L2.96059 13.2303H0.0394287L0.75 10.388V6.8718ZM6 9.9165V12.5592L6.82968 13.5426C7.86643 14.7713 9.39231 15.4803 11 15.4803C12.6077 15.4803 14.1336 14.7713 15.1703 13.5426L16 12.5592V9.70263L10.859 12.7344L6 9.9165ZM10.8506 10.4175L3.96168 6.42239L10.9233 2.3169L17.8122 6.31205L10.8506 10.4175Z" fill="currentColor"/>
+    </svg>`;
+    }
+
+    if (s === "Zwembaden") {
+        const sizePx = isActive ? "22" : "18";
+        return `<svg width="${sizePx}" height="${sizePx}" viewBox="0 0 19.5 19.5" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70365 0C6.08624 0 4.77508 1.31117 4.77508 2.92857V12.7506C3.69561 12.3761 2.48246 12.5151 1.50223 13.1676L0 14.1676L1.10826 15.8324L2.61049 14.8324C3.18476 14.4502 3.93243 14.4502 4.5067 14.8324C5.75224 15.6616 7.37388 15.6616 8.61943 14.8324C9.19298 14.4506 9.94234 14.4508 10.5173 14.8336C11.7601 15.6608 13.3808 15.6629 14.625 14.8347C15.1994 14.4523 15.9476 14.4539 16.5203 14.8386L17.9966 15.8301L19.1117 14.1699L17.6355 13.1783C16.6952 12.5468 15.5375 12.3904 14.4893 12.7098V2.92857C14.4893 2.41574 14.9051 2 15.4179 2C15.9307 2 16.3465 2.41574 16.3465 2.92857V3.57143H18.3465V2.92857C18.3465 1.31117 17.0353 0 15.4179 0C13.8005 0 12.4893 1.31117 12.4893 2.92857V5H6.77508V2.92857C6.77508 2.41574 7.19081 2 7.70365 2C8.21648 2 8.63222 2.41574 8.63222 2.92857V3.57143H10.6322V2.92857C10.6322 1.31117 9.32105 0 7.70365 0ZM7.51117 13.1676C7.28556 13.3178 7.03318 13.4089 6.77508 13.4411V11H12.4893V13.4529C12.1873 13.4382 11.8882 13.3435 11.6256 13.1687C10.3808 12.34 8.75743 12.338 7.51117 13.1676ZM12.4893 9V7H6.77508V9H12.4893ZM4.5067 18.3324C3.93243 17.9502 3.18476 17.9502 2.61049 18.3324L1.10826 19.3324L0 17.6676L1.50223 16.6676C2.74778 15.8384 4.36941 15.8384 5.61496 16.6676C6.18923 17.0498 6.9369 17.0498 7.51117 16.6676C8.75743 15.838 10.3808 15.84 11.6256 16.6687C12.1985 17.0501 12.9452 17.0503 13.5167 16.6698C14.7649 15.8389 16.3908 15.8423 17.6355 16.6783L19.1117 17.6699L17.9966 19.3301L16.5203 18.3386C15.9476 17.9539 15.1994 17.9523 14.625 18.3347C13.3808 19.1629 11.7601 19.1608 10.5173 18.3336C9.94234 17.9508 9.19298 17.9506 8.61943 18.3324C7.37388 19.1616 5.75224 19.1616 4.5067 18.3324Z" fill="currentColor"/>
+    </svg>`;
+    }
+
+    if (s === "Hotels") {
+        const w = isActive ? "17" : "13";
+        const h = isActive ? "22" : "18";
+        if (isActive) {
+            return `<svg width="${w}" height="${h}" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 4.96774V2.51886H10.6195V0H5.35076V2.52885H2.52151V4.97774H0V22H16V4.96774H13.4487ZM6.70269 9.09998H4V11.8027H6.70269V9.09998ZM9.29731 9.09998H12V11.8027H9.29731V9.09998ZM12 14.5054H9.29731V17.2081H12V14.5054ZM5 14.5054C4.44772 14.5054 4 14.9531 4 15.5054V19.9108H6.70269V15.5054C6.70269 14.9531 6.25498 14.5054 5.70269 14.5054H5Z" fill="currentColor"/>
+        </svg>`;
+        }
+        return `<svg width="${w}" height="${h}" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <g id="Shape">
+            <path d="M4.09998 10H6.59998V12.5H4.09998V10Z" fill="currentColor"/>
+            <path d="M11.5 10H9V12.5H11.5V10Z" fill="currentColor"/>
+            <path d="M9 15H11.5V17.5H9V15Z" fill="currentColor"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4487 2.51886V4.96774H16V22H0V4.97774H2.52151V2.52885H5.35076V0H10.6195V2.51886H13.4487ZM6.62144 19.9909H14.0146V6.96683H11.4732V4.51795H4.50695V6.96683H1.98544V19.9909H4.12971V15.9632C4.12971 15.4109 4.57743 14.9632 5.12971 14.9632H5.62144C6.17373 14.9632 6.62144 15.4109 6.62144 15.9632V19.9909Z" fill="currentColor"/>
+        </g>
+    </svg>`;
+    }
+
+    if (s === "Congres- en partyaccommodaties") {
+        const w = isActive ? "22" : "18";
+        const h = isActive ? "22.5" : "18.5";
+        if (isActive) {
+            return `<svg width="${w}" height="${h}" viewBox="0 0 19 19.5" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 5C10.3284 5 11 4.32843 11 3.5C11 2.67157 9.5 0 9.5 0C9.5 0 8 2.67157 8 3.5C8 4.32843 8.67157 5 9.5 5ZM10.5 6V8.5H13V7H15V8.5H16C17.5456 8.5 18.8182 9.66878 18.9821 11.1707L18.3514 11.7384L16.9316 12.882C16.2681 13.4165 15.3389 13.4719 14.6165 13.0202L12.6982 11.8206L10.5604 13.1574C9.91168 13.5631 9.08832 13.5631 8.43957 13.1574L6.30182 11.8206L4.38345 13.0202C3.66111 13.4719 2.73189 13.4165 2.06841 12.882L0.637585 11.7295L0.0147991 11.2001C0.165252 9.68408 1.44435 8.5 3 8.5H4V7H6V8.5H8.5V6H10.5ZM19 13.7841L18.1862 14.4396C16.8592 15.5085 15.0008 15.6194 13.5561 14.716L12.6982 14.1794L11.6209 14.8531C10.3234 15.6645 8.67664 15.6645 7.37914 14.8531L6.30182 14.1794L5.44388 14.716C3.99919 15.6194 2.14076 15.5085 0.813794 14.4396L0 13.7841V19.5H19V13.7841ZM5 6C5.82843 6 6.5 5.32843 6.5 4.5C6.5 3.67157 5 1 5 1C5 1 3.5 3.67157 3.5 4.5C3.5 5.32843 4.17157 6 5 6ZM14 6C14.8284 6 15.5 5.32843 15.5 4.5C15.5 3.67157 14 1 14 1C14 1 12.5 3.67157 12.5 4.5C12.5 5.32843 13.1716 6 14 6Z" fill="currentColor"/>
+        </svg>`;
+        }
+        return `<svg width="${w}" height="${h}" viewBox="0 0 19 19.5" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <g id="Shape">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 5C10.3284 5 11 4.32843 11 3.5C11 2.67157 9.5 0 9.5 0C9.5 0 8 2.67157 8 3.5C8 4.32843 8.67157 5 9.5 5ZM10.5 6V8.5H13V7H15V8.5H16C17.6569 8.5 19 9.84315 19 11.5V19.5H0V11.5C0 9.84315 1.34315 8.5 3 8.5H4V7H6V8.5H8.5V6H10.5ZM2 11.5C2 10.9477 2.44771 10.5 3 10.5H16C16.5523 10.5 17 10.9477 17 11.5V12.827L16.9316 12.8821C16.2681 13.4165 15.3389 13.472 14.6166 13.0202L12.6982 11.8206L10.5604 13.1574C9.91169 13.5631 9.08833 13.5631 8.43958 13.1574L6.30183 11.8206L4.38346 13.0202C3.66112 13.472 2.7319 13.4165 2.06842 12.8821L2 12.8269V11.5ZM2 15.0996V17.5H17V15.0996C15.8755 15.4935 14.6065 15.3728 13.5561 14.716L12.6982 14.1794L11.6209 14.8532C10.3234 15.6646 8.67665 15.6645 7.37915 14.8532L6.30183 14.1794L5.4439 14.716C4.39354 15.3728 3.1245 15.4935 2 15.0996ZM5 6C5.82843 6 6.5 5.32843 6.5 4.5C6.5 3.67157 5 1 5 1C5 1 3.5 3.67157 3.5 4.5C3.5 5.32843 4.17157 6 5 6ZM14 6C14.8284 6 15.5 5.32843 15.5 4.5C15.5 3.67157 14 1 14 1C14 1 12.5 3.67157 12.5 4.5C12.5 5.32843 13.1716 6 14 6Z" fill="currentColor"/>
+        </g>
+    </svg>`;
+    }
+
+    if (s === "Stations") {
+        const w = isActive ? "22" : "18";
+        const h = isActive ? "19" : "15.5";
+        if (isActive) {
+            return `<svg width="${w}" height="${h}" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            <path id="Shape" fill-rule="evenodd" clip-rule="evenodd" d="M5 2H7V3.5H5V2ZM9 3.5V2H17V3.5H9ZM5 8.91967L6.01555 9.49999H15.9844L17 8.91966V5.5H5V8.91967ZM3 2C3 0.89543 3.89543 0 5 0H17C18.1046 0 19 0.895431 19 2V3.5H21C21.5523 3.5 22 3.94772 22 4.5V8.5C22 9.05228 21.5523 9.5 21 9.5H20V5.5H19V17H18V19H14V17H8V19H4V17H3V5.5H2V9.5H1C0.447715 9.5 0 9.05228 0 8.5V4.5C0 3.94772 0.447715 3.5 1 3.5H3V2ZM5.5 14.25H8V12.25H5.5V14.25ZM14 14.25H16.5V12.25H14V14.25Z" fill="currentColor"/>
+        </svg>`;
+        }
+        return `<svg width="${w}" height="${h}" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <path id="Shape" fill-rule="evenodd" clip-rule="evenodd" d="M9 2H17V3.5H9V2ZM7 2H5V3.5H7V2ZM5 5.5V8.91968L6.01556 9.5H15.9844L17 8.91968V5.5H5ZM5 15V11.2232L5.48444 11.5H16.5156L17 11.2232V15H5ZM3 2C3 0.89543 3.89543 0 5 0H17C18.1046 0 19 0.895431 19 2V3.5H21C21.5523 3.5 22 3.94772 22 4.5V8.5C22 9.05228 21.5523 9.5 21 9.5H20V5.5H19V17H18V19H14V17H8V19H4V17H3V5.5H2V9.5H1C0.447715 9.5 0 9.05228 0 8.5V4.5C0 3.94772 0.447715 3.5 1 3.5H3V2ZM16.5 14.25H14V12.25H16.5V14.25ZM5.5 14.25H8V12.25H5.5V14.25Z" fill="currentColor"/>
+    </svg>`;
+    }
+
+    if (hoofdfilter === "Zorg en gezondheid") {
+        if (isActive) {
+            return `<svg width="22" height="22" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 0H4.5V4H0V19H19V4H14.5V0ZM12.5 4V2H6.5V4H12.5ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+        </svg>`;
+        }
+        return `<svg width="18" height="18" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0V4H0V19H19V4H14.5V0H4.5ZM12.5 4V2H6.5V4H12.5ZM17 6V17H2V6H17ZM8.55005 8V10.65H5.90002V12.65H8.55005V15.3H10.5501V12.65H13.2V10.65H10.5501V8H8.55005Z" fill="currentColor"/>
+    </svg>`;
+    }
+
+    if (hoofdfilter === "Sport en Spel") {
+        const w = isActive ? "24" : "20";
+        const h = isActive ? "17" : "15";
+        return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H11.75V4.58054C13.3226 4.92388 14.5 6.32444 14.5 8C14.5 9.67556 13.3226 11.0761 11.75 11.4195V14H20V13.1549C17.5788 12.6879 15.75 10.5575 15.75 8C15.75 5.44246 17.5788 3.31205 20 2.84512V2ZM11.75 9.85462C12.483 9.55793 13 8.83934 13 8C13 7.16066 12.483 6.44207 11.75 6.14538V9.85462ZM10.25 6.14538V9.85462C9.51704 9.55793 9 8.83934 9 8C9 7.16066 9.51704 6.44207 10.25 6.14538ZM10.25 4.58054C8.67741 4.92388 7.5 6.32444 7.5 8C7.5 9.67556 8.67741 11.0761 10.25 11.4195V14H2V13.1549C4.42122 12.6879 6.25 10.5575 6.25 8C6.25 5.44246 4.42122 3.31205 2 2.84512V2H10.25V4.58054ZM17.25 8C17.25 6.27523 18.4144 4.82243 20 4.38481V11.6152C18.4144 11.1776 17.25 9.72477 17.25 8ZM2 11.6152C3.58559 11.1776 4.75 9.72477 4.75 8C4.75 6.27523 3.58559 4.82243 2 4.38481V11.6152ZM0 0V16H22V0H0Z" fill="currentColor"/>
+    </svg>`;
+    }
+
+    if (hoofdfilter === "Hospitality") {
+        return `<svg width="${size}" height="${isActive ? "20" : "18"}" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C15.2889 0 14.6125 0.148448 14 0.416044C12.2341 1.1876 11 2.94968 11 5V14H13V22H16V0ZM13 5C13 4.1115 13.3863 3.31321 14 2.76389V12H13V5ZM0 7.09917V1H2V6.09917H3V1H5V6.09917H6V1H8V7.09917C8 8.7598 6.96232 10.1781 5.5 10.7409V22H2.5V10.7409C1.03768 10.1781 0 8.7598 0 7.09917ZM3.90083 9H4.09998C4.78208 9 5.38087 8.63988 5.716 8.09917H2.284C2.61913 8.63988 3.21792 9 3.90083 9Z" fill="currentColor"/>
+    </svg>`;
+    }
+
+    if (hoofdfilter === "Cultuur en attracties") {
+        if (isActive) {
+            return `<svg width="24" height="17" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.31818V0H0V16H22V5.4L16.2857 2L12 4.31818ZM3.25 3.5H5.25V5.5H3.25V3.5ZM5.25 7H3.25V9H5.25V7ZM13.25 7H15.25V9H13.25V7ZM5.25 10.5H3.25V12.5H5.25V10.5ZM13.25 10.5H15.25V12.5H13.25V10.5ZM8.75 3.5H6.75V5.5H8.75V3.5ZM6.75 7H8.75V9H6.75V7ZM18.75 7H16.75V9H18.75V7ZM6.75 10.5H8.75V12.5H6.75V10.5ZM18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+        </svg>`;
+        }
+        return `<svg width="20" height="15" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <path d="M3.25 3.5H5.25V5.5H3.25V3.5Z" fill="currentColor"/>
+        <path d="M5.25 7H3.25V9H5.25V7Z" fill="currentColor"/>
+        <path d="M5.25 10.5H3.25V12.5H5.25V10.5Z" fill="currentColor"/>
+        <path d="M8.75 3.5H6.75V5.5H8.75V3.5Z" fill="currentColor"/>
+        <path d="M6.75 7H8.75V9H6.75V7Z" fill="currentColor"/>
+        <path d="M6.75 10.5H8.75V12.5H6.75V10.5Z" fill="currentColor"/>
+        <path d="M13.25 7H15.25V9H13.25V7Z" fill="currentColor"/>
+        <path d="M13.25 10.5H15.25V12.5H13.25V10.5Z" fill="currentColor"/>
+        <path d="M18.75 7H16.75V9H18.75V7Z" fill="currentColor"/>
+        <path d="M18.75 10.5H16.75V12.5H18.75V10.5Z" fill="currentColor"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M0 16V0H12V4.31818L16.2857 2L22 5.4V16H0ZM2 2H10V14H2V2ZM12 14H20V6.53725L16.2387 4.29927L12 6.59202V14Z" fill="currentColor"/>
+    </svg>`;
+    }
+
+    if (hoofdfilter === "Winkelen") {
+        const w = isActive ? "22" : "18";
+        const h = isActive ? "16" : "13";
+        if (isActive) {
+            return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            <path d="M22 9H18V10H22V12H20.5V16H1.5V12H0V10H16V9H12V2H22V9Z" fill="currentColor"/>
+            <path d="M8.91504 6.11133C9.83247 6.11152 10.6318 6.73597 10.8545 7.62598L11.1982 9H1.96973L2.31348 7.62598C2.53613 6.73577 3.33626 6.11134 4.25391 6.11133H8.91504Z" fill="currentColor"/>
+            <path d="M6.58496 0C8.05746 0.000309617 9.25098 1.19442 9.25098 2.66699C9.2508 4.13941 8.05735 5.3327 6.58496 5.33301C5.11231 5.33301 3.91814 4.1396 3.91797 2.66699C3.91797 1.19423 5.1122 0 6.58496 0Z" fill="currentColor"/>
+        </svg>`;
+        }
+        return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <g id="Shape">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M22 9H18V10H22V12H20.5V16H18.5V12H3.5V16H1.5V12H0V10H1.71973L2.31348 7.62598C2.53606 6.73565 3.33619 6.11134 4.25391 6.11133H8.91504C9.83255 6.11152 10.6319 6.73585 10.8545 7.62598L11.4482 10H16V9H12V2H22V9ZM3.78223 10H9.38672L8.91504 8.11133H4.25391L3.78223 10ZM14 7H16V6H18V7H20V4H14V7Z" fill="currentColor"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.85742 0.0136719C8.20187 0.150458 9.25098 1.28645 9.25098 2.66699L9.2373 2.93945C9.1007 4.28384 7.96531 5.33266 6.58496 5.33301L6.31152 5.31934C5.05677 5.19168 4.05915 4.19425 3.93164 2.93945L3.91797 2.66699C3.91797 1.19423 5.1122 0 6.58496 0L6.85742 0.0136719ZM6.58496 2C6.21677 2 5.91797 2.2988 5.91797 2.66699C5.91814 3.03503 6.21688 3.33301 6.58496 3.33301C6.95272 3.33263 7.2508 3.0348 7.25098 2.66699C7.25098 2.29903 6.95283 2.00038 6.58496 2Z" fill="currentColor"/>
+        </g>
+    </svg>`;
+    }
+
+    if (hoofdfilter === "Vervoer") {
+        const w = isActive ? "22" : "18";
+        const h = isActive ? "16" : "13";
+        if (isActive) {
+            return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M22 3H18.5L17 0H5L3.5 3H0V5H2.5L2 6H1V16H4V14H18V16H21V6H20L19.5 5H22V3ZM6.24 2H15.77L17.77 6H4.24L6.24 2ZM7 11H4V9H7V11ZM18 11H15V9H18V11Z" fill="currentColor"/>
+        </svg>`;
+        }
+        return `<svg width="${w}" height="${h}" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <g id="Shape">
+            <path d="M7 9H4V11H7V9Z" fill="currentColor"/>
+            <path d="M15 9H18V11H15V9Z" fill="currentColor"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M22 3H18.5L17 0H5L3.5 3H0V5H2.5L2 6H1V16H4V14H18V16H21V6H20L19.5 5H22V3ZM6.24 2H15.77L17.77 6H4.24L6.24 2ZM19 12H3V8H19V12Z" fill="currentColor"/>
+        </g>
+    </svg>`;
+    }
+
+    if (isActive) {
+        return `<svg width="15" height="20" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 22V0H0V22H16ZM4 4H7V7H4V4ZM7 9H4V12H7V9ZM4 14H7V17H4V14ZM12 4H9V7H12V4ZM9 9H12V12H9V9ZM12 14H9V17H12V14Z" fill="currentColor"/>
+    </svg>`;
+    }
+    return `<svg width="${size}" height="18" viewBox="${viewBox}" fill="none" xmlns="http://www.w3.org/2000/svg" style="${style}">
+    <path d="M4 4H7V7H4V4Z" fill="currentColor"/>
+    <path d="M7 9H4V12H7V9Z" fill="currentColor"/>
+    <path d="M4 14H7V17H4V14Z" fill="currentColor"/>
+    <path d="M12 4H9V7H12V4Z" fill="currentColor"/>
+    <path d="M9 9H12V12H9V9Z" fill="currentColor"/>
+    <path d="M12 14H9V17H12V14Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0V22H0V0H16ZM14 2H2V20H14V2Z" fill="currentColor"/>
+</svg>`;
+}

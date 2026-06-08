@@ -416,6 +416,14 @@
                     }
                     const data = await response.json();
 
+                    window.dispatchEvent (
+                        new CustomEvent("listview:update", { 
+                            detail: { 
+                                name,
+                                features: data.features,
+                            } })
+                    )
+
                     // Maak een marker cluster group aan voor deze laag
                     const clusterGroup = L.markerClusterGroup({
                         showCoverageOnHover: false,
