@@ -18,6 +18,9 @@
         printIconSvg,
         shareIconSvg,
         getCbaMarkerSvg,
+        accessibilityJaSvg,
+        accessibilityNoSvg,
+        accessibilityUnknownSvg,
     } from "../../lib/icons.js";
     import {
         getVisualHoofdfilter,
@@ -214,7 +217,10 @@
             const selectedAccessibilityCategories =
                 window.amAccessibilityCategories || [];
             const renderedFields = new Set();
-            const accessibilityRows = [];
+            
+            const yesItems = [];
+            const noItems = [];
+            const unknownItems = [];
 
             selectedAccessibilityCategories.forEach((category) => {
                 const group = accessibilityFieldGroups[category];
@@ -234,30 +240,46 @@
                             ? "no"
                             : "unknown";
 
-                    accessibilityRows.push(`
-                        <div class="am-popup__accessibility-row">
-                            <span class="am-popup__accessibility-label">${escapeHtml(
-                                field.label
-                            )}</span>
-                            <span class="am-popup__value am-popup__value--${modifier}" aria-label="${escapeHtml(
-                        getAccessibilityBadgeLabel(p[field.key])
-                    )}">${
-                        modifier === "yes"
-                            ? "<img src='/icons/accessibility-ja.svg' width='16' height='16' alt='Ja' />"
-                            : ""
-                    }${
-                        modifier === "no"
-                            ? "<img src='/icons/accessibility-no.svg' width='16' height='16' alt='Nee' />"
-                            : ""
-                    }${
-                        modifier === "unknown"
-                            ? "<img src='/icons/accessibility-unknown.svg' width='16' height='16' alt='Onbekend' />"
-                            : ""
-                    }</span>
+                    const itemData = {
+                        label: field.label,
+                        modifier: modifier,
+                        rawStatus: p[field.key]
+                    };
 
-                        </div>
-                    `);
+                    if (modifier === "yes") {
+                        yesItems.push(itemData);
+                    } else if (modifier === "no") {
+                        noItems.push(itemData);
+                    } else {
+                        unknownItems.push(itemData);
+                    }
                 });
+            });
+
+            const sortedItems = [...yesItems, ...noItems, ...unknownItems];
+            const accessibilityRows = sortedItems.map((item) => {
+                return `
+                    <div class="am-popup__accessibility-row">
+                        <span class="am-popup__accessibility-label">${escapeHtml(
+                            item.label
+                        )}</span>
+                        <span class="am-popup__value am-popup__value--${item.modifier}" aria-label="${escapeHtml(
+                            getAccessibilityBadgeLabel(item.rawStatus)
+                        )}">${
+                            item.modifier === "yes"
+                                ? accessibilityJaSvg
+                                : ""
+                        }${
+                            item.modifier === "no"
+                                ? accessibilityNoSvg
+                                : ""
+                        }${
+                            item.modifier === "unknown"
+                                ? accessibilityUnknownSvg
+                                : ""
+                        }</span>
+                    </div>
+                `;
             });
 
             const contactItems = [];
@@ -265,8 +287,7 @@
             if (p.Telefoonnummer && p.Telefoonnummer !== "Onbekend") {
                 contactItems.push(`
                     <div class="am-popup__contact-item">
-                        <p class="am-popup__label">Telefoon</p>
-                        <a class="am-popup__text am-popup__contact-link" href="${escapeHtml(
+                        <a class="am-popup__contact-link" href="${escapeHtml(
                             getTelephoneHref(p.Telefoonnummer)
                         )}">${escapeHtml(p.Telefoonnummer)}</a>
                     </div>
@@ -276,8 +297,7 @@
             if (p.Website && p.Website !== "Onbekend") {
                 contactItems.push(`
                     <div class="am-popup__contact-item">
-                        <p class="am-popup__label">Website</p>
-                        <a class="am-popup__text am-popup__contact-link" href="${escapeHtml(
+                        <a class="am-popup__contact-link" href="${escapeHtml(
                             getWebsiteHref(p.Website)
                         )}" target="_blank" rel="noreferrer">
                         Bezoek de website</a>
