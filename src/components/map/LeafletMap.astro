@@ -27,6 +27,7 @@
         getWebsiteHref,
         getTelephoneHref,
         getTooltipHtml,
+        slugify,
     } from "../../lib/utils.js";
 
     window.addEventListener("load", function () {
@@ -195,6 +196,10 @@
             if (!popover) return;
             currentPopoverProperties = p;
 
+            if (p.Naam_locatie) {
+                window.history.pushState(null, '', '/' + slugify(p.Naam_locatie));
+            }
+
             const naam = p.Naam_locatie ?? "Onbekende locatie";
             const toevoeging = p.Toevoeging ? ` ${p.Toevoeging}` : "";
             const adres = `${p.adres ?? ""} ${
@@ -302,9 +307,20 @@
             );
             const bodyEl = document.getElementById("popover-body-content");
             const footerEl = document.getElementById("popover-footer-actions");
+            const heroImageEl = document.getElementById("popover-hero-img");
 
             if (titleEl) titleEl.textContent = naam;
             if (addressEl) addressEl.textContent = adresVolledig;
+            
+            if (heroImageEl) {
+                if (naam.toLowerCase().includes("rijksmuseum")) {
+                    heroImageEl.src = "https://images.unsplash.com/photo-1558244661-d248897f7bc4?w=1200&q=80";
+                    heroImageEl.style.display = "block";
+                } else {
+                    heroImageEl.src = "";
+                    heroImageEl.style.display = "none";
+                }
+            }
             if (contactEl) {
                 contactEl.innerHTML = contactItems.length
                     ? `<section class="am-popup__contact">${contactItems.join(
@@ -384,6 +400,7 @@
                 }
             }
             resetActiveMarker();
+            window.history.pushState(null, '', '/');
         }
 
         // ── LayerManager class: generiek lazy-load systeem voor alle categorieën ──
@@ -834,6 +851,29 @@
                 map.setView([lat, lng], 16);
             }
         });
+
+        // Direct link auto-open logica
+        const pathSlug = window.location.pathname.replace(/^\/+|\/+$/g, '');
+        if (pathSlug && pathSlug !== 'api') {
+            fetch(`/api/location/${pathSlug}`)
+                .then(res => {
+                    if (res.ok) return res.json();
+                    throw new Error('Not found');
+                })
+                .then(data => {
+                    if (data && data.naam) {
+                        window.dispatchEvent(new CustomEvent("locatieGekozen", { 
+                            detail: { 
+                                lat: data.lat, 
+                                lng: data.lng, 
+                                naam: data.naam, 
+                                subcategorie: data.subcategorie 
+                            } 
+                        }));
+                    }
+                })
+                .catch(err => console.log('Direct link location not found:', err));
+        }
     });
 </script>
 

@@ -1,0 +1,95 @@
+---
+// @ts-nocheck
+export const prerender = false;
+
+import dataset from "../assets/data/CBA_dataset_16-10-2025.json";
+import { slugify } from "../lib/utils.js";
+import LeafletMap from "../components/map/LeafletMap.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SideBar from "../components/layout/SideBar.astro";
+import MapPopover from "../components/map/MapPopover.astro";
+
+const { slug } = Astro.params;
+
+// Check if location exists
+const exists = dataset.features.some(
+    (f) => slugify(f.properties.Naam_locatie) === slug
+);
+
+if (!exists) {
+    Astro.response.status = 404;
+}
+---
+
+{exists ? (
+    <BaseLayout title="Amsterdam Atlas">
+        <SideBar />
+        <LeafletMap />
+        <MapPopover />
+    </BaseLayout>
+) : (
+    <BaseLayout title="404 - Locatie niet gevonden">
+        <div class="error-container">
+            <h1>404</h1>
+            <h2>Locatie niet gevonden</h2>
+            <p>Oeps! De locatie "{slug}" die je zoekt konden we niet vinden in de database.</p>
+            <a href="/" class="btn-home">Terug naar de kaart</a>
+        </div>
+    </BaseLayout>
+)}
+
+<style>
+    .error-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        text-align: center;
+        padding: 40px 20px;
+        font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--color-background-main, #ffffff);
+        color: var(--color-text-main, #000000);
+    }
+
+    .error-container h1 {
+        font-size: 6rem;
+        font-weight: 900;
+        margin: 0;
+        line-height: 1;
+        color: var(--color-accent-1);
+    }
+
+    .error-container h2 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        color: var(--color-text-main, #000000);
+    }
+
+    .error-container p {
+        font-size: 1.2rem;
+        color: var(--color-text-muted, #666666);
+        margin-bottom: 30px;
+        max-width: 500px;
+        line-height: 1.5;
+    }
+
+    .btn-home {
+        display: inline-block;
+        background-color: var(--color-accent-1);
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 28px;
+        font-size: 14px;
+        font-weight: 900;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        transition: background-color 0.15s ease;
+    }
+
+    .btn-home:hover {
+        background-color: #c00000;
+    }
+</style>

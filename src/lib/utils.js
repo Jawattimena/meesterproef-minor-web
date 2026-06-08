@@ -110,3 +110,18 @@ export function getTooltipHtml(properties, selectedCategories) {
         </div>
     `;
 }
+
+export function slugify(text) {
+    if (!text) return "";
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .normalize("NFD") // Splits diakritische tekens (accenten) van de letters
+        .replace(/[\u0300-\u036f]/g, "") // Verwijder alle losse accenten/diakritische tekens
+        .replace(/\s+/g, "-") // Vervang spaties door -
+        .replace(/[^\w\-]+/g, "") // Verwijder alle niet-woord karakters behalve -
+        .replace(/\-\-+/g, "-") // Vervang meerdere opeenvolgende - door een enkele -
+        .replace(/^-+/, "") // Verwijder leading hyphens
+        .replace(/-+$/, ""); // Verwijder trailing hyphens
+}

@@ -12,6 +12,7 @@
     <div class="popover-inner">
         <header class="popover-header">
             <div class="hero-image-placeholder">
+                <img id="popover-hero-img" src="" alt="Locatie foto" style="display: none; width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
                 <button
                     type="button"
                     class="btn-close"
@@ -478,8 +479,6 @@
             const adres = addressEl?.textContent?.trim() || "";
 
             const shareData = {
-                title: naam,
-                text: adres ? `${naam} – ${adres}` : naam,
                 url: window.location.href,
             };
 
@@ -492,7 +491,7 @@
             } else {
                 // Fallback: kopieer naar klembord
                 try {
-                    const text = `${shareData.text}\n${shareData.url}`;
+                    const text = shareData.url;
                     await navigator.clipboard.writeText(text);
 
                     // Korte bevestiging op de knop

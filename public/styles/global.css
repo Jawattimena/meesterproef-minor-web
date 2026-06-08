@@ -82,7 +82,7 @@ body {
 
 @font-face {
   font-family: 'Amsterdam Sans';
-  src: url('https://www.amsterdam.nl/views/libs/design-system-assets/font/woff2/AmsterdamSans-Regular.woff2') format('woff2');
+  src: url('/assets/fonts/Amsterdam Sans Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -90,7 +90,7 @@ body {
 
 @font-face {
   font-family: 'Amsterdam Sans';
-  src: url('https://www.amsterdam.nl/views/libs/design-system-assets/font/woff2/AmsterdamSans-ExtraBold.woff2') format('woff2');
+  src: url('/assets/fonts/Amsterdam Sans Extra Bold.woff2') format('woff2');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
