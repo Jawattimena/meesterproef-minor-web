@@ -16,18 +16,34 @@
         const features = event.detail.features;
 
         listView.innerHTML = features
-            .map((feature) => {
+            .map((feature, index) => {
                 const p = feature.properties;
 
                 return `
                     <li>
-                        <h2>${p.Naam_locatie ?? "Onbekende locatie"}</h2>
-                        <p>${p.adres ?? ""} ${p.Huisnummer ?? ""}</p>
-                        <p>${p.Subfilter ?? ""}</p>
+                        <button data-feature-index="${index}">
+                            <h2>${p.Naam_locatie ?? "Onbekende locatie"}</h2>
+                            <p>${p.adres ?? ""} ${p.Huisnummer ?? ""}</p>
+                            <p>${p.Subfilter ?? ""}</p>
+                        </button>
                     </li>
                 `;
             })
             .join("");
+
+        listView.querySelectorAll("[data-feature-index]").forEach((button) => {
+            button.addEventListener("click", () => {
+                const feature = features[button.dataset.featureIndex];
+
+                window.dispatchEvent(
+                    new CustomEvent("listview:open-popover", {
+                        detail: {
+                            feature,
+                        },
+                    })
+                );
+            });
+        });
         
     });
 

@@ -642,6 +642,19 @@
             layerManager.hideAll();
         });
 
+        window.addEventListener("listview:open-popover", (event) => {
+            const feature = event.detail.feature;
+            if (!feature) return;
+
+            openPopoverWithDetails(feature.properties);
+
+            const coordinates = feature.geometry?.coordinates;
+            if (coordinates) {
+                const [lng, lat] = coordinates;
+                map.setView([lat, lng], 16);
+            }
+        });
+
         // Set up the close button listener
         const closeBtn = document.getElementById("popover-close-btn");
         if (closeBtn) {
