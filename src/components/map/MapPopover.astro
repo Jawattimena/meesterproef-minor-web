@@ -96,11 +96,13 @@
         position: absolute;
         top: 0;
         left: 320px;
+        right: auto;
         width: 400px;
         height: 100%;
         z-index: 999;
         background-color: #ffffff;
-        border-right: 0;
+        border-right: 1px solid var(--color-border);
+        border-left: none;
         box-shadow: 4px 0 22px rgba(0, 0, 0, 0.14);
         display: flex;
         flex-direction: column;
@@ -115,6 +117,20 @@
     .map-popover.is-open {
         transform: translateX(0);
         visibility: visible;
+    }
+
+    /* List view active: move popover to the right side */
+    :global(html:has(#lijst:checked)) .map-popover {
+        left: auto;
+        right: 0;
+        border-left: 1px solid var(--color-border);
+        border-right: none;
+        box-shadow: -4px 0 22px rgba(0, 0, 0, 0.14);
+        transform: translateX(100%);
+    }
+
+    :global(html:has(#lijst:checked)) .map-popover.is-open {
+        transform: translateX(0);
     }
 
     .popover-inner {
@@ -414,6 +430,13 @@
     /* HIGH CONTRAST ACCESSIBILITY MODE SUPPORT */
     :global(html:has(#contrast-toggle:checked)) .map-popover {
         border-right: 2px solid var(--color-border);
+        border-left: none;
+        box-shadow: none;
+    }
+
+    :global(html:has(#contrast-toggle:checked):has(#lijst:checked)) .map-popover {
+        border-left: 2px solid var(--color-border);
+        border-right: none;
         box-shadow: none;
     }
 
@@ -430,9 +453,11 @@
         .map-popover {
             width: 100%;
             left: 0;
+            right: auto;
             height: 50%;
             bottom: 0;
             top: auto;
+            border-left: none;
             border-right: none;
             border-top: 1px solid var(--color-border);
             transform: translateY(100%);
@@ -440,6 +465,20 @@
         }
 
         .map-popover.is-open {
+            transform: translateY(0);
+        }
+
+        :global(html:has(#lijst:checked)) .map-popover {
+            left: 0;
+            right: auto;
+            border-left: none;
+            border-right: none;
+            border-top: 1px solid var(--color-border);
+            transform: translateY(100%);
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        :global(html:has(#lijst:checked)) .map-popover.is-open {
             transform: translateY(0);
         }
 
