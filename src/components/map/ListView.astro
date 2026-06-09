@@ -3,13 +3,12 @@
 ---
 
 <section class="list-view" aria-label="Lijstweergave">
-    <header class="list-view-header" id="list-view-header" style="display: none;">
-        <!-- Dynamische header content -->
-    </header>
-
-    <div class="list-view-content" id="list-view-content">
-        <!-- Dynamische lijst of empty state -->
-    </div>
+    <ul id="list-view-list">
+        <li class="list-view-empty">
+            <h2>Nog geen locaties geselecteerd</h2>
+            <p>Kies een hoofdcategorie en subcategorie in de filters om de lijst te vullen.</p>
+        </li>
+    </ul>
 </section>
 
 <script>
@@ -185,9 +184,13 @@
     renderList();
 </script>
 
-<style is:global>
-    /* Hoofd container van de lijstview */
+<style>
+
+
+
+
     .list-view {
+        display: none;
         position: absolute;
         top: 0;
         left: 320px;

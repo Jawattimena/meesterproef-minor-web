@@ -177,4 +177,32 @@ import Header from '../components/layout/Header.astro';
 	skipLink?.addEventListener('click', (button) => {
 		document.getElementById('filter-paneel')?.focus();
 	})
+
+
+
+
+	
+	// Toggle between map and list view
+	window.addEventListener("load", () => {
+    const kaartToggle = document.getElementById("kaart");
+    const lijstToggle = document.getElementById("lijst");
+    const map = document.querySelector(".mapSection");
+    const listView = document.querySelector(".list-view");
+
+    if (!kaartToggle || !lijstToggle || !map || !listView) return;
+
+    kaartToggle.addEventListener("change", () => {
+        if (kaartToggle.checked) {
+            map.style.display = "flex";
+            listView.style.display = "none";
+        }
+    });
+
+    lijstToggle.addEventListener("change", () => {
+        if (lijstToggle.checked) {
+            map.style.display = "none";
+            listView.style.display = "block";
+        }
+    });
+});
 </script>
