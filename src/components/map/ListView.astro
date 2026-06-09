@@ -4,7 +4,10 @@
 
 <section class="list-view" aria-label="Lijstweergave">
     <ul id="list-view-list">
-
+        <li class="list-view-empty">
+            <h2>Nog geen locaties geselecteerd</h2>
+            <p>Kies een hoofdcategorie en subcategorie in de filters om de lijst te vullen.</p>
+        </li>
     </ul>
 </section>
 
@@ -56,7 +59,12 @@
 </script>
 
 <style>
+
+
+
+
     .list-view {
+        display: none;
         position: absolute;
         top: 0;
         left: 320px;
