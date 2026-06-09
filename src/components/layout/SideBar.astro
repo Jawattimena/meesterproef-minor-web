@@ -559,7 +559,7 @@ event.preventDefault()
     const checkboxes = document.querySelectorAll('input[name="accessibility"]');
     const hoofdSelect = document.getElementById("hoofdcategorie");
     const subSelect = document.getElementById("subcategorie");
-    const subOptions = subSelect.querySelectorAll("option[data-parent]");
+    const subOptions = Array.from(subSelect.querySelectorAll("option[data-parent]"));
 
     let activeFilter = null;
 
@@ -584,6 +584,9 @@ event.preventDefault()
     function updateSubcategorieen() {
         const gekozenHoofdCategorie = hoofdSelect.value;
 
+        // Verwijder alle subcategorie-opties
+        subSelect.querySelectorAll("option[data-parent]").forEach(opt => opt.remove());
+
         subSelect.value = "";
         subSelect.disabled = !gekozenHoofdCategorie;
 
@@ -597,18 +600,18 @@ event.preventDefault()
             activeFilter = null;
         }
 
-        subOptions.forEach((option) => {
-            const isActiveOption =
-                option.dataset.parent === gekozenHoofdCategorie;
-
-            option.hidden = !isActiveOption;
-            option.disabled = !isActiveOption;
-        });
+        if (gekozenHoofdCategorie) {
+            subOptions.forEach((option) => {
+                if (option.dataset.parent === gekozenHoofdCategorie) {
+                    subSelect.appendChild(option);
+                }
+            });
+        }
     }
 
+    // Verwijder alle opties initieel
     subOptions.forEach((option) => {
-        option.hidden = true;
-        option.disabled = true;
+        option.remove();
     });
 
     hoofdSelect.addEventListener("change", updateSubcategorieen);
@@ -649,11 +652,8 @@ event.preventDefault()
             subSelect.disabled = true;
             activeFilter = null;
 
-            // Verberg alle subcategorie-opties weer
-            subOptions.forEach((option) => {
-                option.hidden = true;
-                option.disabled = true;
-            });
+            // Verberg alle subcategorie-opties weer door ze te verwijderen
+            subSelect.querySelectorAll("option[data-parent]").forEach(opt => opt.remove());
 
             // Reset accessibility checkboxes
             checkboxes.forEach((cb) => {
@@ -685,10 +685,13 @@ event.preventDefault()
             
             // Toon de juiste opties in de subcategorie dropdown
             subSelect.disabled = false;
+
+            subSelect.querySelectorAll("option[data-parent]").forEach(opt => opt.remove());
+            
             subOptions.forEach((option) => {
-                const isActiveOption = option.dataset.parent === targetCatValue;
-                option.hidden = !isActiveOption;
-                option.disabled = !isActiveOption;
+                if (option.dataset.parent === targetCatValue) {
+                    subSelect.appendChild(option);
+                }
             });
 
             // Update de selectie van de subcategorie
