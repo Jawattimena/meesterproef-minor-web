@@ -111,17 +111,18 @@ export function getTooltipHtml(properties, selectedCategories) {
     `;
 }
 
+// Zet een locatienaam om in een schone, veilige URL-slug (bijv. "Ons' Lieve Heer" -> "ons-lieve-heer")
 export function slugify(text) {
     if (!text) return "";
     return text
         .toString()
-        .toLowerCase()
-        .trim()
-        .normalize("NFD") // Splits diakritische tekens (accenten) van de letters
-        .replace(/[\u0300-\u036f]/g, "") // Verwijder alle losse accenten/diakritische tekens
-        .replace(/\s+/g, "-") // Vervang spaties door -
-        .replace(/[^\w\-]+/g, "") // Verwijder alle niet-woord karakters behalve -
-        .replace(/\-\-+/g, "-") // Vervang meerdere opeenvolgende - door een enkele -
-        .replace(/^-+/, "") // Verwijder leading hyphens
-        .replace(/-+$/, ""); // Verwijder trailing hyphens
+        .toLowerCase()                  // 1. Alles omzetten naar kleine letters
+        .trim()                         // 2. Spaties aan het begin en einde weghalen
+        .normalize("NFD")               // 3. Accenten loskoppelen van letters (bijv. de '´' losmaken van 'é')
+        .replace(/[\u0300-\u036f]/g, "") // 4. De losgekoppelde accent-tekens volledig verwijderen
+        .replace(/\s+/g, "-")           // 5. Alle spaties vervangen door een liggend streepje (-)
+        .replace(/[^\w\-]+/g, "")       // 6. Speciale tekens (zoals leestekens, quotes) verwijderen
+        .replace(/\-\-+/g, "-")         // 7. Dubbele streepjes (bijv. --) inkorten naar een enkel streepje (-)
+        .replace(/^-+/, "")             // 8. Eventuele streepjes aan het begin van de tekst verwijderen
+        .replace(/-+$/, "");            // 9. Eventuele streepjes aan het einde van de tekst verwijderen
 }
