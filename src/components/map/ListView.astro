@@ -222,9 +222,9 @@
 
     .list-view .header-main {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
         flex-wrap: wrap;
+        align-content:start;
         gap: 16px;
     }
 
@@ -261,7 +261,6 @@
         padding: 0 40px;
         background: var(--color-background-main);
         box-sizing: border-box;
-        padding-top: 72px;
     }
 
     #list-view-list {
