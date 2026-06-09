@@ -453,6 +453,14 @@
                     }
                     const data = await response.json();
 
+                    window.dispatchEvent (
+                        new CustomEvent("listview:update", { 
+                            detail: { 
+                                name,
+                                features: data.features,
+                            } })
+                    )
+
                     // Maak een marker cluster group aan voor deze laag
                     const clusterGroup = L.markerClusterGroup({
                         showCoverageOnHover: false,
@@ -669,6 +677,19 @@
 
         window.addEventListener("filter:hideAll", () => {
             layerManager.hideAll();
+        });
+
+        window.addEventListener("listview:open-popover", (event) => {
+            const feature = event.detail.feature;
+            if (!feature) return;
+
+            openPopoverWithDetails(feature.properties);
+
+            const coordinates = feature.geometry?.coordinates;
+            if (coordinates) {
+                const [lng, lat] = coordinates;
+                map.setView([lat, lng], 16);
+            }
         });
 
         // Set up the close button listener

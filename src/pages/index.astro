@@ -6,6 +6,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import SideBar from "../components/layout/SideBar.astro";
 import ToegankelijkheidButton from "../components/ui/ToegankelijkheidButton.astro";
 import MapPopover from "../components/map/MapPopover.astro";
+import ListView from "../components/map/ListView.astro"
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
@@ -13,10 +14,8 @@ import MapPopover from "../components/map/MapPopover.astro";
 <BaseLayout title="Amsterdam Atlas">
 	<SideBar />
 	<LeafletMap />
+	<ListView />
 	<MapPopover />
 </BaseLayout>
 
-<style>
-	
-</style>	
 
