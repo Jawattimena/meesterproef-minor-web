@@ -3,12 +3,23 @@
 ---
 
 <section class="list-view" aria-label="Lijstweergave">
-    <ul id="list-view-list">
-        <li class="list-view-empty">
-            <h2>Nog geen locaties geselecteerd</h2>
-            <p>Kies een hoofdcategorie en subcategorie in de filters om de lijst te vullen.</p>
-        </li>
-    </ul>
+    <header class="list-view-header" id="list-view-header" style="display: none;">
+        <!-- Dynamische header content -->
+    </header>
+
+    <div class="list-view-content">
+        <ul id="list-view-list" class="list-cards-grid">
+            <li class="list-view-empty">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6H20M4 12H20M4 18H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="17" cy="18" r="3" stroke="currentColor" stroke-width="2"/>
+                    <path d="M19 20L22 23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <h2>Geen categorie gekozen</h2>
+                <p>Kies een categorie in het filterpaneel aan de linkerkant om de locaties in een lijst te bekijken.</p>
+            </li>
+        </ul>
+    </div>
 </section>
 
 <script>
@@ -16,7 +27,7 @@
     import { ACCESSIBILITY_GROUPS } from "../../lib/constants.js";
 
     const listViewHeader = document.getElementById("list-view-header");
-    const listViewContent = document.getElementById("list-view-content");
+    const listView = document.getElementById("list-view-list");
 
     let currentFeatures = [];
     let currentCategoryName = "";
@@ -27,8 +38,8 @@
         // Geen subcategorie geselecteerd? Toon lege staat
         if (!currentCategoryName || currentFeatures.length === 0) {
             listViewHeader.style.display = "none";
-            listViewContent.innerHTML = `
-                <div class="list-view-empty">
+            listView.innerHTML = `
+                <li class="list-view-empty">
                     <svg class="empty-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 6H20M4 12H20M4 18H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         <circle cx="17" cy="18" r="3" stroke="currentColor" stroke-width="2"/>
@@ -36,7 +47,7 @@
                     </svg>
                     <h2>Geen categorie gekozen</h2>
                     <p>Kies een categorie in het filterpaneel aan de linkerkant om de locaties in een lijst te bekijken.</p>
-                </div>
+                </li>
             `;
             return;
         }
@@ -54,91 +65,87 @@
         `;
 
         // Genereer de kaarten voor elke locatie
-        listViewContent.innerHTML = `
-            <ul class="list-cards-grid">
-                ${currentFeatures
-                    .map((feature, index) => {
-                        const p = feature.properties;
-                        const name = p.Naam_locatie ?? "Onbekende locatie";
-                        const toevoeging = p.Toevoeging ? ` ${p.Toevoeging}` : "";
-                        const address = `${p.adres ?? ""} ${p.Huisnummer ?? ""}${toevoeging}`.trim();
-                        const subfilter = p.Subfilter ?? "";
+        listView.innerHTML = currentFeatures
+            .map((feature, index) => {
+                const p = feature.properties;
+                const name = p.Naam_locatie ?? "Onbekende locatie";
+                const toevoeging = p.Toevoeging ? ` ${p.Toevoeging}` : "";
+                const address = `${p.adres ?? ""} ${p.Huisnummer ?? ""}${toevoeging}`.trim();
+                const subfilter = p.Subfilter ?? "";
 
-                        // Bereken toegankelijkheidsscores (Ja, Nee, Onbekend)
-                        let yes = 0;
-                        let no = 0;
-                        let unknown = 0;
-                        let showBadges = false;
+                // Bereken toegankelijkheidsscores (Ja, Nee, Onbekend)
+                let yes = 0;
+                let no = 0;
+                let unknown = 0;
+                let showBadges = false;
 
-                        if (selectedCategories.length > 0) {
-                            showBadges = true;
-                            const fieldsToCount = [];
-                            selectedCategories.forEach(cat => {
-                                const fields = ACCESSIBILITY_GROUPS[cat];
-                                if (fields) {
-                                    fields.forEach(f => {
-                                        if (!fieldsToCount.includes(f)) {
-                                            fieldsToCount.push(f);
-                                        }
-                                    });
-                                }
-                            });
-
-                            fieldsToCount.forEach(field => {
-                                let value = p[field];
-                                if (value === undefined || value === null) {
-                                    value = "";
-                                }
-                                const val = String(value).trim().toLowerCase();
-                                if (val === "ja") {
-                                    yes++;
-                                } else if (val === "nee") {
-                                    no++;
-                                } else {
-                                    unknown++;
+                if (selectedCategories.length > 0) {
+                    showBadges = true;
+                    const fieldsToCount = [];
+                    selectedCategories.forEach(cat => {
+                        const fields = ACCESSIBILITY_GROUPS[cat];
+                        if (fields) {
+                            fields.forEach(f => {
+                                if (!fieldsToCount.includes(f)) {
+                                    fieldsToCount.push(f);
                                 }
                             });
                         }
+                    });
 
-                        // Genereer de ja/nee/onbekend cijfer-bolletjes
-                        const badgesHtml = showBadges
-                            ? `<div class="card-badges" aria-label="Toegankelijkheid: ${yes} voldaan, ${no} niet voldaan, ${unknown} onbekend">
-                                <span class="card-badge card-badge--yes" title="Aantal criteria voldaan: ${yes}">${yes}</span>
-                                <span class="card-badge card-badge--no" title="Aantal criteria niet voldaan: ${no}">${no}</span>
-                                <span class="card-badge card-badge--unknown" title="Aantal criteria onbekend: ${unknown}">${unknown}</span>
-                               </div>`
-                            : "";
+                    fieldsToCount.forEach(field => {
+                        let value = p[field];
+                        if (value === undefined || value === null) {
+                            value = "";
+                        }
+                        const val = String(value).trim().toLowerCase();
+                        if (val === "ja") {
+                            yes++;
+                        } else if (val === "nee") {
+                            no++;
+                        } else {
+                            unknown++;
+                        }
+                    });
+                }
 
-                        return `
-                            <li>
-                                <button class="list-card-btn" data-feature-index="${index}" aria-label="${name}, ${address}. ${subfilter}. Klik voor details.">
-                                    <div class="card-left">
-                                        <h2 class="card-title">${name}</h2>
-                                        <p class="card-address">
-                                            <svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                                <circle cx="12" cy="10" r="3"/>
-                                            </svg>
-                                            ${address}
-                                        </p>
-                                        ${badgesHtml}
-                                    </div>
-                                    <div class="card-right">
-                                        ${subfilter ? `<span class="card-category-label">${subfilter}</span>` : ""}
-                                        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </div>
-                                </button>
-                            </li>
-                        `;
-                    })
-                    .join("")}
-            </ul>
-        `;
+                // Genereer de ja/nee/onbekend cijfer-bolletjes
+                const badgesHtml = showBadges
+                    ? `<div class="card-badges" aria-label="Toegankelijkheid: ${yes} voldaan, ${no} niet voldaan, ${unknown} onbekend">
+                        <span class="card-badge card-badge--yes" title="Aantal criteria voldaan: ${yes}">${yes}</span>
+                        <span class="card-badge card-badge--no" title="Aantal criteria niet voldaan: ${no}">${no}</span>
+                        <span class="card-badge card-badge--unknown" title="Aantal criteria onbekend: ${unknown}">${unknown}</span>
+                       </div>`
+                    : "";
+
+                return `
+                    <li>
+                        <button class="list-card-btn" data-feature-index="${index}" aria-label="${name}, ${address}. ${subfilter}. Klik voor details.">
+                            <div class="card-left">
+                                <h2 class="card-title">${name}</h2>
+                                <p class="card-address">
+                                    <svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                    ${address}
+                                </p>
+                                ${badgesHtml}
+                            </div>
+                            <div class="card-right">
+                                ${subfilter ? `<span class="card-category-label">${subfilter}</span>` : ""}
+                                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </button>
+                    </li>
+                `;
+            })
+            .join("");
 
         // Voeg click handlers toe om popover te openen
-        listViewContent.querySelectorAll("[data-feature-index]").forEach((button) => {
+        listView.querySelectorAll("[data-feature-index]").forEach((button) => {
             button.addEventListener("click", () => {
                 const feature = currentFeatures[button.dataset.featureIndex];
                 window.dispatchEvent(
@@ -184,13 +191,9 @@
     renderList();
 </script>
 
-<style>
-
-
-
-
+<style is:global>
+    /* Hoofd container van de lijstview */
     .list-view {
-        display: none;
         position: absolute;
         top: 0;
         left: 320px;
@@ -271,6 +274,7 @@
         margin: 60px auto 0;
         border: 2px dashed var(--color-border);
         background: var(--color-background-secondairy);
+        list-style: none !important;
     }
 
     .list-view .empty-icon {
@@ -384,7 +388,7 @@
         font-weight: 800;
         color: #ffffff;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.15);
         text-shadow: none;
     }
 
