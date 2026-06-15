@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "algolia-sync": "node ./src/scripts/upload.mjs"
   },
   "dependencies": {
     "algoliasearch": "^5.52.1",

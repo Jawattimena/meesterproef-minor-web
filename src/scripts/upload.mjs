@@ -55,7 +55,7 @@ async function upload() {
     // indexName = de naam van ons index in Algolia
     // objects = de lijst met locaties
     console.log('Uploaden naar Algolia...');
-    await client.saveObjects({
+    await client.replaceAllObjects({
         indexName: 'locations',
         objects: alleLocaties
     });
@@ -64,3 +64,5 @@ async function upload() {
 }
 
 upload();
+
+// npm run algolia-sync (ook toevoegen aan onRender)
