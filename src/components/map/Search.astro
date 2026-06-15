@@ -27,11 +27,13 @@
         display: flex;
         max-width: 400px;
         width: 100%;
+        min-width: 0;
     }
 
     form {
         display: flex;
         width: 100%;
+        min-width: 0;
         gap: 8px;
         align-items: center;
     }
@@ -50,6 +52,7 @@
 
     input {
         flex: 1;
+        min-width: 0;
         padding: 10px 14px;
         border: 2px solid var(--color-border);
         background: var(--color-background-main);
@@ -158,6 +161,16 @@
         color: var(--color-text-muted);
         opacity: 1;
         line-height: 1.2;
+    }
+
+    @media (max-width: 768px) {
+        search {
+            max-width: none;
+        }
+
+        input {
+            min-height: 44px;
+        }
     }
 </style>
 

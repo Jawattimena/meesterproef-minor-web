@@ -47,6 +47,12 @@
             zoomControl: false,
         }).setView([52.3676, 4.9041], 13);
 
+        window.addEventListener("map:view-active", () => {
+            requestAnimationFrame(() => {
+                map.invalidateSize();
+            });
+        });
+
         L.control
             .zoom({
                 position: "topright",

@@ -9,7 +9,7 @@ import Header from '../components/layout/Header.astro';
 <html lang="nl">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<!-- <link rel="stylesheet" href="/../public/global.css" /> -->
@@ -119,49 +119,87 @@ import Header from '../components/layout/Header.astro';
 			flex: 1;
 			position: relative;
 			overflow: hidden;
-		display: flex;
-		flex-direction: column;
-	}
+			display: flex;
+			flex-direction: column;
+		}
 
-	.toggle-group {
-      display: inline-flex;
-      border: 1px solid #ccc;
-      overflow: hidden;
-	  position: absolute;
-	  top: 5.3em;
-	  right: 4em;
-	  z-index: 1000;
-    }
+		.toggle-group {
+			display: inline-flex;
+			border: 1px solid #ccc;
+			overflow: hidden;
+			position: absolute;
+			top: 5.3em;
+			right: 4em;
+			z-index: 1000;
+		}
 
-    .toggle-group input[type="radio"] {
-      display: none;
-    }
+		.toggle-group input[type="radio"] {
+			display: none;
+		}
 
-    .toggle-group label {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 9px 20px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      background: #fff;
-      color: #666;
-      transition: background 0.15s, color 0.15s;
-    }
+		.toggle-group label {
+			display: flex;
+			align-items: center;
+			gap: 7px;
+			padding: 9px 20px;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+			background: #fff;
+			color: #666;
+			transition: background 0.15s, color 0.15s;
+		}
 
-    .toggle-group label:not(:last-child) {
-      border-right: 1px solid #ccc;
-    }
+		.toggle-group label:not(:last-child) {
+			border-right: 1px solid #ccc;
+		}
 
-    .toggle-group input[type="radio"]:checked + label {
-      background: #cc2222;
-      color: #fff;
-    }
+		.toggle-group input[type="radio"]:checked + label {
+			background: #cc2222;
+			color: #fff;
+		}
 
-    .toggle-group input[type="radio"]:checked + label svg {
-      stroke: #fff;
-    }
+		.toggle-group input[type="radio"]:checked + label svg {
+			stroke: #fff;
+		}
+
+		:global(html:has(#lijst:checked) .mapSection) {
+			display: none;
+		}
+
+		:global(html:has(#kaart:checked) .mapSection) {
+			display: flex;
+		}
+
+		@media (max-width: 768px) {
+			.toggle-group {
+				top: auto;
+				right: 16px;
+				bottom: 16px;
+				z-index: 1050;
+			}
+
+			.toggle-group label {
+				min-height: 48px;
+				padding: 0 14px;
+				font-size: 13px;
+			}
+
+			body.filters-open .toggle-group {
+				display: none;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.toggle-group {
+				right: 12px;
+				bottom: 12px;
+			}
+
+			.toggle-group label {
+				padding: 0 12px;
+			}
+		}
 </style>
 
 <script>
@@ -176,27 +214,11 @@ import Header from '../components/layout/Header.astro';
 
 
 	
-	// Toggle between map and list view
-	window.addEventListener("load", () => {
-    const kaartToggle = document.getElementById("kaart");
-    const lijstToggle = document.getElementById("lijst");
-    const map = document.querySelector(".mapSection");
-    const listView = document.querySelector(".list-view");
+	const kaartToggle = document.getElementById("kaart");
 
-    if (!kaartToggle || !lijstToggle || !map || !listView) return;
-
-    kaartToggle.addEventListener("change", () => {
-        if (kaartToggle.checked) {
-            map.style.display = "flex";
-            listView.style.display = "none";
-        }
-    });
-
-    lijstToggle.addEventListener("change", () => {
-        if (lijstToggle.checked) {
-            map.style.display = "none";
-            listView.style.display = "flex";
-        }
-    });
-});
+	kaartToggle?.addEventListener("change", () => {
+		if (kaartToggle.checked) {
+			window.dispatchEvent(new CustomEvent("map:view-active"));
+		}
+	});
 </script>

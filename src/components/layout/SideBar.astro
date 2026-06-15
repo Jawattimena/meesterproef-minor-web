@@ -3,9 +3,56 @@
 import ToegankelijkheidButton from "../ui/ToegankelijkheidButton.astro";
 ---
 
+<button
+    type="button"
+    class="mobile-filter-toggle"
+    aria-controls="filter-sidebar"
+    aria-expanded="false"
+>
+    <svg
+        aria-hidden="true"
+        focusable="false"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M4 6H20M7 12H17M10 18H14"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="square"></path>
+    </svg>
+    Filters
+</button>
+
+<div class="sidebar-overlay" hidden></div>
+
 <form class="sidebar" onsubmit="
 event.preventDefault()
-">
+" id="filter-sidebar" aria-label="Filters">
+    <button
+        type="button"
+        class="sidebar-close"
+        aria-label="Sluit filters"
+    >
+        <svg
+            aria-hidden="true"
+            focusable="false"
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M17 1L1 17M1 1L17 17"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="square"></path>
+        </svg>
+    </button>
     <div class="sidebar-header">
         <div class="title-container">
             <h1
@@ -357,6 +404,12 @@ event.preventDefault()
         font-family: var(--font-family-base);
     }
 
+    .mobile-filter-toggle,
+    .sidebar-close,
+    .sidebar-overlay {
+        display: none;
+    }
+
     .sidebar-header {
         border-bottom: 1px solid var(--color-border);
         padding: 32px 24px 0;
@@ -550,6 +603,98 @@ event.preventDefault()
         background-color: #b80000;
         border-color: #b80000;
     }
+
+    @media (max-width: 768px) {
+        .mobile-filter-toggle {
+            position: absolute;
+            left: 16px;
+            bottom: 16px;
+            z-index: 1100;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+            padding: 0 18px;
+            background: var(--color-accent-1);
+            border: 2px solid var(--color-border);
+            color: var(--color-background-main);
+            font-family: var(--font-family-base);
+            font-size: var(--font-size-regular);
+            font-weight: var(--font-weight-other-headings);
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+        }
+
+        .mobile-filter-toggle[aria-expanded="true"] {
+            display: none;
+        }
+
+        .sidebar-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1090;
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .sidebar-overlay:not([hidden]) {
+            display: block;
+        }
+
+        .sidebar {
+            position: absolute;
+            inset: 0 auto 0 0;
+            z-index: 1200;
+            width: min(100%, 360px);
+            max-width: 100%;
+            border-right: 2px solid var(--color-border);
+            box-shadow: 8px 0 28px rgba(0, 0, 0, 0.24);
+            transform: translateX(-100%);
+            visibility: hidden;
+            transition:
+                transform 0.25s ease,
+                visibility 0.25s ease;
+        }
+
+        .sidebar.is-open {
+            transform: translateX(0);
+            visibility: visible;
+        }
+
+        .sidebar-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: var(--color-background-main);
+            border: 2px solid var(--color-border);
+            color: var(--color-text-main);
+            cursor: pointer;
+        }
+
+        .sidebar-header {
+            padding: 24px 76px 0 20px;
+        }
+
+        .sidebar-content {
+            padding: 24px 20px;
+            gap: 24px;
+        }
+
+        .sidebar-footer {
+            padding: 12px 20px;
+            height: 72px;
+        }
+
+        .accessibility-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
 <script>
@@ -560,8 +705,38 @@ event.preventDefault()
     const hoofdSelect = document.getElementById("hoofdcategorie");
     const subSelect = document.getElementById("subcategorie");
     const subOptions = Array.from(subSelect.querySelectorAll("option[data-parent]"));
+    const sidebar = document.querySelector(".sidebar");
+    const filterToggle = document.querySelector(".mobile-filter-toggle");
+    const sidebarClose = document.querySelector(".sidebar-close");
+    const sidebarOverlay = document.querySelector(".sidebar-overlay");
 
     let activeFilter = null;
+    let previousFocus = null;
+
+    function openMobileFilters() {
+        previousFocus = document.activeElement;
+        sidebar?.classList.add("is-open");
+        sidebarOverlay?.removeAttribute("hidden");
+        filterToggle?.setAttribute("aria-expanded", "true");
+        document.body.classList.add("filters-open");
+        document.getElementById("filter-paneel")?.focus();
+    }
+
+    function closeMobileFilters() {
+        sidebar?.classList.remove("is-open");
+        sidebarOverlay?.setAttribute("hidden", "");
+        filterToggle?.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("filters-open");
+
+        if (previousFocus && typeof previousFocus.focus === "function") {
+            previousFocus.focus();
+        } else {
+            filterToggle?.focus();
+        }
+    }
+
+    filterToggle?.addEventListener("click", openMobileFilters);
+    sidebarClose?.addEventListener("click", closeMobileFilters);
 
     function updateAccessibilitySelection() {
         const selectedCategories = Array.from(checkboxes)

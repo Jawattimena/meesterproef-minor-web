@@ -55,7 +55,7 @@ import Search from '../map/Search.astro';
         padding: 1rem;
         border-bottom: 1px solid var(--color-border);
         display: grid;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: auto minmax(0, 1fr) auto;
         gap: 2rem;
         align-items: center;
     }
@@ -63,11 +63,18 @@ import Search from '../map/Search.astro';
     .logo-section {
         display: flex;
         align-items: center;
+        min-width: 0;
+    }
+
+    .logo-section a {
+        display: inline-flex;
+        min-width: 0;
     }
 
     .search-section {
         display: flex;
         justify-content: center;
+        min-width: 0;
     }
 
     .actions-section {
@@ -77,6 +84,7 @@ import Search from '../map/Search.astro';
         align-items: center;
         margin: 0;
         padding: 0;
+        flex-wrap: nowrap;
     }
 
     .changeLang {
@@ -123,5 +131,70 @@ import Search from '../map/Search.astro';
     a {
         color: var(--color-text-main);
         text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+        header {
+            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-areas:
+                "logo actions"
+                "search search";
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .logo-section {
+            grid-area: logo;
+        }
+
+        .logo-section a {
+            max-width: 12rem;
+        }
+
+        .logo-section img {
+            width: min(100%, 12rem);
+            height: auto;
+        }
+
+        .search-section {
+            grid-area: search;
+            width: 100%;
+            justify-content: stretch;
+        }
+
+        .actions-section {
+            grid-area: actions;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .actions-section svg {
+            width: 1.75rem;
+            height: 1.75rem;
+        }
+
+        .changeLang {
+            display: none;
+        }
+    }
+
+    @media (max-width: 420px) {
+        header {
+            grid-template-columns: minmax(0, 1fr) auto;
+            padding: 0.75rem;
+        }
+
+        .logo-section a {
+            max-width: 9.5rem;
+        }
+
+        .logo-section img {
+            width: min(100%, 9.5rem);
+        }
+
+        .actions-section svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
     }
 </style>
