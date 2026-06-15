@@ -15,9 +15,11 @@
             aria-autocomplete="list"
             aria-expanded="false"
             aria-controls="zoekResultaten"
+            aria-describedby="zoekMelding"
         />
     </form>
     <ul id="zoekResultaten" role="listbox" aria-label="Zoekresultaten"></ul>
+    <div aria-live="polite" class="sr-only" id="zoekMelding"></div>
 </search>
 
 <style>
@@ -27,16 +29,18 @@
         display: flex;
         max-width: 400px;
         width: 100%;
+        min-width: 0;
     }
 
     form {
         display: flex;
         width: 100%;
+        min-width: 0;
         gap: 8px;
         align-items: center;
     }
 
-    label {
+    label, .sr-only {
         position: absolute;
         width: 1px;
         height: 1px;
@@ -50,6 +54,7 @@
 
     input {
         flex: 1;
+        min-width: 0;
         padding: 10px 14px;
         border: 2px solid var(--color-border);
         background: var(--color-background-main);
@@ -119,12 +124,20 @@
     }
 
     :global(#zoekResultaten li:hover),
+    :global(#zoekResultaten li:focus-visible),
     :global(#zoekResultaten li[aria-selected="true"]) {
         background: var(--color-accent-1);
         color: var(--color-background-main);
+        outline: none; /* We use background color as focus state for list items */
+    }
+
+    :global(#zoekResultaten li:focus-visible) {
+        outline: 3px solid #000;
+        outline-offset: -3px;
     }
 
     :global(#zoekResultaten li:hover .resultaatNaam),
+    :global(#zoekResultaten li:focus-visible .resultaatNaam),
     :global(#zoekResultaten li[aria-selected="true"] .resultaatNaam) {
         color: var(--color-background-main);
     }
@@ -158,6 +171,16 @@
         color: var(--color-text-muted);
         opacity: 1;
         line-height: 1.2;
+    }
+
+    @media (max-width: 768px) {
+        search {
+            max-width: none;
+        }
+
+        input {
+            min-height: 44px;
+        }
     }
 </style>
 
@@ -209,9 +232,54 @@
 
             // Wacht 200ms nadat gebruiker stopt met typen, dan pas zoeken
             wachtTimer = setTimeout(async function () {
+                const melding = document.getElementById("zoekMelding");
+                if (melding) melding.textContent = "Aan het zoeken...";
+
                 const resultaten = await zoekInAlgolia(zoekwoord);
                 toonResultaten(resultaten);
+
+                if (melding) {
+                    melding.textContent = resultaten.length > 0 ? resultaten.length + " resultaten gevonden. Gebruik pijl omlaag om te navigeren." : "Geen resultaten gevonden.";
+                }
             }, 200);
+        });
+
+        // Toetsenbord navigatie voor de input
+        invoerVeld.addEventListener("keydown", function (e) {
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                if (zoekResultaten.classList.contains("is-open")) {
+                    const firstOption = zoekResultaten.querySelector("li");
+                    if (firstOption) firstOption.focus();
+                }
+            } else if (e.key === "Escape") {
+                zoekResultaten.classList.remove("is-open");
+                invoerVeld.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        // Toetsenbord navigatie in de lijst
+        zoekResultaten.addEventListener("keydown", function (e) {
+            const activeEl = document.activeElement;
+            if (activeEl && activeEl.tagName === "LI") {
+                if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    const next = activeEl.nextElementSibling;
+                    if (next) next.focus();
+                } else if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    const prev = activeEl.previousElementSibling;
+                    if (prev) {
+                        prev.focus();
+                    } else {
+                        invoerVeld.focus();
+                    }
+                } else if (e.key === "Escape") {
+                    zoekResultaten.classList.remove("is-open");
+                    invoerVeld.setAttribute("aria-expanded", "false");
+                    invoerVeld.focus();
+                }
+            }
         });
     }
 

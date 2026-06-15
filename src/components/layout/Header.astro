@@ -15,38 +15,24 @@ import Search from '../map/Search.astro';
         <Search />
     </div>
     
-    <ul class="actions-section">
-        <li class="changeLang"><a href="/">English site</a></li>
-        <li>
-            <label for="contrast-toggle" class="contrast-label" aria-label="Toggle hoge contrast modus">
-                <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><path
-                        clip-rule="evenodd"
-                        d="M1 12c0 6.075 4.925 11 11 11s11-4.925 11-11S18.075 1 12 1 1 5.925 1 12m11 9a9 9 0 1 1 0-18z"
-                        fill-rule="evenodd"></path></svg>
-            </label>
-        </li>
-        <li>
-            <a href="/" aria-label="Tekstgrootte aanpassen (momenteel niet beschikbaar)"
-                ><svg
-                    aria-hidden="true"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><path
-                        d="M19.275 15.89h-6.27l-.73-1.798H18.6l-3.25-8.344h-.05l-3.127 8.091-1.008-2.479L14.076 4h2.6L23 20h-2.15z"
-                    ></path><path
-                        clip-rule="evenodd"
-                        d="M5.68 8.48 1 20h2.412l.972-2.534h5.202L10.558 20h2.502L8.38 8.48zm-.594 7.072 1.872-4.857h.036l1.872 4.857z"
-                        fill-rule="evenodd"></path></svg
-                ></a
-            >
-        </li>
-    </ul>
+    <nav aria-label="Instellingen menu" class="actions-section-nav">
+        <ul class="actions-section">
+            <li>
+                <label for="contrast-toggle" class="contrast-label">
+                    <span class="sr-only">Zet hoog contrast aan of uit</span>
+                    <svg
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                        ><path
+                            clip-rule="evenodd"
+                            d="M1 12c0 6.075 4.925 11 11 11s11-4.925 11-11S18.075 1 12 1 1 5.925 1 12m11 9a9 9 0 1 1 0-18z"
+                            fill-rule="evenodd"></path></svg>
+                </label>
+            </li>
+        </ul>
+    </nav>
 </header>
 
 <style>
@@ -55,7 +41,7 @@ import Search from '../map/Search.astro';
         padding: 1rem;
         border-bottom: 1px solid var(--color-border);
         display: grid;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: auto minmax(0, 1fr) auto;
         gap: 2rem;
         align-items: center;
     }
@@ -63,11 +49,18 @@ import Search from '../map/Search.astro';
     .logo-section {
         display: flex;
         align-items: center;
+        min-width: 0;
+    }
+
+    .logo-section a {
+        display: inline-flex;
+        min-width: 0;
     }
 
     .search-section {
         display: flex;
         justify-content: center;
+        min-width: 0;
     }
 
     .actions-section {
@@ -77,22 +70,10 @@ import Search from '../map/Search.astro';
         align-items: center;
         margin: 0;
         padding: 0;
+        flex-wrap: nowrap;
     }
 
-    .changeLang {
-        font-family: 'Amsterdam Sans', sans-serif;
-        color: var(--color-primary-container);
-    }
 
-    img, svg {
-        height: 2rem;
-        fill: var(--color-accent-1);
-    }
-
-    .changeLang {
-        font-family: "Amsterdam Sans", sans-serif;
-        color: var(--color-accent-1);
-    }
 
     img,
     svg {
@@ -123,5 +104,79 @@ import Search from '../map/Search.astro';
     a {
         color: var(--color-text-main);
         text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+        header {
+            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-areas:
+                "logo actions"
+                "search search";
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .logo-section {
+            grid-area: logo;
+        }
+
+        .logo-section a {
+            max-width: 12rem;
+        }
+
+        .logo-section img {
+            width: min(100%, 12rem);
+            height: auto;
+        }
+
+        .search-section {
+            grid-area: search;
+            width: 100%;
+            justify-content: stretch;
+        }
+
+        .actions-section {
+            grid-area: actions;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .actions-section svg {
+            width: 1.75rem;
+            height: 1.75rem;
+        }
+
+        .changeLang {
+            display: none;
+        }
+    }
+
+    @media (max-width: 420px) {
+        header {
+            grid-template-columns: minmax(0, 1fr) auto;
+            padding: 0.75rem;
+        }
+
+        .logo-section a {
+            max-width: 9.5rem;
+        }
+
+        .logo-section img {
+            width: min(100%, 9.5rem);
+        }
+
+        .actions-section svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+    }
+
+    .btn-icon {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
     }
 </style>
