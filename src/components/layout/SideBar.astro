@@ -67,7 +67,7 @@ event.preventDefault()
 
     <div class="sidebar-content">
         <div class="filter-group">
-            <label for="hoofdcategorie">Hoofdcategorie</label>
+            <h2><label for="hoofdcategorie">Hoofdcategorie</label></h2>
             <div class="select-wrapper">
                 <select id="hoofdcategorie" name="hoofdcategorie">
                     <option value="" disabled selected
@@ -100,7 +100,7 @@ event.preventDefault()
         </div>
 
         <div class="filter-group">
-            <label for="subcategorie">Subcategorie</label>
+            <h2><label for="subcategorie">Subcategorie</label></h2>
             <div class="select-wrapper">
                 <select id="subcategorie" name="subcategorie" disabled>
                     <option value="" disabled selected
@@ -290,96 +290,136 @@ event.preventDefault()
         </div>
 
         <fieldset class="filter-group" id="toegankelijkheid-filter" tabindex="-1">
-            <legend class="group-label">Toegankelijkheid</legend>
-            <div class="accessibility-grid">
-                <ToegankelijkheidButton
-                    title="Mobiliteit"
-                    name="accessibility"
-                    value="mobility"
-                >
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 18.5 21"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
+            <legend class="group-label legend-with-tooltip">
+                <h2>Toegankelijkheidseisen</h2>
+                <div class="tooltip-container">
+                    <button
+                        type="button"
+                        class="tooltip-trigger"
+                        aria-describedby="toegankelijkheid-beschrijving"
+                        aria-label="Meer informatie over filterwerking"
                     >
-                        <g id="Shape">
-                            <path
-                                d="M7.25 5C8.63071 5 9.75 3.88071 9.75 2.5C9.75 1.11929 8.63071 0 7.25 0C5.86929 0 4.75 1.11929 4.75 2.5C4.75 3.88071 5.86929 5 7.25 5Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M8.2222 8.72095V6.41862H6.16665V14.8605H12.3658L14.6271 17.5621C14.9773 17.9806 15.5955 18.0525 16.0333 17.7256L18.0888 16.1907C18.5429 15.8517 18.635 15.2103 18.2944 14.7582C17.9538 14.3061 17.3096 14.2144 16.8555 14.5535L15.5811 15.5051L13.3286 12.814H8.2222V10.7675H12.8472C13.4148 10.7675 13.875 10.3093 13.875 9.74421C13.875 9.17908 13.4148 8.72095 12.8472 8.72095H8.2222Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M4.1111 7.36369C1.68047 8.51328 0 10.9799 0 13.8372C0 17.7931 3.22105 21 7.19442 21C9.40171 21 11.3768 20.0103 12.6966 18.4524L11.403 16.907H11.3059C10.3684 18.1497 8.87568 18.9535 7.19442 18.9535C4.3563 18.9535 2.05555 16.6628 2.05555 13.8372C2.05555 12.1633 2.86292 10.6772 4.1111 9.74379V7.36369Z"
-                                fill="currentColor"></path>
-                        </g>
-                    </svg>
-                </ToegankelijkheidButton>
-                <ToegankelijkheidButton
-                    title="Visueel"
-                    name="accessibility"
-                    value="visual"
-                >
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 22 16"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </button>
+                    <span
+                        id="toegankelijkheid-beschrijving"
+                        class="tooltip-content"
+                        role="tooltip"
                     >
-                        <g id="Shape">
-                            <path
-                                d="M15 8C15 10.2091 13.2091 12 11 12C8.79086 12 7 10.2091 7 8C7 5.79086 8.79086 4 11 4C13.2091 4 15 5.79086 15 8Z"
-                                fill="currentColor"></path>
+                        Selecteer een of meerdere opties om de toegankelijkheidsdetails van locaties op de kaart en in de lijst te bekijken. Locaties worden niet gefilterd of verborgen.
+                    </span>
+                </div>
+            </legend>
+            <ul class="accessibility-list">
+                <li>
+                    <ToegankelijkheidButton
+                        title="Mobiliteit"
+                        name="accessibility"
+                        value="mobility"
+                    >
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 18.5 21"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <g id="Shape">
+                                <path
+                                    d="M7.25 5C8.63071 5 9.75 3.88071 9.75 2.5C9.75 1.11929 8.63071 0 7.25 0C5.86929 0 4.75 1.11929 4.75 2.5C4.75 3.88071 5.86929 5 7.25 5Z"
+                                    fill="currentColor"></path>
+                                <path
+                                    d="M8.2222 8.72095V6.41862H6.16665V14.8605H12.3658L14.6271 17.5621C14.9773 17.9806 15.5955 18.0525 16.0333 17.7256L18.0888 16.1907C18.5429 15.8517 18.635 15.2103 18.2944 14.7582C17.9538 14.3061 17.3096 14.2144 16.8555 14.5535L15.5811 15.5051L13.3286 12.814H8.2222V10.7675H12.8472C13.4148 10.7675 13.875 10.3093 13.875 9.74421C13.875 9.17908 13.4148 8.72095 12.8472 8.72095H8.2222Z"
+                                    fill="currentColor"></path>
+                                <path
+                                    d="M4.1111 7.36369C1.68047 8.51328 0 10.9799 0 13.8372C0 17.7931 3.22105 21 7.19442 21C9.40171 21 11.3768 20.0103 12.6966 18.4524L11.403 16.907H11.3059C10.3684 18.1497 8.87568 18.9535 7.19442 18.9535C4.3563 18.9535 2.05555 16.6628 2.05555 13.8372C2.05555 12.1633 2.86292 10.6772 4.1111 9.74379V7.36369Z"
+                                    fill="currentColor"></path>
+                            </g>
+                        </svg>
+                    </ToegankelijkheidButton>
+                </li>
+                <li>
+                    <ToegankelijkheidButton
+                        title="Visueel"
+                        name="accessibility"
+                        value="visual"
+                    >
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 22 16"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <g id="Shape">
+                                <path
+                                    d="M15 8C15 10.2091 13.2091 12 11 12C8.79086 12 7 10.2091 7 8C7 5.79086 8.79086 4 11 4C13.2091 4 15 5.79086 15 8Z"
+                                    fill="currentColor"></path>
+                                <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M0 8C0 8 4 0 11 0C18 0 22 8 22 8C22 8 18 16 11 16C4 16 0 8 0 8ZM2.31 8C3.49 9.86 6.6 14 11 14C15.43 14 18.52 9.87 19.69 8C18.51 6.14 15.43 2 11 2C6.57 2 3.48 6.13 2.31 8Z"
+                                    fill="currentColor"></path>
+                            </g>
+                        </svg>
+                    </ToegankelijkheidButton>
+                </li>
+                <li>
+                    <ToegankelijkheidButton
+                        title="Auditief"
+                        name="accessibility"
+                        value="auditory"
+                    >
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 20.5 19"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
                             <path
                                 fill-rule="evenodd"
                                 clip-rule="evenodd"
-                                d="M0 8C0 8 4 0 11 0C18 0 22 8 22 8C22 8 18 16 11 16C4 16 0 8 0 8ZM2.31 8C3.49 9.86 6.6 14 11 14C15.43 14 18.52 9.87 19.69 8C18.51 6.14 15.43 2 11 2C6.57 2 3.48 6.13 2.31 8Z"
+                                d="M5.14093 12H2V6.99996H5.14093L9.49999 3.88636V15.1136L5.14093 12ZM4.5 4.99995L11.5 0V19L4.5 14H0V4.99995H4.5ZM15.4692 16.2448C17.2757 14.5583 18.4016 12.1774 18.4016 9.53865C18.4016 7.06409 17.4114 4.81623 15.7984 3.15523L17.2826 1.70001C19.2752 3.73364 20.5 6.49592 20.5 9.53865C20.5 12.7456 19.1394 15.6409 16.9534 17.7L15.4692 16.2448ZM13.9848 14.7894C15.4118 13.4757 16.3032 11.6092 16.3032 9.53865C16.3032 7.6322 15.5476 5.89883 14.314 4.61063L12.8292 6.06648C13.6835 6.98146 14.2047 8.20037 14.2047 9.53865C14.2047 11.0411 13.5477 12.3931 12.5 13.3335L13.9848 14.7894Z"
                                 fill="currentColor"></path>
-                        </g>
-                    </svg>
-                </ToegankelijkheidButton>
-                <ToegankelijkheidButton
-                    title="Auditief"
-                    name="accessibility"
-                    value="auditory"
-                >
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 20.5 19"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
+                        </svg>
+                    </ToegankelijkheidButton>
+                </li>
+                <li>
+                    <ToegankelijkheidButton
+                        title="Prikkel&shy;gevoelig"
+                        name="accessibility"
+                        value="hidden"
                     >
-                        <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M5.14093 12H2V6.99996H5.14093L9.49999 3.88636V15.1136L5.14093 12ZM4.5 4.99995L11.5 0V19L4.5 14H0V4.99995H4.5ZM15.4692 16.2448C17.2757 14.5583 18.4016 12.1774 18.4016 9.53865C18.4016 7.06409 17.4114 4.81623 15.7984 3.15523L17.2826 1.70001C19.2752 3.73364 20.5 6.49592 20.5 9.53865C20.5 12.7456 19.1394 15.6409 16.9534 17.7L15.4692 16.2448ZM13.9848 14.7894C15.4118 13.4757 16.3032 11.6092 16.3032 9.53865C16.3032 7.6322 15.5476 5.89883 14.314 4.61063L12.8292 6.06648C13.6835 6.98146 14.2047 8.20037 14.2047 9.53865C14.2047 11.0411 13.5477 12.3931 12.5 13.3335L13.9848 14.7894Z"
-                            fill="currentColor"></path>
-                    </svg>
-                </ToegankelijkheidButton>
-                <ToegankelijkheidButton
-                    title="Prikkelgevoelig"
-                    name="accessibility"
-                    value="hidden"
-                >
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <g transform="translate(2, 2)">
-                            <path
-                                d="M3 20V15.7C2.05 14.8333 1.3125 13.8208 0.7875 12.6625C0.2625 11.5042 0 10.2833 0 9C0 6.5 0.875 4.375 2.625 2.625C4.375 0.875 6.5 0 9 0C11.0833 0 12.9292 0.6125 14.5375 1.8375C16.1458 3.0625 17.1917 4.65833 17.675 6.625L18.975 11.75C19.0583 12.0667 19 12.3542 18.8 12.6125C18.6 12.8708 18.3333 13 18 13H16V16C16 16.55 15.8042 17.0208 15.4125 17.4125C15.0208 17.8042 14.55 18 14 18H12V20H10V16H14V16V16V11H16.7L15.75 7.125C15.3667 5.60833 14.55 4.375 13.3 3.425C12.05 2.475 10.6167 2 9 2C7.06667 2 5.41667 2.675 4.05 4.025C2.68333 5.375 2 7.01667 2 8.95C2 9.95 2.20417 10.9 2.6125 11.8C3.02083 12.7 3.6 13.5 4.35 14.2L5 14.8V20H3V20M9.35 11V11V11V11V11V11V11V11V11V11V11V11V11V11V11V11V11V11M8 13H10L10.15 11.75C10.2833 11.7 10.4042 11.6417 10.5125 11.575C10.6208 11.5083 10.7167 11.4333 10.8 11.35L11.95 11.85L12.95 10.15L11.95 9.4C11.9833 9.26667 12 9.13333 12 9C12 8.86667 11.9833 8.73333 11.95 8.6L12.95 7.85L11.95 6.15L10.8 6.65C10.7167 6.56667 10.6208 6.49167 10.5125 6.425C10.4042 6.35833 10.2833 6.3 10.15 6.25L10 5H8L7.85 6.25C7.71667 6.3 7.59583 6.35833 7.4875 6.425C7.37917 6.49167 7.28333 6.56667 7.2 6.65L6.05 6.15L5.05 7.85L6.05 8.6C6.01667 8.73333 6 8.86667 6 9C6 9.13333 6.01667 9.26667 6.05 9.4L5.05 10.15L6.05 11.85L7.2 11.35C7.28333 11.4333 7.37917 11.5083 7.4875 11.575C7.59583 11.6417 7.71667 11.7 7.85 11.75L8 13V13M9 10.5C8.58333 10.5 8.22917 10.3542 7.9375 10.0625C7.64583 9.77083 7.5 9.41667 7.5 9C7.5 8.58333 7.64583 8.22917 7.9375 7.9375C8.22917 7.64583 8.58333 7.5 9 7.5C9.41667 7.5 9.77083 7.64583 10.0625 7.9375C10.3542 8.22917 10.5 8.58333 10.5 9C10.5 9.41667 10.3542 9.77083 10.0625 10.0625C9.77083 10.3542 9.41667 10.5 9 10.5V10.5"
-                            ></path>
-                        </g>
-                    </svg>
-                </ToegankelijkheidButton>
-            </div>
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <g transform="translate(2, 2)">
+                                <path
+                                    d="M3 20V15.7C2.05 14.8333 1.3125 13.8208 0.7875 12.6625C0.2625 11.5042 0 10.2833 0 9C0 6.5 0.875 4.375 2.625 2.625C4.375 0.875 6.5 0 9 0C11.0833 0 12.9292 0.6125 14.5375 1.8375C16.1458 3.0625 17.1917 4.65833 17.675 6.625L18.975 11.75C19.0583 12.0667 19 12.3542 18.8 12.6125C18.6 12.8708 18.3333 13 18 13H16V16C16 16.55 15.8042 17.0208 15.4125 17.4125C15.0208 17.8042 14.55 18 14 18H12V20H10V16H14V16V16V11H16.7L15.75 7.125C15.3667 5.60833 14.55 4.375 13.3 3.425C12.05 2.475 10.6167 2 9 2C7.06667 2 5.41667 2.675 4.05 4.025C2.68333 5.375 2 7.01667 2 8.95C2 9.95 2.20417 10.9 2.6125 11.8C3.02083 12.7 3.6 13.5 4.35 14.2L5 14.8V20H3V20M9.35 11V11V11V11V11V11V11V11V11V11V11V11V11V11V11V11V11V11M8 13H10L10.15 11.75C10.2833 11.7 10.4042 11.6417 10.5125 11.575C10.6208 11.5083 10.7167 11.4333 10.8 11.35L11.95 11.85L12.95 10.15L11.95 9.4C11.9833 9.26667 12 9.13333 12 9C12 8.86667 11.9833 8.73333 11.95 8.6L12.95 7.85L11.95 6.15L10.8 6.65C10.7167 6.56667 10.6208 6.49167 10.5125 6.425C10.4042 6.35833 10.2833 6.3 10.15 6.25L10 5H8L7.85 6.25C7.71667 6.3 7.59583 6.35833 7.4875 6.425C7.37917 6.49167 7.28333 6.56667 7.2 6.65L6.05 6.15L5.05 7.85L6.05 8.6C6.01667 8.73333 6 8.86667 6 9C6 9.13333 6.01667 9.26667 6.05 9.4L5.05 10.15L6.05 11.85L7.2 11.35C7.28333 11.4333 7.37917 11.5083 7.4875 11.575C7.59583 11.6417 7.71667 11.7 7.85 11.75L8 13V13M9 10.5C8.58333 10.5 8.22917 10.3542 7.9375 10.0625C7.64583 9.77083 7.5 9.41667 7.5 9C7.5 8.58333 7.64583 8.22917 7.9375 7.9375C8.22917 7.64583 8.58333 7.5 9 7.5C9.41667 7.5 9.77083 7.64583 10.0625 7.9375C10.3542 8.22917 10.5 8.58333 10.5 9C10.5 9.41667 10.3542 9.77083 10.0625 10.0625C9.77083 10.3542 9.41667 10.5 9 10.5V10.5"
+                                    ></path>
+                            </g>
+                        </svg>
+                    </ToegankelijkheidButton>
+                </li>
+            </ul>
         </fieldset>
     </div>
 
@@ -486,6 +526,121 @@ event.preventDefault()
         padding: 0;
     }
 
+    .filter-group h2,
+    .group-label h2 {
+        font-size: inherit;
+        font-weight: inherit;
+        margin: 0;
+        padding: 0;
+        display: inline;
+    }
+
+    .legend-with-tooltip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative; /* Anchor for absolute positioning */
+    }
+
+    .tooltip-container {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .tooltip-trigger {
+        background: transparent;
+        border: none;
+        padding: 4px;
+        margin: 0;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: color 0.15s ease, background-color 0.15s ease;
+        anchor-name: --toegankelijkheid-info-trigger;
+    }
+
+    .tooltip-trigger:hover,
+    .tooltip-trigger:focus-visible {
+        color: var(--color-accent-1);
+        background-color: var(--color-background-secondairy);
+        outline: none;
+    }
+
+    .tooltip-trigger:focus-visible {
+        outline: 2px solid var(--color-accent-1);
+        outline-offset: 1px;
+    }
+
+    .tooltip-content {
+        position: absolute;
+        bottom: 110%;
+        left: 4px;
+        width: calc(100% - 8px);
+        background-color: #1a1a1a;
+        color: #ffffff;
+        padding: 12px;
+        font-size: 13px;
+        font-weight: normal;
+        line-height: 1.4;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1100;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+        transform: translateY(4px) scale(0.95);
+    }
+
+    .tooltip-content::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 195px; /* Standring fallback uitlijning voor browsers zonder anchor-support */
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #1a1a1a transparent transparent transparent;
+    }
+
+    /* CSS Anchor Positioning progressive enhancement */
+    @supports (position-anchor: --toegankelijkheid-info-trigger) {
+        .tooltip-content {
+            position: absolute;
+            position-anchor: --toegankelijkheid-info-trigger;
+            bottom: anchor(top);
+            margin-bottom: 10px;
+            /* Horizontally bounded by the legend container */
+            left: 4px;
+            width: calc(100% - 8px);
+            right: auto;
+            top: auto;
+        }
+
+        .tooltip-content::after {
+            position-anchor: --toegankelijkheid-info-trigger;
+            left: anchor(center);
+        }
+    }
+
+    .tooltip-container:hover .tooltip-content,
+    .tooltip-trigger:focus-visible + .tooltip-content,
+    .tooltip-container:focus-within .tooltip-content {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+    }
+
+    .tooltip-container.tooltip-dismissed .tooltip-content {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+
     .select-wrapper {
         position: relative;
         width: 100%;
@@ -523,11 +678,14 @@ event.preventDefault()
         justify-content: center;
     }
 
-    .accessibility-grid {
+    .accessibility-list {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
         margin-top: 8px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
     }
 
     .bento-card {
@@ -696,7 +854,7 @@ event.preventDefault()
             height: 72px;
         }
 
-        .accessibility-grid {
+        .accessibility-list {
             grid-template-columns: 1fr;
         }
     }
@@ -879,6 +1037,26 @@ event.preventDefault()
             activeFilter = subcategorie;
         }
     });
+
+    // Escape key dismissal logic voor de toegankelijkheidstooltip
+    const tooltipContainer = document.querySelector(".tooltip-container");
+    const tooltipTrigger = document.querySelector(".tooltip-trigger");
+
+    if (tooltipContainer && tooltipTrigger) {
+        tooltipTrigger.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                tooltipContainer.classList.add("tooltip-dismissed");
+                e.stopPropagation();
+            }
+        });
+
+        const resetDismissal = () => {
+            tooltipContainer.classList.remove("tooltip-dismissed");
+        };
+
+        tooltipContainer.addEventListener("mouseleave", resetDismissal);
+        tooltipTrigger.addEventListener("blur", resetDismissal);
+    }
 
     updateAccessibilitySelection();
 </script>

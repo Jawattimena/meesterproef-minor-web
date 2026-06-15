@@ -7,6 +7,7 @@ const inputId = `${name}-${value.toString().replace(/[^a-zA-Z0-9]/g, '-').toLowe
 
 <label class="toegankelijk-button" for={inputId}>
     <input type="checkbox" id={inputId} name={name} value={value} checked={checked} />
+    <span class="checkbox-indicator" aria-hidden="true"></span>
     <span class="icon" aria-hidden="true">
         <slot />
     </span>
@@ -29,6 +30,36 @@ const inputId = `${name}-${value.toString().replace(/[^a-zA-Z0-9]/g, '-').toLowe
         transition: background 0.2s;
         font-size: 1.1rem;
         min-height: 8rem;
+        position: relative;
+    }
+
+    .checkbox-indicator {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 18px;
+        height: 18px;
+        border: 2px solid var(--color-border);
+        background-color: var(--color-background-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .toegankelijk-button:has(input:checked) .checkbox-indicator {
+        border-color: var(--color-background-main);
+        background-color: var(--color-background-main);
+    }
+
+    .toegankelijk-button:has(input:checked) .checkbox-indicator::after {
+        content: "";
+        width: 8px;
+        height: 4px;
+        border-left: 2.5px solid var(--color-accent-1);
+        border-bottom: 2.5px solid var(--color-accent-1);
+        transform: rotate(-45deg) translate(0.5px, -0.5px);
+        display: block;
     }
 
     .button-text {

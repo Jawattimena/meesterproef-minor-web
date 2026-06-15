@@ -60,6 +60,12 @@
             })
             .addTo(map);
 
+        // Verberg de Leaflet/OpenStreetMap attributie voor schermlezers om tab-ruis te verminderen
+        const attributionEl = map.getContainer().querySelector(".leaflet-control-attribution");
+        if (attributionEl) {
+            attributionEl.setAttribute("aria-hidden", "true");
+        }
+
         // Track zoom level op de map container voor CSS visibility
         map.on("zoomend", function () {
             const zoom = map.getZoom();
@@ -371,7 +377,12 @@
             popover.classList.add("is-open");
             popover.setAttribute("aria-hidden", "false");
             setTimeout(() => {
-                popover.focus();
+                const titleEl = document.getElementById("popover-title");
+                if (titleEl) {
+                    titleEl.focus();
+                } else {
+                    popover.focus();
+                }
             }, 100);
         }
 
@@ -482,6 +493,14 @@
                         spiderfyOnMaxZoom: true, // Spiderfy bij maximale zoom (indien exact zelfde coordinaten)
                         disableClusteringAtZoom: 16, // Deactiveer clusters op hoge zoomniveaus zodat alle labels getoond worden!
                         chunkedLoading: true, // Verbeterde performance bij veel markers
+                        iconCreateFunction: function (cluster) {
+                            const childCount = cluster.getChildCount();
+                            return L.divIcon({
+                                html: `<div aria-label="${childCount} locaties gegroepeerd" role="button"><span>${childCount}</span></div>`,
+                                className: "marker-cluster",
+                                iconSize: [40, 40],
+                            });
+                        },
                     });
 
                     const geoJsonLayer = L.geoJSON(data, {
