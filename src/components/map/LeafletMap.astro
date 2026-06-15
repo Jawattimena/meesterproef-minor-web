@@ -2,8 +2,9 @@
 // Geen server-side fetches meer — alles wordt client-side lazy geladen via API routes
 ---
 
-<section class="mapSection">
-    <div id="map"></div>
+<section class="mapSection" aria-label="Kaart weergave">
+    <div id="map" role="region" aria-label="Interactieve kaart van Amsterdam">
+    </div>
 </section>
 
 <script>
@@ -206,7 +207,11 @@
             currentPopoverProperties = p;
 
             if (p.Naam_locatie) {
-                window.history.pushState(null, '', '/' + slugify(p.Naam_locatie));
+                window.history.pushState(
+                    null,
+                    "",
+                    "/" + slugify(p.Naam_locatie)
+                );
             }
 
             const naam = p.Naam_locatie ?? "Onbekende locatie";
@@ -223,7 +228,7 @@
             const selectedAccessibilityCategories =
                 window.amAccessibilityCategories || [];
             const renderedFields = new Set();
-            
+
             const yesItems = [];
             const noItems = [];
             const unknownItems = [];
@@ -249,7 +254,7 @@
                     const itemData = {
                         label: field.label,
                         modifier: modifier,
-                        rawStatus: p[field.key]
+                        rawStatus: p[field.key],
                     };
 
                     if (modifier === "yes") {
@@ -264,27 +269,23 @@
 
             const sortedItems = [...yesItems, ...noItems, ...unknownItems];
             const accessibilityRows = sortedItems.map((item) => {
+                const combinedText = `${
+                    item.label
+                }: ${getAccessibilityBadgeLabel(item.rawStatus)}`;
                 return `
-                    <div class="am-popup__accessibility-row">
-                        <span class="am-popup__accessibility-label">${escapeHtml(
+                    <li class="am-popup__accessibility-row" role="listitem">
+                        <span class="sr-only">${escapeHtml(combinedText)}</span>
+                        <span class="am-popup__accessibility-label" aria-hidden="true">${escapeHtml(
                             item.label
                         )}</span>
-                        <span class="am-popup__value am-popup__value--${item.modifier}" aria-label="${escapeHtml(
-                            getAccessibilityBadgeLabel(item.rawStatus)
-                        )}">${
-                            item.modifier === "yes"
-                                ? accessibilityJaSvg
-                                : ""
-                        }${
-                            item.modifier === "no"
-                                ? accessibilityNoSvg
-                                : ""
-                        }${
-                            item.modifier === "unknown"
-                                ? accessibilityUnknownSvg
-                                : ""
-                        }</span>
-                    </div>
+                        <span class="am-popup__value am-popup__value--${
+                            item.modifier
+                        }" aria-hidden="true">${
+                    item.modifier === "yes" ? accessibilityJaSvg : ""
+                }${item.modifier === "no" ? accessibilityNoSvg : ""}${
+                    item.modifier === "unknown" ? accessibilityUnknownSvg : ""
+                }</span>
+                    </li>
                 `;
             });
 
@@ -314,10 +315,15 @@
             const accessibilityHtml =
                 selectedAccessibilityCategories.length &&
                 accessibilityRows.length
-                    ? `<div class="am-popup__accessibility-list">${accessibilityRows.join(
+                    ? `<ul class="am-popup__accessibility-list" role="list">${accessibilityRows.join(
                           ""
-                      )}</div>`
-                    : `<p class="am-popup__empty-accessibility">Selecteer een toegankelijkheidsoptie.</p>`;
+                      )}</ul>`
+                    : `<div class="am-popup__empty-accessibility">
+                         <p>Kies een filter om hier de toegankelijkheid te zien.</p>
+                         <button type="button" class="am-popup__filter-btn" onclick="document.getElementById('toegankelijkheid-filter').focus();">
+                             Ga naar filters
+                         </button>
+                       </div>`;
 
             const bodyHtml = `
                 <section class="am-popup__accessibility">
@@ -337,10 +343,11 @@
 
             if (titleEl) titleEl.textContent = naam;
             if (addressEl) addressEl.textContent = adresVolledig;
-            
+
             if (heroImageEl) {
                 if (naam.toLowerCase().includes("rijksmuseum")) {
-                    heroImageEl.src = "https://images.unsplash.com/photo-1558244661-d248897f7bc4?w=1200&q=80";
+                    heroImageEl.src =
+                        "https://images.unsplash.com/photo-1558244661-d248897f7bc4?w=1200&q=80";
                     heroImageEl.style.display = "block";
                 } else {
                     heroImageEl.src = "";
@@ -426,7 +433,7 @@
                 }
             }
             resetActiveMarker();
-            window.history.pushState(null, '', '/');
+            window.history.pushState(null, "", "/");
         }
 
         // ── LayerManager class: generiek lazy-load systeem voor alle categorieën ──
@@ -459,13 +466,14 @@
                     }
                     const data = await response.json();
 
-                    window.dispatchEvent (
-                        new CustomEvent("listview:update", { 
-                            detail: { 
+                    window.dispatchEvent(
+                        new CustomEvent("listview:update", {
+                            detail: {
                                 name,
                                 features: data.features,
-                            } })
-                    )
+                            },
+                        })
+                    );
 
                     // Maak een marker cluster group aan voor deze laag
                     const clusterGroup = L.markerClusterGroup({
@@ -493,6 +501,21 @@
                                 title:
                                     feature.properties.Naam_locatie ||
                                     "Locatiemarker",
+                                alt:
+                                    feature.properties.Naam_locatie ||
+                                    "Locatiemarker",
+                            });
+
+                            // Zorg voor perfecte ARIA attributen wanneer de marker in de DOM wordt geplaatst
+                            marker.on("add", function () {
+                                if (marker._icon) {
+                                    marker._icon.setAttribute(
+                                        "aria-label",
+                                        feature.properties.Naam_locatie ||
+                                            "Locatiemarker"
+                                    );
+                                    marker._icon.setAttribute("role", "button");
+                                }
                             });
 
                             // Koppel de originele feature aan de marker zodat we er later bij kunnen in updateAllTooltips()
@@ -900,26 +923,30 @@
         });
 
         // Direct link auto-open logica
-        const pathSlug = window.location.pathname.replace(/^\/+|\/+$/g, '');
-        if (pathSlug && pathSlug !== 'api') {
+        const pathSlug = window.location.pathname.replace(/^\/+|\/+$/g, "");
+        if (pathSlug && pathSlug !== "api") {
             fetch(`/api/location/${pathSlug}`)
-                .then(res => {
+                .then((res) => {
                     if (res.ok) return res.json();
-                    throw new Error('Not found');
+                    throw new Error("Not found");
                 })
-                .then(data => {
+                .then((data) => {
                     if (data && data.naam) {
-                        window.dispatchEvent(new CustomEvent("locatieGekozen", { 
-                            detail: { 
-                                lat: data.lat, 
-                                lng: data.lng, 
-                                naam: data.naam, 
-                                subcategorie: data.subcategorie 
-                            } 
-                        }));
+                        window.dispatchEvent(
+                            new CustomEvent("locatieGekozen", {
+                                detail: {
+                                    lat: data.lat,
+                                    lng: data.lng,
+                                    naam: data.naam,
+                                    subcategorie: data.subcategorie,
+                                },
+                            })
+                        );
                     }
                 })
-                .catch(err => console.log('Direct link location not found:', err));
+                .catch((err) =>
+                    console.log("Direct link location not found:", err)
+                );
         }
     });
 </script>
@@ -1026,9 +1053,10 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        gap: 3px;
         min-width: 16px;
         height: 16px;
-        padding: 0 4px;
+        padding: 0 5px;
         border-radius: 8px;
         font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
         font-size: 9px !important;
@@ -1042,6 +1070,13 @@
         animation: badge-pop-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
 
+    :global(.am-tooltip-badge svg) {
+        display: block;
+        width: 8px;
+        height: 8px;
+        flex-shrink: 0;
+    }
+
     /* Groene achtergrond voor toegankelijke items (Ja) */
     :global(.am-tooltip-badge--yes) {
         background-color: #007a3d !important;
@@ -1052,12 +1087,6 @@
     :global(.am-tooltip-badge--no) {
         background-color: #ec0000 !important;
         animation-delay: 60ms;
-    }
-
-    /* Grijze achtergrond voor onbekende items */
-    :global(.am-tooltip-badge--unknown) {
-        background-color: #888888 !important;
-        animation-delay: 120ms;
     }
 
     @keyframes badge-pop-in {
@@ -1084,11 +1113,6 @@
 
     :global(html:has(#contrast-toggle:checked)) :global(.am-tooltip-badge--no) {
         background-color: #ec0000 !important;
-    }
-
-    :global(html:has(#contrast-toggle:checked))
-        :global(.am-tooltip-badge--unknown) {
-        background-color: #888888 !important;
     }
 
     #map {

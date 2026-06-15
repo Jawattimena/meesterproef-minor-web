@@ -5,7 +5,7 @@
 <aside
     class="map-popover"
     id="map-popover"
-    aria-label="Locatiedetails"
+    aria-labelledby="popover-title"
     aria-hidden="true"
     tabindex="-1"
 >
@@ -44,7 +44,7 @@
             </div>
         </header>
 
-        <article class="popover-body" id="popover-body-content">
+        <article class="popover-body" id="popover-body-content" tabindex="0" aria-label="Locatie informatie">
             <div class="popover-placeholder-message">
                 <svg
                     width="40"
@@ -373,6 +373,9 @@
         flex-direction: column;
         font-size: 1rem;
         gap: 14px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
     }
 
     .am-popup__accessibility-row {
@@ -398,12 +401,58 @@
     }
 
     .am-popup__empty-accessibility {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .am-popup__empty-accessibility p {
         color: var(--color-text-muted);
         font-family: var(--font-family-base);
         font-size: var(--font-size-regular);
         font-weight: var(--font-weight-body-text);
         line-height: var(--heading-text-line-height);
         margin: 0;
+    }
+
+    .am-popup__filter-btn {
+        /* Verborgen net als een sr-only class */
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        
+        /* Basis stijlen voor als de knop focus krijgt */
+        background: var(--color-primary-light);
+        color: var(--color-accent-1);
+        text-decoration: underline;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-regular);
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .am-popup__filter-btn:focus {
+        /* Zichtbaar maken bij tab focus */
+        position: static;
+        width: auto;
+        height: auto;
+        padding: 8px 12px;
+        margin: 8px 0 0 0;
+        overflow: visible;
+        clip: auto;
+        white-space: normal;
+        border: 2px solid var(--color-accent-1);
+        border-radius: 4px;
+        outline: 2px solid var(--color-accent-1);
+        outline-offset: 2px;
+        text-decoration: none;
     }
 
     .am-popup__value {
