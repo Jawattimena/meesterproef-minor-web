@@ -11,9 +11,8 @@ event.preventDefault()
             <h1
                 id="filter-paneel"
                 tabindex="-1"
-                aria-label="Filters voor kaartlocaties. U bent nu in het filterpaneel."
             >
-                Filters
+                Filters <span class="sr-only">voor kaartlocaties</span>
             </h1>
             <p>Pas uw weergave aan</p>
         </div>
@@ -243,8 +242,8 @@ event.preventDefault()
             </div>
         </div>
 
-        <div class="filter-group">
-            <span class="group-label">Toegankelijkheidseisen</span>
+        <fieldset class="filter-group" id="toegankelijkheid-filter" tabindex="-1">
+            <legend class="group-label">Toegankelijkheid</legend>
             <div class="accessibility-grid">
                 <ToegankelijkheidButton
                     title="Mobiliteit"
@@ -315,7 +314,7 @@ event.preventDefault()
                     </svg>
                 </ToegankelijkheidButton>
                 <ToegankelijkheidButton
-                    title="Prikkel gevoelig"
+                    title="Prikkelgevoelig"
                     name="accessibility"
                     value="hidden"
                 >
@@ -334,7 +333,7 @@ event.preventDefault()
                     </svg>
                 </ToegankelijkheidButton>
             </div>
-        </div>
+        </fieldset>
     </div>
 
     <div class="sidebar-footer">
@@ -420,6 +419,10 @@ event.preventDefault()
         display: flex;
         flex-direction: column;
         gap: 8px;
+        border: none;
+        padding: 0;
+        margin: 0;
+        min-width: 0; /* Prevents fieldset from overflowing */
     }
 
     .filter-group label,
@@ -427,6 +430,7 @@ event.preventDefault()
         font-size: var(--font-size-small);
         font-weight: var(--font-weight-other-headings);
         color: var(--color-text-main);
+        padding: 0;
     }
 
     .select-wrapper {
@@ -470,6 +474,7 @@ event.preventDefault()
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
+        margin-top: 8px;
     }
 
     .bento-card {
