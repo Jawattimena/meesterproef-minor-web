@@ -142,4 +142,9 @@ Tot slot hebben we voor de de kaart een list view gemaakt voor de kaart omdat ee
 
 
 # AI Bronnen
-Ik werk aan een Astro/Leaflet kaart met data uit de Amsterdam API. Sommige schoolgebouwen hebben geen bruikbare GeoJSON Point-coördinaten. Ik wil daarom met de PDOK Locatieserver zoeken op adres, huisnummer en postcode. De PDOK response geeft een veld `centroide_ll` terug als tekst in de vorm `POINT(lon lat)`. Hoe kan ik deze string met JavaScript omzetten naar een GeoJSON Point object met numerieke coordinates? Leg vooral uit waarom `.replace('POINT(', '').replace(')', '').split(' ')` wordt gebruikt.
+- **Antigravity (2026)**
+  - **APA-bronvermelding**: Antigravity. (2026). *Antigravity AI Coding Assistant* [Large language model].
+  - **Gebruik**: Geassisteerd bij het ontwerpen van de cross-browser oplossing voor het dynamisch filteren van subcategorieën in de dropdown-filters (`src/components/layout/SideBar.astro`). Door opties in JavaScript in het geheugen te houden en fysiek uit de DOM te verwijderen/toe te voegen, wordt voorkomen dat browsers zoals Safari de CSS-regel `display: none` op `<option>`-elementen negeren.
+
+- **PDOK Coördinatenconversie**:
+  Ik werk aan een Astro/Leaflet kaart met data uit de Amsterdam API. Sommige schoolgebouwen hebben geen bruikbare GeoJSON Point-coördinaten. Ik wil daarom met de PDOK Locatieserver zoeken op adres, huisnummer en postcode. De PDOK response geeft een veld `centroide_ll` terug als tekst in de vorm `POINT(lon lat)`. Hoe kan ik deze string met JavaScript omzetten naar een GeoJSON Point object met numerieke coordinates? Leg vooral uit waarom `.replace('POINT(', '').replace(')', '').split(' ')` wordt gebruikt.

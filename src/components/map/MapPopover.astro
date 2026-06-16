@@ -629,6 +629,134 @@
             flex-shrink: 0;
         }
     }
+
+    @media print {
+        /* Style the popover element as a standard static page flow element */
+        #map-popover {
+            position: static !important;
+            width: 100% !important;
+            height: auto !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+            transform: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            background: #ffffff !important;
+            display: block !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            visibility: visible !important;
+        }
+
+        #map-popover * {
+            visibility: visible !important;
+        }
+
+        .popover-inner {
+            display: block !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        .popover-body {
+            display: block !important;
+            height: auto !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+            padding: 24px 0 !important;
+        }
+
+        /* Hide popover control elements */
+        #popover-close-btn,
+        #popover-footer-actions {
+            display: none !important;
+        }
+
+        /* Optimise image placeholder for print (collapses if no image, scales nicely if present) */
+        .hero-image-placeholder {
+            height: auto !important;
+            min-height: 0 !important;
+            background: transparent !important;
+            padding: 0 !important;
+            display: block !important;
+        }
+
+        .hero-image-placeholder img {
+            position: relative !important;
+            width: 100% !important;
+            max-height: 250px !important;
+            object-fit: cover !important;
+        }
+
+        .hero-image-placeholder img[style*="display: none"] {
+            display: none !important;
+        }
+
+        /* Print-friendly fallback styling for accessibility badges.
+           Ensures borders and icons/checkmark shapes are visible in high-contrast colored borders/fills
+           even when background graphic printing is disabled in the user's browser. */
+        .am-popup__value {
+            border: 2px solid transparent !important;
+            border-radius: 50% !important;
+            background-color: transparent !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 24px !important;
+            height: 24px !important;
+            box-sizing: border-box !important;
+        }
+
+        .am-popup__value--yes {
+            border-color: #007a3d !important;
+            color: #007a3d !important;
+        }
+
+        .am-popup__value--no {
+            border-color: #ec0000 !important;
+            color: #ec0000 !important;
+        }
+
+        .am-popup__value--unknown {
+            border-color: #767676 !important;
+            color: #5d5d5d !important;
+        }
+
+        /* Force SVGs within the values to be colored and sized appropriately */
+        .am-popup__value svg {
+            display: block !important;
+            width: 14px !important;
+            height: 14px !important;
+            color: inherit !important;
+            fill: currentColor !important;
+        }
+
+        .am-popup__value--yes svg {
+            color: #007a3d !important;
+            fill: #007a3d !important;
+        }
+
+        .am-popup__value--no svg {
+            color: #ec0000 !important;
+            fill: #ec0000 !important;
+        }
+
+        .am-popup__value--unknown svg {
+            color: #5d5d5d !important;
+            fill: #5d5d5d !important;
+        }
+
+        /* Optimise pagination and page breaks */
+        .am-popup__accessibility-row {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .am-popup__section-title {
+            page-break-after: avoid !important;
+            break-after: avoid !important;
+        }
+    }
 </style>
 
 <script>
