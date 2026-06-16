@@ -11,7 +11,6 @@
     //@ts-nocheck
 
     import {
-        ACCESSIBILITY_GROUPS,
         accessibilityFieldGroups,
     } from "../../lib/constants.js";
     import {
@@ -376,6 +375,7 @@
             // Show popover
             popover.classList.add("is-open");
             popover.setAttribute("aria-hidden", "false");
+            window.dispatchEvent(new CustomEvent("popover:open", { detail: { properties: p } }));
             setTimeout(() => {
                 const titleEl = document.getElementById("popover-title");
                 if (titleEl) {
@@ -445,6 +445,7 @@
             }
             resetActiveMarker();
             window.history.pushState(null, "", "/");
+            window.dispatchEvent(new CustomEvent("popover:close"));
         }
 
         // ── LayerManager class: generiek lazy-load systeem voor alle categorieën ──
@@ -985,7 +986,7 @@
         border-radius: 0 !important;
         padding: 0 !important;
         font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
-        font-size: 11px !important;
+        font-size: 14px !important;
         font-weight: 800 !important;
         color: #1c1c1c !important;
         box-shadow: none !important;
@@ -997,7 +998,7 @@
 
     /* Actieve marker tooltip styling voor optimale contrast en focus */
     :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active) {
-        font-size: 12px !important;
+        font-size: 16px !important;
         font-weight: 900 !important;
         color: #000000 !important;
         margin-left: 18px !important;
@@ -1026,14 +1027,14 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 2px;
+        gap: 4px;
     }
 
     /* Standaard weergave van de locatienaam */
     :global(.am-tooltip-name) {
         white-space: nowrap;
         font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
-        font-size: 11px !important;
+        font-size: 14px !important;
         font-weight: 800 !important;
         color: #1c1c1c !important;
     }
@@ -1041,7 +1042,7 @@
     /* Weergave van de locatienaam wanneer de marker actief is */
     :global(.leaflet-tooltip.am-marker-tooltip.am-marker-tooltip--active
             .am-tooltip-name) {
-        font-size: 12px !important;
+        font-size: 16px !important;
         font-weight: 900 !important;
         color: #000000 !important;
     }
@@ -1061,8 +1062,8 @@
     /* Flex-rij voor de ja/nee/onbekend tellerbolletjes */
     :global(.am-tooltip-badges) {
         display: flex;
-        gap: 6px;
-        margin-top: 2px;
+        gap: 8px;
+        margin-top: 4px;
         margin-left: 3px; /* Zorgt dat de bolletjes netjes uitlijnen onder de eerste letter van de locatienaam */
         text-shadow: none !important; /* Verwijder de witte gloed om de tekst in de bolletjes leesbaar te maken */
     }
@@ -1073,12 +1074,12 @@
         align-items: center;
         justify-content: center;
         gap: 3px;
-        min-width: 16px;
-        height: 16px;
-        padding: 0 5px;
-        border-radius: 8px;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 4px;
+        border-radius: 11px;
         font-family: "Amsterdam Sans", "Helvetica Neue", Arial, sans-serif !important;
-        font-size: 9px !important;
+        font-size: 13px !important;
         font-weight: 800 !important;
         color: #ffffff !important;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -1091,8 +1092,8 @@
 
     :global(.am-tooltip-badge svg) {
         display: block;
-        width: 8px;
-        height: 8px;
+        width: 11px;
+        height: 11px;
         flex-shrink: 0;
     }
 

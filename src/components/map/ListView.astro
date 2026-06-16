@@ -24,6 +24,7 @@
 <script>
     //@ts-nocheck
     import { ACCESSIBILITY_GROUPS } from "../../lib/constants.js";
+    import { slugify } from "../../lib/utils.js";
 
     const listViewHeader = document.getElementById("list-view-header");
     const listView = document.getElementById("list-view-list");
@@ -161,7 +162,40 @@
                 );
             });
         });
+
+        updateActiveCard();
     }
+
+    function updateActiveCard() {
+        const pathSlug = window.location.pathname.replace(/^\/+|\/+$/g, "");
+        const buttons = listView.querySelectorAll(".list-card-btn");
+        buttons.forEach((button) => {
+            const index = button.dataset.featureIndex;
+            const feature = currentFeatures[index];
+            if (feature) {
+                const featureSlug = slugify(feature.properties.Naam_locatie || "");
+                if (featureSlug === pathSlug) {
+                    button.classList.add("is-active");
+                    button.setAttribute("aria-current", "true");
+                } else {
+                    button.classList.remove("is-active");
+                    button.removeAttribute("aria-current");
+                }
+            }
+        });
+    }
+
+    window.addEventListener("popover:open", () => {
+        updateActiveCard();
+    });
+
+    window.addEventListener("popover:close", () => {
+        updateActiveCard();
+    });
+
+    window.addEventListener("popstate", () => {
+        updateActiveCard();
+    });
 
     // Luister naar data updates van de map component
     window.addEventListener("listview:update", (event) => {
@@ -202,13 +236,15 @@
         top: 0;
         left: 320px;
         z-index: 900;
-        width: calc(100% - 320px);
+        width: calc(100% - 320px - 400px); /* Leave 400px on the right for the popover */
         height: 100%;
         overflow: hidden; /* Scrollen gebeurt in de content area */
         background: var(--color-background-main);
         display: none;
         flex-direction: column;
         font-family: var(--font-family-base);
+        border-right: 1px solid var(--color-border);
+        box-shadow: 4px 0 16px rgba(0, 0, 0, 0.08);
     }
 
     /* Weergave trigger via radio weergave toggle */
@@ -348,8 +384,9 @@
         border-radius: 0;
     }
 
-    /* Hover en focus micro-interacties */
-    .list-view .list-card-btn:hover {
+    /* Hover, focus en active micro-interacties */
+    .list-view .list-card-btn:hover,
+    .list-view .list-card-btn.is-active {
         background-color: var(--color-background-secondairy);
     }
 
@@ -448,7 +485,8 @@
         transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
     }
 
-    .list-view .list-card-btn:hover .chevron-icon {
+    .list-view .list-card-btn:hover .chevron-icon,
+    .list-view .list-card-btn.is-active .chevron-icon {
         transform: translateX(4px);
         color: var(--color-accent-1);
         opacity: 1;
@@ -487,6 +525,8 @@
             left: 0;
             width: 100%;
             height: 100%;
+            border-right: none;
+            box-shadow: none;
         }
 
         .list-view .list-view-header {
