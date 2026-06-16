@@ -1,4 +1,5 @@
 import { ACCESSIBILITY_GROUPS } from './constants.js';
+import { accessibilityJaSvg, accessibilityNoSvg } from './icons.js';
 
 export function getVisualHoofdfilter(hoofdfilter, subfilter) {
     const h = (hoofdfilter || "").trim();
@@ -103,9 +104,8 @@ export function getTooltipHtml(properties, selectedCategories) {
         <div class="am-tooltip-container">
             <div class="am-tooltip-name">${name}</div>
             <div class="am-tooltip-badges">
-                <span class="am-tooltip-badge am-tooltip-badge--yes">${yes}</span>
-                <span class="am-tooltip-badge am-tooltip-badge--no">${no}</span>
-                <span class="am-tooltip-badge am-tooltip-badge--unknown">${unknown}</span>
+                <span class="am-tooltip-badge am-tooltip-badge--yes">${accessibilityJaSvg} <span>${yes}</span></span>
+                <span class="am-tooltip-badge am-tooltip-badge--no">${accessibilityNoSvg} <span>${no}</span></span>
             </div>
         </div>
     `;

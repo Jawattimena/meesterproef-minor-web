@@ -8,6 +8,7 @@ import LeafletMap from "../components/map/LeafletMap.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SideBar from "../components/layout/SideBar.astro";
 import MapPopover from "../components/map/MapPopover.astro";
+import ListView from "../components/map/ListView.astro";
 
 const { slug } = Astro.params;
 
@@ -26,6 +27,7 @@ if (!exists) {
         <SideBar />
         <LeafletMap />
         <MapPopover />
+        <ListView />
     </BaseLayout>
 ) : (
     <BaseLayout title="404 - Locatie niet gevonden">
