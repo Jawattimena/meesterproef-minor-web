@@ -66,9 +66,36 @@ export const accessibilityFieldGroups = {
     },
 };
 
+
+
 export const ACCESSIBILITY_GROUPS = Object.fromEntries(
+
+     // Zet het object om naar een array van [key, value] paren
+  // Bijvoorbeeld:
+  // [
+  //   ["mobility", { label: "Mobiliteit", fields: [...] }],
+  //   ["visual", { label: "Visueel", fields: [...] }]
+  // ]
+
     Object.entries(accessibilityFieldGroups).map(([groupKey, groupData]) => [
+        // De naam van de groep blijft hetzelfde
+        // Bijvoorbeeld: "mobility"
+
         groupKey,
+        // Pak uit alle velden alleen de key-property
+        // Bijvoorbeeld:
+        // [
+        //   { key: "Toegankelijk_gebouw", label: "Toegankelijk gebouw" },
+        //   { key: "Rolstoelvriendelijk_toilet", label: "Rolstoelvriendelijk toilet" }
+        // ]
+        //
+        // wordt:
+        //
+        // [
+        //   "Toegankelijk_gebouw",
+        //   "Rolstoelvriendelijk_toilet"
+        // ]
+        
         groupData.fields.map(f => f.key)
     ])
 );
