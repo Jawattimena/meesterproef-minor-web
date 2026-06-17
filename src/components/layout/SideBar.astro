@@ -919,6 +919,15 @@ event.preventDefault()
         checkbox.addEventListener("change", updateAccessibilitySelection);
     });
 
+    /**
+     * Updates the subcategory dropdown options based on the selected main category.
+     * 
+     * APA Bronvermelding:
+     * Antigravity. (2026). Antigravity AI Coding Assistant [Large language model].
+     * 
+     * Opmerking: Deze cross-browser oplossing verwijdert en voegt fysiek DOM-elementen toe
+     * om te omzeilen dat sommige browsers (zoals Safari) het verbergen van <option>-elementen via CSS negeren.
+     */
     function updateSubcategorieen() {
         const gekozenHoofdCategorie = hoofdSelect.value;
 

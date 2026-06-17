@@ -134,6 +134,13 @@ import Header from '../components/layout/Header.astro';
 			z-index: 1000;
 			margin: 0;
 			padding: 0;
+			transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		@media (min-width: 769px) {
+			html:has(#lijst:checked) .toggle-group {
+				right: calc(4em + 400px);
+			}
 		}
 
 		.toggle-group input[type="radio"]:focus-visible + label {
