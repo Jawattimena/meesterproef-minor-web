@@ -98,3 +98,34 @@ window.addEventListener("filter:show", (event) => {
   const filterNaam = event.detail.name;
   layerManager.show(filterNaam);
 });
+
+```
+
+**Hoe Algolia werkt**
+
+Je stuurt je locaties naar Algolia. Algolia slaat die op in een index.
+
+``` javascript 
+await client.replaceAllObjects({
+    indexName: 'locations',
+    objects: alleLocaties  // jouw array met locaties
+});
+
+```
+
+In deze app wordt Algolia gebruikt voor het zoekveld in `src/components/map/Search.astro`. Dat bestand haalt twee environment-variabelen op:
+
+- `PUBLIC_ALGOLIA_APP_ID`
+- `PUBLIC_ALGOLIA_SEARCH_KEY`
+
+Met die waarden bouwt de code een Algolia-URL voor de index `locations` en stuurt een POST-verzoek met het zoekwoord.
+
+Dit gebeurt in deze manier:
+
+1. De gebruiker typt iets in het zoekveld.
+2. De code wacht 200ms, zodat er niet direct bij elke letter een verzoek wordt verstuurd.
+3. Er wordt een zoekopdracht naar Algolia gestuurd met `query: zoekwoord` en `hitsPerPage: 8`.
+4. Algolia geeft `data.hits` terug: de gevonden locaties.
+5. Die resultaten worden in een dropdown getoond.
+
+Dus Algolia werkt als een zoekmachine.
