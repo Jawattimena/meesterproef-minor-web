@@ -57,12 +57,26 @@ De teksten en foutmeldingen scoren 100% op B1-taalbereik.
 - `push()` gebruikt om een nieuwe waarde aan het einde van een array toe te voegen:  
   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
 
+- MDN Web Docs - `Set`  
+  Gebruikt om unieke subfilters te genereren uit de features dataset in `src/pages/api/cba/[...subfilter].js`.  
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+
+- MDN Web Docs - Spread-syntaxis (`...`)  
+  Gebruikt om de `Set` om te zetten in een array in `src/pages/api/cba/[...subfilter].js`.  
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+
+
 
 
 # AI Bronnen
-- **Antigravity (2026)**
+- **Antigravity (2026) - Dropdown Filters**:
   - **APA-bronvermelding**: Antigravity. (2026). *Antigravity AI Coding Assistant* [Large language model].
   - **Gebruik**: Geassisteerd bij het ontwerpen van de cross-browser oplossing voor het dynamisch filteren van subcategorieën in de dropdown-filters (`src/components/layout/SideBar.astro`). Door opties in JavaScript in het geheugen te houden en fysiek uit de DOM te verwijderen/toe te voegen, wordt voorkomen dat browsers zoals Safari de CSS-regel `display: none` op `<option>`-elementen negeren.
+
+- **Antigravity (2026) - Label Botsingsdetectie**:
+  - **APA-bronvermelding**: Google DeepMind. (2026). *Antigravity AI Coding Assistant* [Software]. https://deepmind.google/
+  - **Gebruik**: Ontwerp van een botsingsdetectie-algoritme voor Leaflet marker tooltips (`src/components/map/LeafletMap.astro`). Het algoritme controleert met `getBoundingClientRect()` en een buffer van 6px of labels overlappen. Indien overlappend, worden ze dynamisch verborgen (`opacity: 0 !important`, `visibility: hidden !important`) om de kaart overzichtelijk te houden tijdens in-/uitzoomen en pannen.
+  - **Prompt**: *"De markers staan over elkaar"*
 
 - **PDOK Coördinatenconversie**:
   Ik werk aan een Astro/Leaflet kaart met data uit de Amsterdam API. Sommige schoolgebouwen hebben geen bruikbare GeoJSON Point-coördinaten. Ik wil daarom met de PDOK Locatieserver zoeken op adres, huisnummer en postcode. De PDOK response geeft een veld `centroide_ll` terug als tekst in de vorm `POINT(lon lat)`. Hoe kan ik deze string met JavaScript omzetten naar een GeoJSON Point object met numerieke coordinates? Leg vooral uit waarom `.replace('POINT(', '').replace(')', '').split(' ')` wordt gebruikt.

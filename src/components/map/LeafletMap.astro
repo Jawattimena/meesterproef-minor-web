@@ -766,6 +766,13 @@
         window.amClosePopup = closePopover;
 
         // Botsingsdetectie voor labels om overlap te voorkomen
+        /**
+         * APA Bronvermelding:
+         * Google DeepMind. (2026). Antigravity AI Coding Assistant [Software]. https://deepmind.google/
+         * 
+         * Prompt:
+         * "De markers staan over elkaar"
+         */
         function resolveLabelCollisions() {
             const tooltips = Array.from(
                 document.querySelectorAll(".am-marker-tooltip")
@@ -867,32 +874,6 @@
                 });
             }
 
-            // Fallback: zoek door alle geladen lagen als we de marker nog niet hebben gevonden
-            if (!foundMarker) {
-                for (const key of Object.keys(layerManager.layers)) {
-                    const entry = layerManager.layers[key];
-                    if (entry.loaded && entry.layer) {
-                        entry.layer.eachLayer((layer) => {
-                            if (
-                                layer instanceof L.Marker &&
-                                layer.feature &&
-                                layer.feature.properties
-                            ) {
-                                const nameProp =
-                                    layer.feature.properties.Naam_locatie;
-                                if (
-                                    nameProp &&
-                                    nameProp.trim() === naam.trim()
-                                ) {
-                                    foundMarker = layer;
-                                    matchingLayerName = key;
-                                }
-                            }
-                        });
-                    }
-                    if (foundMarker) break;
-                }
-            }
 
             if (foundMarker) {
                 const featProps = foundMarker.feature.properties;
