@@ -5,7 +5,7 @@ export function getVisualHoofdfilter(hoofdfilter, subfilter) {
     const h = (hoofdfilter || "").trim();
     const s = (subfilter || "").trim();
 
-    if (s === "Sportaccommodaties" || s === "Zwembaden") {
+    if (s === "Sportaccommodaties" || s === "Zwembaden") { // Voor zwembaden is geen hoofdfilter dus we maken die aan
         return "Sport en Spel";
     }
     if (s === "Stations" || s === "Parkeergarages") {

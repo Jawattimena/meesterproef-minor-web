@@ -2,6 +2,8 @@
 // MARK: Bestand uploaden naar Algolia zodat we het kunnen gebruiken in onze app
 // -----------------------------------------------------------------------------
 
+// Bron; https://www.algolia.com/doc/guides/get-started/quickstart
+
 import { algoliasearch } from 'algoliasearch';
 // fs = file system, hiermee kan je bestanden lezen van je computer
 import fs from "fs";
