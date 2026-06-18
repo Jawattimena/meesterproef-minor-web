@@ -76,11 +76,7 @@ De teksten en foutmeldingen scoren 100% op B1-taalbereik.
 - **Antigravity (2026) - Label Botsingsdetectie**:
   - **APA-bronvermelding**: Google DeepMind. (2026). *Antigravity AI Coding Assistant* [Software]. https://deepmind.google/
   - **Gebruik**: Ontwerp van een botsingsdetectie-algoritme voor Leaflet marker tooltips (`src/components/map/LeafletMap.astro`). Het algoritme controleert met `getBoundingClientRect()` en een buffer van 6px of labels overlappen. Indien overlappend, worden ze dynamisch verborgen (`opacity: 0 !important`, `visibility: hidden !important`) om de kaart overzichtelijk te houden tijdens in-/uitzoomen en pannen.
-  - **Prompt**: *"De markers staan over elkaar"*
-
-- **PDOK Coördinatenconversie**:
-  Ik werk aan een Astro/Leaflet kaart met data uit de Amsterdam API. Sommige schoolgebouwen hebben geen bruikbare GeoJSON Point-coördinaten. Ik wil daarom met de PDOK Locatieserver zoeken op adres, huisnummer en postcode. De PDOK response geeft een veld `centroide_ll` terug als tekst in de vorm `POINT(lon lat)`. Hoe kan ik deze string met JavaScript omzetten naar een GeoJSON Point object met numerieke coordinates? Leg vooral uit waarom `.replace('POINT(', '').replace(')', '').split(' ')` wordt gebruikt.
-Ik werk aan een Astro/Leaflet kaart met data uit de Amsterdam API. Sommige schoolgebouwen hebben geen bruikbare GeoJSON Point-coördinaten. Ik wil daarom met de PDOK Locatieserver zoeken op adres, huisnummer en postcode. De PDOK response geeft een veld `centroide_ll` terug als tekst in de vorm `POINT(lon lat)`. Hoe kan ik deze string met JavaScript omzetten naar een GeoJSON Point object met numerieke coordinates? Leg vooral uit waarom `.replace('POINT(', '').replace(')', '').split(' ')` wordt gebruikt.
+  - **Prompt**: *"De markers staan over elkaar"
 
 
 # Code examples
